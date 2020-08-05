@@ -1,0 +1,7 @@
+{
+  "name": "V2-App-Grupo-MPE",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
