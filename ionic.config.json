@@ -1,7 +1,9 @@
 {
-  "name": "V2-App-Grupo-MPE",
+  "name": "GrupoMPE",
   "integrations": {
+    "cordova": {},
     "capacitor": {}
   },
-  "type": "angular"
+  "type": "angular",
+  "id": "ca339cf9"
 }

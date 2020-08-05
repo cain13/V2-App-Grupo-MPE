@@ -1,0 +1,75 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+        <ion-button color="primary" (click)="closeModal()">
+            <ion-icon name="close" color="light"></ion-icon>
+        </ion-button>
+    </ion-buttons>
+    <ion-title>
+    	Buscar Centro
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item class="ion-margin-bottom">
+    <ion-label color="primary" stacked>
+    	<ion-text color="dark" class="fw500">Código postal</ion-text>
+    </ion-label>
+    <ion-input type="number" placeholder="Ejemplo 30007"></ion-input>
+  </ion-item>
+
+	<ion-item>
+	  <ion-label class="no-margin-bottom" stacked>
+      <ion-text color="dark" class="fw500">Radio:</ion-text>
+    </ion-label>
+    <ion-range min="1" max="50" step="1" value="1" class="no-padding-top" [(ngModel)]="radiusmiles">
+      <ion-label slot="start"><ion-text color="primary"> {{radiusmiles}} Kilometros(s)</ion-text></ion-label>
+    </ion-range>
+	</ion-item>
+
+	<ion-item>
+	  <ion-label class="fw500" color="dark">Municipio</ion-label>
+	  <ion-select [(ngModel)]="organizeby">
+	    <ion-select-option>Sevilla</ion-select-option>
+	    <ion-select-option>Murcia</ion-select-option>
+	    <ion-select-option>Madrid</ion-select-option>
+	    <ion-select-option>Malaga</ion-select-option>
+		<ion-select-option>Barcelona</ion-select-option>
+		<ion-select-option>Santiago de los reyes Barcelona pepe</ion-select-option>
+	  </ion-select>
+	</ion-item>
+
+	<ion-item>
+	  <ion-label class="fw500" color="dark">Localidad</ion-label>
+	  <ion-select [(ngModel)]="proptype" multiple="true">
+	    <ion-select-option>Sevilla</ion-select-option>
+	    <ion-select-option>Murcia</ion-select-option>
+	    <ion-select-option>Madrid</ion-select-option>
+	    <ion-select-option>Malaga</ion-select-option>
+	    <ion-select-option>Barcelona</ion-select-option>
+	  </ion-select>
+	</ion-item>
+
+	<ion-item>
+	  <ion-label class="fw500" color="dark">Especialista</ion-label>
+	  <ion-select [(ngModel)]="wantslabel" multiple="true">
+	    <ion-select-option>Fisioterapeuta</ion-select-option>
+	    <ion-select-option>Psicologia</ion-select-option>
+	    <ion-select-option>Rayos</ion-select-option>
+	  </ion-select>
+	</ion-item>
+
+	<!--<ion-item class="ion-margin-bottom">
+	  <ion-label class="ion-no-margin-bottom">
+      <ion-text color="dark" class="fw500">Min/Max Price:</ion-text>
+    </ion-label>
+
+      <ion-range dualKnobs="true" [(ngModel)]="minmaxprice" min="100000" max="5000000" step="50000" class="no-padding-top">
+        <ion-label slot="start"><ion-text color="primary">$ {{minmaxprice.lower}}</ion-text></ion-label>
+        <ion-label slot="end"><ion-text color="primary">$ {{minmaxprice.upper}}</ion-text></ion-label>
+      </ion-range>
+	</ion-item>-->
+
+	<ion-button expand="full" color="primary" (click)="closeModal()">Filtrar</ion-button>
+</ion-content>

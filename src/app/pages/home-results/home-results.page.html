@@ -1,0 +1,111 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button color="tertiary"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+        <ion-text color="light">
+          {{ 'app.name' | translate }} <ion-text color="tertiary" class="fw700"> {{ 'app.version' | translate }}</ion-text>
+        </ion-text>
+    </ion-title>
+    <ion-buttons slot="end">
+      <ion-button size="small" shape="round" color="medium" (click)="notifications()">
+        <ion-icon name="notifications"></ion-icon>
+        <ion-badge color="dark" slot="end">2</ion-badge>
+      </ion-button>
+      <ion-button size="small" shape="round" color="medium" tappable routerLink="/settings" routerDirection="forward">
+        <ion-icon slot="icon-only" name="person-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar color="dark">
+      <ion-searchbar [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+      <ion-buttons slot="end">
+        <ion-button size="small" shape="round" color="medium" (click)="searchFilter()">
+          <ion-icon name="options"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+    <ion-grid class="ion-no-padding" fixed>
+       <!--<ion-row class="ion-no-padding">
+          <ion-col class="ion-no-padding">
+            <ion-button class="ion-no-margin" expand="full" size="large" color="secondary"  (click)="openPropertyListPage('abierto')">
+              Abiertos
+            </ion-button>  
+          </ion-col>
+          <ion-col class="ion-no-padding">
+            <ion-button class="ion-no-margin" expand="full" size="large" color="primary" (click)="openPropertyListPage('cerrado')">
+              Cerrados
+            </ion-button>  
+          </ion-col>
+        </ion-row>-->
+    
+        <div class="ion-no-margin" [@staggerIn]="properties">
+          <!-- # -->
+          <ion-item lines="none" class="bg-white" tappable routerLink="/property-detail/{{property.id}}" *ngFor="let property of properties | termSearch:label:'label'">
+            <ion-thumbnail slot="start">
+              <img [src]="property.thumbnail">
+            </ion-thumbnail>
+            <ion-label>
+              <h2>
+                  <ion-text color="dark"><strong>{{ property.title }}</strong></ion-text>
+              </h2>
+              <p class="text-12x">
+                <ion-text color="primary">{{property.city}}</ion-text> ∙ <ion-text color="secondary">{{ property.price }}</ion-text>
+              </p>
+              <p class="text-12x">
+                <ion-text color="primary">{{property.address}}</ion-text> 
+              </p>
+              <ion-badge slot="end" color="primary" *ngIf="property.label === 'rent'">
+                <ion-text color="light">{{ property.label }}</ion-text>
+              </ion-badge>
+
+              <ion-badge slot="end" color="secondary" *ngIf="property.label === 'sale'">
+                <ion-text color="light">{{ property.label }}</ion-text>
+              </ion-badge>
+
+            </ion-label>
+          </ion-item>
+          <!-- # -->
+        </div>
+    
+      </ion-grid>
+
+      <ion-button class="ion-margin" expand="full" color="secondary" (click)="openPropertyListPage()">
+        {{ 'app.button.moreresults' | translate }}
+      </ion-button>      
+</ion-content>
+
+<ion-footer class="animated fadeIn">
+    <ion-toolbar color="primary">
+      <ion-grid class="ion-no-padding">
+          <ion-row>
+            <ion-col size="3" class="ion-no-padding">
+              <ion-button size="small" expand="full" fill="clear" color="medium" routerLink="/nearby">
+                <ion-icon slot="start" name="map-outline"></ion-icon>
+                <!--{{ 'app.button.nearby' | translate }}-->
+                Mapa
+              </ion-button>
+            </ion-col>
+            <ion-col size="4" class="ion-no-padding">
+              <ion-button size="small" expand="full" fill="clear" color="medium" routerLink="/bycategory">
+                <ion-icon slot="start" name="home-outline"></ion-icon>
+                <!--{{ 'app.button.bycategory' | translate }}-->
+                Centros
+              </ion-button>
+            </ion-col>
+            <ion-col size="5" class="ion-no-padding">
+              <ion-button size="small" expand="full" fill="clear" color="medium" routerLink="/invoices">
+                <ion-icon slot="start" name="folder-open-outline"></ion-icon>
+                {{ 'app.button.invoices' | translate }}
+              </ion-button>
+            </ion-col>
+          </ion-row>
+      </ion-grid>
+    </ion-toolbar>
+  </ion-footer>
+  
