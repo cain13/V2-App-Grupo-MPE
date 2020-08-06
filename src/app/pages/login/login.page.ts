@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavController, MenuController, ToastController, AlertController, LoadingController, IonCheckbox, Platform } from '@ionic/angular';
 import { TranslateProvider } from '../../providers';
-import { RespuestaAPIGetDatos, ObtenerDatosConsultorResult } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { RespuestaAPIGetDatos, ObtenerDatosConsultorResult, RespuestaGetCentrosTrabajo, ObtenerCentros } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
@@ -278,6 +278,7 @@ export class LoginPage implements OnInit {
                     console.log('ACCEDEMOS COMO CLIENTE');
                     this.menuCtrl.enable(false, 'menuTrabajadores');
                     this.menuCtrl.enable(true, 'menuCompleto');
+                    this.getCentros();
                     this.navCtrl.navigateRoot('certificado-aptitud');
 
                   } else {
@@ -297,6 +298,46 @@ export class LoginPage implements OnInit {
 
   }
 
+  getCentros() {
+    const xmlhttp = new XMLHttpRequest();
+
+
+    xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+    xmlhttp.responseType = 'document';
+      // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+    const sr =
+    '<?xml version="1.0" encoding="utf-8"?>' +
+    '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+      '<soap:Header>' +
+        '<AuthHeader xmlns="http://tempuri.org/">' +
+          '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
+          '<Password>' + this.usuario.Password + '</Password>' +
+        '</AuthHeader>' +
+      '</soap:Header>' +
+      '<soap:Body>' +
+        '<ObtenerCentrosTrabajo xmlns="http://tempuri.org/">' +
+        '<NifClienteConsultor></NifClienteConsultor>' +
+        '</ObtenerCentrosTrabajo>' +
+      '</soap:Body>' +
+    '</soap:Envelope>';
+
+    xmlhttp.onreadystatechange =  () => {
+          if (xmlhttp.readyState === 4) {
+              if (xmlhttp.status === 200) {
+                const xml = xmlhttp.responseXML;
+                const obj: RespuestaGetCentrosTrabajo = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                // tslint:disable-next-line: max-line-length
+                const a: ObtenerCentros = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCentrosTrabajoResponse']['ObtenerCentrosTrabajoResult']));
+                console.log(a.CentroTrabajoInfo);
+                this.usuarioService.guardarCentros(a.CentroTrabajoInfo);
+              }
+          }
+      };
+
+    xmlhttp.send(sr);
+  }
 
   async presentAlert(subtitulo: string, mensaje: string) {
     const alert = await this.alertCtrl.create({

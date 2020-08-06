@@ -116,23 +116,23 @@ export interface RespuestaDocumentosTrabajador{
 
 
 export interface RespuestaDocumentoPDFTrabajador{
-"soap:Envelope": {
-  "$": {
-    "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
-    "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-    "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+'soap:Envelope': {
+  '$': {
+    'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+    'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+    'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
   },
-  "soap:Body": [
+  'soap:Body': [
     {
-      "ObtenerTrabajadorPdfResponse": [
+      'ObtenerTrabajadorPdfResponse': [
         {
-          "$": {
-            "xmlns": "http://tempuri.org/"
+          '$': {
+            'xmlns': 'http://tempuri.org/'
           },
-          "ObtenerTrabajadorPdfResult": [
+          'ObtenerTrabajadorPdfResult': [
             {
-              "NombreFichero": string,
-              "Datos": Uint8Array
+              'NombreFichero': string,
+              'Datos': Uint8Array
             }
           ]
         }
@@ -145,5 +145,119 @@ export interface ObtenerDocumentoPDFTrabajador {
 
 NombreFichero: string;
 Datos: any;
+
+}
+
+export interface RespuestaGetAPICertificadosAptitud {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
+    },
+    'soap:Body': [
+      {
+        'ObtenerCertificadosAptitudRelacionDocumentosResponse': [
+          {
+            '$': {
+              'xmlns': 'http://tempuri.org/'
+            },
+            'ObtenerCertificadosAptitudRelacionDocumentosResult': [
+              {
+                'CertificadoAptitudInfo': Certificado[]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+}
+
+export interface ObtenerCertificados {
+
+  CertificadoAptitudInfo: Certificado[];
+
+}
+
+export interface Certificado {
+
+  'Id': string;
+  'Descripcion': string;
+  'FechaDocumento': string;
+  'CentroTrabajo': string;
+}
+
+export interface RespuestaObtenerCertPDF {
+ 'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
+    },
+    'soap:Body': [
+      {
+        'ObtenerCertificadoAptitudPdfResponse': [
+          {
+            '$': {
+              'xmlns': 'http://tempuri.org/'
+            },
+            'ObtenerCertificadoAptitudPdfResult': [
+              {
+                'NombreFichero': string
+                'Datos': Uint8Array;
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+}
+
+
+export interface CertificadoPDF {
+
+  NombreFichero: string;
+  Datos: any;
+
+}
+
+export interface RespuestaGetCentrosTrabajo {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
+    },
+    'soap:Body': [
+      {
+        'ObtenerCentrosTrabajoResponse': [
+          {
+            '$': {
+              'xmlns': 'http://tempuri.org/'
+            },
+            'ObtenerCentrosTrabajoResult': [
+              {
+                'CentroTrabajoInfo': Centro[];
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+}
+
+export interface ObtenerCentros {
+
+  CentroTrabajoInfo: Centro[];
+
+}
+
+export interface Centro {
+
+  IdCentroTrabajo: string;
+  NombreCentroTrabajo: string;
 
 }

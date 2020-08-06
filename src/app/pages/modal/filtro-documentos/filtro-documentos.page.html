@@ -12,7 +12,7 @@
 </ion-header>
 
 <ion-content class="ion-padding">
-  <ion-item class="ion-margin-bottom">
+  <!-- <ion-item class="ion-margin-bottom">
     <ion-label color="primary" stacked>
     	<ion-text color="dark" class="fw500">Código postal</ion-text>
     </ion-label>
@@ -26,20 +26,52 @@
     <ion-range min="1" max="50" step="1" value="1" class="no-padding-top" [(ngModel)]="radiusmiles">
       <ion-label slot="start"><ion-text color="primary"> {{radiusmiles}} Kilometros(s)</ion-text></ion-label>
     </ion-range>
+	</ion-item> -->
+
+	<ion-item>
+		<ion-label class="fw500" color="dark">Centros</ion-label>
+		<ion-select [(ngModel)]="filtro_idCentro" style="max-width: max-content;" placeholder="Nombre Centro">
+			<ion-select-option *ngFor="let centro of centros" [value]="centro.IdCentroTrabajo">{{centro.NombreCentroTrabajo}}</ion-select-option>
+		</ion-select>
 	</ion-item>
 
 	<ion-item>
-	  <ion-label class="fw500" color="dark">Municipio</ion-label>
-	  <ion-select [(ngModel)]="organizeby">
-	    <ion-select-option>Sevilla</ion-select-option>
-	    <ion-select-option>Murcia</ion-select-option>
-	    <ion-select-option>Madrid</ion-select-option>
-	    <ion-select-option>Malaga</ion-select-option>
-	    <ion-select-option>Barcelona</ion-select-option>
-	  </ion-select>
+		<ion-label class="fw500" color="dark">DNI</ion-label>
+		<ion-input style="text-align: end !important;" placeholder="Introduzca DNI" [(ngModel)]="filtro_dni"></ion-input>
 	</ion-item>
 
 	<ion-item>
+		<ion-label class="fw500" color="dark">Trabajador</ion-label>
+		<ion-input style="text-align: end !important;" placeholder="Nombre Trabajador" [(ngModel)]="filtro_nombre"></ion-input>
+	</ion-item>
+
+	<ion-item>
+		<ion-label class="fw500" color="dark">Desde</ion-label>
+		<ion-datetime 	placeholder = "Desde"
+						value= "{{filtro_desde}}"
+						displayFormat="DD/MM/YYYY"
+						pickerFormat="DD MM YYYY" 
+						doneText="Ok" 
+						cancelText="Cancelar"
+						[(ngModel)]="filtro_desde">
+		</ion-datetime>
+	</ion-item>
+
+	<ion-item >
+		<ion-label class="fw500" color="dark">Hasta</ion-label>
+		<ion-datetime 	placeholder = "Hasta"
+                    	value= "{{filtro_hasta}}"
+                        displayFormat="DD/MM/YYYY"
+                    	pickerFormat="DD MM YYYY" 
+                    	doneText="Ok" 
+                    	cancelText="Cancelar"
+						[(ngModel)]="filtro_hasta">
+		</ion-datetime>
+	</ion-item>
+
+
+
+	<!-- <ion-item>
 	  <ion-label class="fw500" color="dark">Localidad</ion-label>
 	  <ion-select [(ngModel)]="proptype" multiple="true">
 	    <ion-select-option>Sevilla</ion-select-option>
@@ -57,7 +89,7 @@
 	    <ion-select-option>Psicologia</ion-select-option>
 	    <ion-select-option>Rayos</ion-select-option>
 	  </ion-select>
-	</ion-item>
+	</ion-item> -->
 
 	<!--<ion-item class="ion-margin-bottom">
 	  <ion-label class="ion-no-margin-bottom">
@@ -70,5 +102,5 @@
       </ion-range>
 	</ion-item>-->
 
-	<ion-button expand="full" color="primary" (click)="closeModal()">Filtrar</ion-button>
+	<ion-button expand="full" color="primary" (click)="filtrar()">Filtrar</ion-button>
 </ion-content>
