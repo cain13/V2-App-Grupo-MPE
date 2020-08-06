@@ -78,7 +78,13 @@ const routes: Routes = [
   {
     path: 'blanco',
     loadChildren: () => import('./pages/vistasMPE/blanco/blanco.module').then( m => m.BlancoPageModule)
+  },  {
+    path: 'cambiar-password',
+    loadChildren: () => import('./pages/vistasMPE/cambiar-password/cambiar-password.module').then( m => m.CambiarPasswordPageModule)
   },
+
+ 
+
 
 
 

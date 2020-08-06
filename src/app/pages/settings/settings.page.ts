@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from '@ionic/angular';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-settings',
@@ -14,13 +15,18 @@ export class SettingsPage implements OnInit {
   enablePromo: any;
   enableHistory: any;
 
+  Nombre = "";
+  Tipo = "";
   languages: any = ['Español', 'Catalan', 'Vasco'];
   paymentMethods: any = ['Paypal', 'Tarjeta de Credito'];
   currencies: any = ['USD', 'BRL', 'EUR'];
 
-  constructor(public navCtrl: NavController) { }
+  constructor(public navCtrl: NavController, private usuarioService: UsuarioService) { }
+
 
   ngOnInit() {
+    this.Nombre = this.usuarioService.usuario.Nombre;
+    this.Tipo = this.usuarioService.usuario.Tipo;
   }
 
   editProfile() {

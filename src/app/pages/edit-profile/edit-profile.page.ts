@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController, LoadingController, ToastController } from '@ionic/angular';
 import { TranslateProvider } from '../../providers';
+import { UsuarioService } from 'src/app/services/usuario.service';
 
 @Component({
   selector: 'app-edit-profile',
@@ -9,14 +10,19 @@ import { TranslateProvider } from '../../providers';
 })
 export class EditProfilePage implements OnInit {
 
+  Nombre = "";
+  Tipo = "";
   constructor(
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
-    private translate: TranslateProvider
+    private translate: TranslateProvider,
+    private usuarioService: UsuarioService,
     ) { }
 
   ngOnInit() {
+    this.Nombre = this.usuarioService.usuario.Nombre;
+    this.Tipo = this.usuarioService.usuario.Tipo;
   }
 
   async sendData() {
@@ -29,12 +35,12 @@ export class EditProfilePage implements OnInit {
     loader.onWillDismiss().then(async l => {
       const toast = await this.toastCtrl.create({
         cssClass: 'bg-profile',
-        message: 'Your Data was Edited!',
+        message: 'Su información a sido modificada!',
         duration: 3000,
         position: 'bottom',
         buttons: [
           {
-            text: 'Cancel',
+            text: 'Cancelar',
             role: 'cancel',
             handler: () => {
               console.log('Cancel clicked');
@@ -47,6 +53,10 @@ export class EditProfilePage implements OnInit {
       this.navCtrl.navigateForward('/home-location');
     });
     // end
+  }
+
+  CambiarPassword(){
+    this.navCtrl.navigateForward('/CambiarPassword');
   }
 
 }

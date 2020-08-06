@@ -62,7 +62,7 @@ export class WalkthroughPage implements OnInit {
   // }
 
   openHomeLocation() {
-    this.navCtrl.navigateRoot('/home-location');
+    this.navCtrl.navigateForward('/home-location');
     // this.router.navigateByUrl('/tabs/(home:home)');
   }
 

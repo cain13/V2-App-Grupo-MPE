@@ -61,8 +61,8 @@
         <sup *ngIf="property.period === 'month'">/month</sup>
       </ion-badge>
 
-      <img [src]="property.picture" (load)="loaded = true" [ngClass]="{'img-loaded':loaded}" [hidden]="!loaded" tappable routerLink="/property-detail/{{property.id}}" />
-      <ion-spinner [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner>
+      <!--<img [src]="property.picture" (load)="loaded = true" [ngClass]="{'img-loaded':loaded}" [hidden]="!loaded" tappable routerLink="/property-detail/{{property.id}}" />
+      <ion-spinner [ngClass]="{'center':true}" *ngIf="!loaded"></ion-spinner> -->
 
       <ion-card-header>
 

@@ -86,23 +86,18 @@ export class AppComponent {
 
     this.appPages = [
       {
-        title: 'Inicio',
-        url: '/home-results',
-        direct: 'root',
-        icon: 'browsers'
-      },
-      {
-        title: 'Localización Centros MPE',
-        url: '/home-location',
-        direct: 'root',
-        icon: 'browsers'
-      },
-      {
-        title: 'Mensajes',
-        url: '/messages',
+        title: 'Editar Perfil',
+        url: '/edit-profile',
         direct: 'forward',
-        icon: 'mail'
+        icon: 'person-outline'
       },
+      {
+        title: 'Cerrar Sesion',
+        url: '/blanco',
+        direct: 'forward',
+        icon: 'lock-closed-outline'
+      }
+      /* ,
       {
         title: 'Centros MPE',
         url: '/property-list',
@@ -168,7 +163,7 @@ export class AppComponent {
         url: '/extras',
         direct: 'forward',
         icon: 'newspaper-outline'
-      }
+      } */
     ];
 
 

@@ -10,17 +10,17 @@
 <ion-content>
   <ion-item class="bg-profile">
     <ion-avatar slot="start">
-      <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar">
+      <img src="assets/img/brokers/avatar.jpg" class="user-avatar">
     </ion-avatar>
     <ion-label>
       <ion-text color="light">
         <h2>
-          <strong>Juan Fernandez</strong>
+          <strong>{{Nombre}}</strong>
         </h2>
       </ion-text>
       <ion-text color="tertiary">
         <h3>
-          juan_pedro@gmail.com
+          {{Tipo}}
         </h3>
       </ion-text>
       <ion-button icon-left size="small" shape="round" color="dark" (click)="editProfile()">
@@ -69,7 +69,7 @@
       <ion-toggle [(ngModel)]="enableHistory"></ion-toggle>
     </ion-item>
   </ion-list>
-  <ion-list>
+ <!--  <ion-list> 
     <ion-list-header>
       <ion-text color="dark">
         <h5>Moneda</h5>
@@ -90,5 +90,5 @@
       </ion-select>
     </ion-item>
   </ion-list>
-  
+  -->
 </ion-content>

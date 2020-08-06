@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
-import { LoadingController } from '@ionic/angular';
+import { LoadingController, Platform } from '@ionic/angular';
 import { UsuarioLogin } from '../interfaces/usuario-interfaces';
 import { DatabaseService } from './database.service';
+import { FileOpener } from '@ionic-native/file-opener/ngx';
+import { File } from '@ionic-native/file/ngx';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +17,11 @@ export class UsuarioService {
 
   isLoading = false;
 
-  constructor(private loadingCtrl: LoadingController, private dataBaseService: DatabaseService) { }
+  constructor(private loadingCtrl: LoadingController, 
+    private dataBaseService: DatabaseService,  
+    private platform: Platform,
+    private opener: FileOpener,
+    private file: File,) { }
 
 
   login(usuario: UsuarioLogin) {
@@ -67,4 +73,46 @@ export class UsuarioService {
     }
 
   }
+
+  
+saveAndOpenPdf(pdf: string, filename: string) {
+  console.log('path ' + this.file.dataDirectory);
+  const writeDirectory = this.platform.is('ios') ? this.file.dataDirectory : this.file.dataDirectory;
+  this.file.writeFile(writeDirectory, filename, this.convertBase64ToBlob(pdf, 'data:application/pdf;base64',512), {replace: true})
+    .then(() => {
+        this.opener.open(writeDirectory + filename, 'application/pdf')
+            .catch(() => {
+                console.log('Error opening pdf file');
+            });
+    })
+    .catch(() => {
+        console.error('Error writing pdf file');
+    });
+}
+
+convertBase64ToBlob(b64Data, contentType, sliceSize) {
+  console.log(b64Data);
+  contentType = contentType || '';
+  sliceSize = sliceSize || 512;
+
+  const byteCharacters = atob(b64Data);
+  const byteArrays = [];
+
+  for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+      const slice = byteCharacters.slice(offset, offset + sliceSize);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+
+          byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+
+      byteArrays.push(byteArray);
+  }
+
+const blob = new Blob(byteArrays, {type: contentType});
+return blob;
+}
 }
