@@ -193,7 +193,6 @@ export class DocumentosTrabajadorPage {
 
   onCancel(event) {
     this.findAll();
-    console.log("Cancela");
   }
   
 

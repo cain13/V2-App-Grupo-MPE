@@ -20,6 +20,10 @@ export class FiltroDocumentosPage implements OnInit {
 
   usuario: UsuarioLogin;
   listaCertificados = [];
+  ultimoMes = false;
+  ultimoTrimestre = false;
+  anioActual = false;
+  anioAnterior = false;
 
 
   filtro_dni = '';
@@ -45,6 +49,7 @@ export class FiltroDocumentosPage implements OnInit {
   ngOnInit() {
     this.centros = this.usuarioService.getCentros();
     this.usuario = this.usuarioService.getUsuario();
+    
   }
 
 
@@ -74,7 +79,7 @@ export class FiltroDocumentosPage implements OnInit {
       fecha_hasta_aux = moment().format('YYYY-MM-DDT00:00:00');
     } else {
 
-      fecha_hasta_aux = moment(this.filtro_hasta.toString()).format('YYYY-MM-DDT00:00:00');
+      fecha_hasta_aux = moment(this.filtro_hasta.toString()).add(1, 'days').format('YYYY-MM-DDT00:00:00');
 
     }
     if (this.filtro_idCentro === undefined) {
@@ -102,6 +107,7 @@ export class FiltroDocumentosPage implements OnInit {
 
 
   getCertificados(fechaDesde: string, fechaHasta: string, nombre: string, dni: string, idCentro: number, idCentroEspecificado: number) {
+
     this.usuarioService.present('Cargando datos...');
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
@@ -133,7 +139,6 @@ export class FiltroDocumentosPage implements OnInit {
         '</soap:Body>' +
       '</soap:Envelope>';
 
-      console.log(sr);
 
     xmlhttp.onreadystatechange =  () => {
           if (xmlhttp.readyState === 4) {
@@ -142,14 +147,60 @@ export class FiltroDocumentosPage implements OnInit {
                   const obj: RespuestaGetAPICertificadosAptitud = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                   // tslint:disable-next-line: max-line-length
                   const a: ObtenerCertificados = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadosAptitudRelacionDocumentosResponse']['ObtenerCertificadosAptitudRelacionDocumentosResult']));
-                  this.listaCertificados = a.CertificadoAptitudInfo;
+                  if (a.CertificadoAptitudInfo !== undefined && !Array.isArray(a.CertificadoAptitudInfo)) {
+
+                    this.listaCertificados.push(a.CertificadoAptitudInfo);
+
+                  } else {
+
+                    this.listaCertificados = a.CertificadoAptitudInfo;
+
+                  }
                   console.log('Cert: ', a.CertificadoAptitudInfo);
+                  console.log('1.', this.listaCertificados);
                   this.usuarioService.dismiss();
-                  this.usuarioService.guardarCertificados(a.CertificadoAptitudInfo);
+                  this.usuarioService.guardarCertificados(this.listaCertificados);
                   this.closeModal();
               }
           }
       };
     xmlhttp.send(sr);
+  }
+
+  ultimoMesF() {
+
+    const fechaDesde = moment().add(-1, 'month').format('YYYY-MM-DDT00:00:00');
+    this.filtro_desde = new Date(fechaDesde);
+    this.filtrar();
+  }
+
+  ultimoTrimestreF() {
+
+    const fechaDesde = moment().add(-3, 'month').format('YYYY-MM-DDT00:00:00');
+    this.filtro_desde = new Date(fechaDesde);
+    this.filtrar();
+
+  }
+
+  anioAnteriorF() {
+    const anio = moment().year() - 1 ;
+    const desdeAux = anio + '/01/01';
+    const hastaAux = anio + '/12/31';
+    this.filtro_desde = new Date(desdeAux);
+    this.filtro_hasta = new Date(hastaAux);
+    this.filtrar();
+
+  }
+
+  anioActualF() {
+
+    const anio = moment().year();
+    const desdeAux = anio + '/01/01';
+    const hastaAux = anio + '/12/31';
+    this.filtro_desde = new Date(desdeAux);
+    this.filtro_hasta = new Date(hastaAux);
+    this.filtrar();
+
+
   }
 }

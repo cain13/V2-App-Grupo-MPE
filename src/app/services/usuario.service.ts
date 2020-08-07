@@ -68,6 +68,8 @@ export class UsuarioService {
   guardarCertificados(array: Certificado[]) {
     this.certificados = [];
     this.haFiltrado = true;
+    /* console.log('2.', this.getCertificados().length); */
+
     this.certificados = array;
 
   }

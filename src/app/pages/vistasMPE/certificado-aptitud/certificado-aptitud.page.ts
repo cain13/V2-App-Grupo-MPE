@@ -8,7 +8,6 @@ import { SearchFilterPage } from '../../../pages/modal/search-filter/search-filt
 import { NotificationsComponent } from '../../../components/notifications/notifications.component';
 import { FiltroDocumentosPage } from '../../modal/filtro-documentos/filtro-documentos.page';
 import { File } from '@ionic-native/file/ngx';
-import { CertificadosAptitudService } from '../../../providers/certificadosAptitud/certificados-aptitud.service';
 
 import * as moment from 'moment';
 
@@ -29,6 +28,8 @@ import { UsuarioService } from '../../../services/usuario.service';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 import { Certificado } from '../../../interfaces/interfaces-grupo-mpe';
+import { CertificadosService } from '../../../services/certificados.service';
+import { ModalMasInfoPage } from '../modal-mas-info/modal-mas-info.page';
 
 @Component({
   selector: 'app-certificado-aptitud',
@@ -67,16 +68,16 @@ export class CertificadoAptitudPage {
     private opener: FileOpener,
     private file: File,
     private platform: Platform,
+    private certificadosService: CertificadosService
 
   ) {
 
     this.usuario = this.usuarioService.getUsuario();
-   
+
 
   }
 
   ionViewWillEnter() {
-    console.log('WIIIIIIIL')
     this.menuCtrl.enable(true);
     if ( this.usuarioService.haFiltrado) {
       this.listaCertificados = [];
@@ -122,7 +123,6 @@ export class CertificadoAptitudPage {
         '</soap:Body>' +
       '</soap:Envelope>';
 
-      console.log(sr);
 
     xmlhttp.onreadystatechange =  () => {
           if (xmlhttp.readyState === 4) {
@@ -131,8 +131,17 @@ export class CertificadoAptitudPage {
                   const obj: RespuestaGetAPICertificadosAptitud = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                   // tslint:disable-next-line: max-line-length
                   const a: ObtenerCertificados = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadosAptitudRelacionDocumentosResponse']['ObtenerCertificadosAptitudRelacionDocumentosResult']));
-                  this.listaCertificados = a.CertificadoAptitudInfo;
+                  if (a.CertificadoAptitudInfo !== undefined && !Array.isArray(a.CertificadoAptitudInfo)) {
+
+                    this.listaCertificados.push(a.CertificadoAptitudInfo);
+
+                  } else {
+
+                    this.listaCertificados = a.CertificadoAptitudInfo;
+
+                  }
                   console.log('Cert: ', a.CertificadoAptitudInfo);
+                  this.certificadosService.setCertificado(this.listaCertificados);
                   this.usuarioService.dismiss();
                   console.log('Certificados APTITUD:' , this.listaCertificados);
               }
@@ -232,8 +241,15 @@ export class CertificadoAptitudPage {
   }
 
 
-  masInfo(cert: Certificado) {
+  async masInfo(cert: Certificado) {
 
+    this.certificadosService.guardarCertificadoInfo(cert);
+    const popover = await this.popoverCtrl.create({
+      component: ModalMasInfoPage,
+      animated: true,
+      showBackdrop: true
+    });
+    return await popover.present();
 
 
   }
@@ -250,9 +266,10 @@ export class CertificadoAptitudPage {
 
 
   onInput(event) {
-    this.service.findByName(this.searchKey)
+    console.log(event.target.value);
+    this.certificadosService.findByName(event.target.value)
         .then(data => {
-            this.properties = data;
+            this.listaCertificados = data;
         })
         .catch(error => alert(JSON.stringify(error)));
   }
@@ -275,22 +292,21 @@ export class CertificadoAptitudPage {
       component: FiltroDocumentosPage
     });
     modal.onDidDismiss().then(() => {
+
       if (this.usuarioService.haFiltrado) {
-
         this.listaCertificados = this.usuarioService.getCertificados();
-
       }
     });
     return await modal.present();
   }
 
+
+
   findAll() {
-    this.service.findAll()
-      .then(data => this.properties = data)
-      .catch(error => alert(error));
+    this.listaCertificados = this.certificadosService.getCertificados();
 
   }
 
-
+  
 
 }

@@ -68,39 +68,22 @@
 						[(ngModel)]="filtro_hasta">
 		</ion-datetime>
 	</ion-item>
-
-
-
-	<!-- <ion-item>
-	  <ion-label class="fw500" color="dark">Localidad</ion-label>
-	  <ion-select [(ngModel)]="proptype" multiple="true">
-	    <ion-select-option>Sevilla</ion-select-option>
-	    <ion-select-option>Murcia</ion-select-option>
-	    <ion-select-option>Madrid</ion-select-option>
-	    <ion-select-option>Malaga</ion-select-option>
-	    <ion-select-option>Barcelona</ion-select-option>
-	  </ion-select>
-	</ion-item>
-
 	<ion-item>
-	  <ion-label class="fw500" color="dark">Especialista</ion-label>
-	  <ion-select [(ngModel)]="wantslabel" multiple="true">
-	    <ion-select-option>Fisioterapeuta</ion-select-option>
-	    <ion-select-option>Psicologia</ion-select-option>
-	    <ion-select-option>Rayos</ion-select-option>
-	  </ion-select>
-	</ion-item> -->
-
-	<!--<ion-item class="ion-margin-bottom">
-	  <ion-label class="ion-no-margin-bottom">
-      <ion-text color="dark" class="fw500">Min/Max Price:</ion-text>
-    </ion-label>
-
-      <ion-range dualKnobs="true" [(ngModel)]="minmaxprice" min="100000" max="5000000" step="50000" class="no-padding-top">
-        <ion-label slot="start"><ion-text color="primary">$ {{minmaxprice.lower}}</ion-text></ion-label>
-        <ion-label slot="end"><ion-text color="primary">$ {{minmaxprice.upper}}</ion-text></ion-label>
-      </ion-range>
-	</ion-item>-->
+	  <ion-label class="label" color="primary" >Mostrar Ultimo mes</ion-label>
+	  <ion-toggle [(ngModel)]="ultimoMes" (click)="ultimoMesF()"></ion-toggle>
+	</ion-item>
+	<ion-item>
+		<ion-label class="label" color="primary">Mostrar Ultimo trimestre</ion-label>
+		<ion-toggle [(ngModel)]="ultimoTrimestre" (click)="ultimoTrimestreF()"></ion-toggle>
+	</ion-item>
+	<ion-item>
+		<ion-label class="label" color="primary">Mostrar Año en curso</ion-label>
+		<ion-toggle [(ngModel)]="anioActual" (click)="anioActualF()"></ion-toggle>
+	</ion-item>
+	<ion-item>
+		<ion-label class="label" color="primary">Mostrar Año anterior</ion-label>
+		<ion-toggle [(ngModel)]="anioAnterior" (click)="anioAnteriorF()"></ion-toggle>
+	</ion-item>
 
 	<ion-button expand="full" color="primary" (click)="filtrar()">Filtrar</ion-button>
 </ion-content>

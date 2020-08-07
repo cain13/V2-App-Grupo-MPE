@@ -83,6 +83,11 @@ const routes: Routes = [
     path: 'cambiar-password',
     loadChildren: () => import('./pages/vistasMPE/cambiar-password/cambiar-password.module').then( m => m.CambiarPasswordPageModule)
   },
+  {
+    path: 'modal-mas-info',
+    loadChildren: () => import('./pages/vistasMPE/modal-mas-info/modal-mas-info.module').then( m => m.ModalMasInfoPageModule)
+  },
+
 
 
 

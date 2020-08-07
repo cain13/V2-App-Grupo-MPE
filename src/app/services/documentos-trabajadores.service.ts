@@ -11,10 +11,10 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 })
 export class DocumentosTrabajadoresService {
   listaDocumentosTodos = [];
-  
-  constructor(  
+
+  constructor(
     private usuarioService: UsuarioService) { }
- 
+
     setDocumento(listadocumentos){
       this.listaDocumentosTodos = listadocumentos;
     }
@@ -22,15 +22,15 @@ export class DocumentosTrabajadoresService {
     findAll() {
       return Promise.resolve(this.listaDocumentosTodos);
     }
-  
+
     getDocumentos() {
       return this.listaDocumentosTodos;
     }
-  
+
     findById(id) {
       return Promise.resolve(this.listaDocumentosTodos[id - 1]);
     }
-  
+
     getItem(id) {
       for (let i = 0; i < this.listaDocumentosTodos.length; i++) {
         if (this.listaDocumentosTodos[i].id === parseInt(id)) {
@@ -39,14 +39,14 @@ export class DocumentosTrabajadoresService {
       }
       return null;
     }
-  
+
     findByName(searchKey: string) {
       console.log(searchKey);
       const key: string = searchKey.toUpperCase();
       return Promise.resolve(this.listaDocumentosTodos.filter((documento: any) =>
           (documento.Descripcion +  ' ' + documento.FechaDocumento).toUpperCase().indexOf(key) > -1));
     }
-  
-    
+
+
 
 }
