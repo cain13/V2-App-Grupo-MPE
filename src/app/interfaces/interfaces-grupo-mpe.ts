@@ -82,7 +82,7 @@ export interface Documento {
 
 }
 
-export interface RespuestaDocumentosTrabajador{
+export interface RespuestaDocumentosTrabajador {
   'soap:Envelope': {
     '$': {
       'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
@@ -115,7 +115,7 @@ export interface RespuestaDocumentosTrabajador{
 }
 
 
-export interface RespuestaDocumentoPDFTrabajador{
+export interface RespuestaDocumentoPDFTrabajador {
 'soap:Envelope': {
   '$': {
     'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
@@ -186,6 +186,9 @@ export interface Certificado {
   'Descripcion': string;
   'FechaDocumento': string;
   'CentroTrabajo': string;
+  'IdCentroTrabajo': number;
+  'DomicilioCentroTrabajo': string;
+  'TipoCentroTrabajo': string;
 }
 
 export interface RespuestaObtenerCertPDF {
