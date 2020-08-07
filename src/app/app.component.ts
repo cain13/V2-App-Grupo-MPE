@@ -24,7 +24,7 @@ export class AppComponent {
   public appPages: Array<Pages>;
   public appPagesVSAll: Array<Pages>;
   public appPagesTrabajador: Array<Pages>;
-
+  public Version = this.usuarioService.version;
   constructor(
     private platform: Platform,
     private menu: MenuController,

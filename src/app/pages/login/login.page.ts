@@ -124,6 +124,7 @@ export class LoginPage implements OnInit {
               console.log('ACCEDEMOS COMO CLIENTE');
               this.menuCtrl.enable(false, 'menuTrabajadores');
               this.menuCtrl.enable(true, 'menuCompleto');
+              this.getCentros();
               this.usuarioService.dismiss();
               this.navCtrl.navigateRoot('certificado-aptitud');
 

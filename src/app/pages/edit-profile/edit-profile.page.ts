@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { NavController, LoadingController, ToastController } from '@ionic/angular';
+import { ModalController, NavController, LoadingController, ToastController } from '@ionic/angular';
 import { TranslateProvider } from '../../providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { CambiarPasswordPage } from '../vistasMPE/cambiar-password/cambiar-password.page';
 
 @Component({
   selector: 'app-edit-profile',
@@ -13,6 +14,7 @@ export class EditProfilePage implements OnInit {
   Nombre = "";
   Tipo = "";
   constructor(
+    public modalCtrl: ModalController,
     public navCtrl: NavController,
     public loadingCtrl: LoadingController,
     public toastCtrl: ToastController,
@@ -54,9 +56,18 @@ export class EditProfilePage implements OnInit {
     });
     // end
   }
-
+  async searchFilter () {
+    const modal = await this.modalCtrl.create({
+      component: CambiarPasswordPage
+    });
+    return await modal.present();
+  }
   CambiarPassword(){
     this.navCtrl.navigateForward('/CambiarPassword');
+  }
+
+  editarImagen(){
+    this.usuarioService.presentToast("Esta funcionalidad no esta disponible en este momento...");
   }
 
 }

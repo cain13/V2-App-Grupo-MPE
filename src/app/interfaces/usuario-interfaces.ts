@@ -8,3 +8,11 @@ export interface UsuarioLogin {
     Recordarme: boolean;
 
 }
+
+export interface CambiarPassword {
+
+    PassOld: string;
+    PassNew: string;
+    PassConfirmada: string;
+}
+

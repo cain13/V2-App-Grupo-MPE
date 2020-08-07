@@ -13,9 +13,9 @@
       <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar">
       <h1 class="fw500">{{Nombre}}</h1>
       <h2 color="light" class="ion-margin-bottom">{{Tipo}}</h2>
-      <ion-button icon-left color="secondary">
-        <ion-icon name="photos"></ion-icon> 
-        {{ 'app.label.edit' | translate }} / {{ 'app.label.insertavatar' | translate }}
+      <ion-button icon-left color="secondary" (click)="searchFilter()">
+        <ion-icon name="lock-closed-outline" ></ion-icon> 
+        Cambiar Contraseña
       </ion-button>
     </ion-card-content>
   
@@ -39,7 +39,6 @@
             </ion-item>
     
           </ion-list>
-
           <ion-list>
             <ion-radio-group [(ngModel)]="Tipo">
               <ion-list-header color="light">
@@ -57,12 +56,9 @@
               </ion-item>
             </ion-radio-group>
           </ion-list>
-  
         </ion-col>
       </ion-row>
     </ion-grid>
-  
-    <ion-button size="large" expand="full" color="dark" (click)="CambiarPassword()" class="ion-no-margin">Cambiar Contraseña</ion-button>
   </ion-card>
   
   <div class="ion-padding">

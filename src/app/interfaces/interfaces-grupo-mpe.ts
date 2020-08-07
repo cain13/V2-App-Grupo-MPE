@@ -261,3 +261,23 @@ export interface Centro {
   NombreCentroTrabajo: string;
 
 }
+export interface CambioPassword{
+  "soap:Envelope": {
+    "$": {
+      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
+      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "soap:Body": [
+      {
+        "CambiarPasswordResponse": [
+          {
+            "$": {
+              "xmlns": "http://tempuri.org/"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

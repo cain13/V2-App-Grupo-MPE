@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { LoadingController, Platform  } from '@ionic/angular';
-import { UsuarioLogin } from '../interfaces/usuario-interfaces';
+import { LoadingController, Platform, ToastController  } from '@ionic/angular';
+import { UsuarioLogin, CambiarPassword } from '../interfaces/usuario-interfaces';
 import { DatabaseService } from './database.service';
 import { Centro, Certificado } from '../interfaces/interfaces-grupo-mpe';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
@@ -11,7 +11,9 @@ import { File } from '@ionic-native/file/ngx';
 })
 export class UsuarioService {
 
+  version = "1.0.1";
   usuario: UsuarioLogin;
+  cambiarPassword: CambiarPassword;
   centros: Centro[];
   certificados: Certificado[];
   haFiltrado: boolean;
@@ -25,7 +27,8 @@ export class UsuarioService {
     private dataBaseService: DatabaseService,
     private platform: Platform,
     private opener: FileOpener,
-    private file: File,) { }
+    private file: File,
+    private toastController: ToastController) { }
 
 
   login(usuario: UsuarioLogin) {
@@ -44,6 +47,10 @@ export class UsuarioService {
 
     return this.usuario;
 
+  }
+
+  getCambiarPassword(){
+    return this.cambiarPassword;
   }
 
   guardarCentros(centros: Centro[]) {
@@ -144,5 +151,13 @@ export class UsuarioService {
   
   const blob = new Blob(byteArrays, {type: contentType});
   return blob;
+  }
+
+  async presentToast(texto: string) {
+    const toast = await this.toastController.create({
+      message: texto,
+      duration: 2000
+    });
+    toast.present();
   }
 }
