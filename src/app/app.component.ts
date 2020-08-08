@@ -24,7 +24,7 @@ export class AppComponent {
   public appPages: Array<Pages>;
   public appPagesVSAll: Array<Pages>;
   public appPagesTrabajador: Array<Pages>;
-  public Version = this.usuarioService.version;
+  public Version = "Versión 1.0.1";
   constructor(
     private platform: Platform,
     private menu: MenuController,
@@ -81,6 +81,12 @@ export class AppComponent {
         url: '/nearby',
         direct: 'forward',
         icon: 'help-buoy'
+      },
+      {
+        title: 'Historial Documentos',
+        url: '/historial-notificaciones',
+        direct: 'forward',
+        icon: 'clipboard'
       }
     ];
 
@@ -95,7 +101,7 @@ export class AppComponent {
         title: 'Cerrar Sesion',
         url: '/blanco',
         direct: 'forward',
-        icon: 'lock-closed-outline'
+        icon: 'power-outline'
       }
       /* ,
       {

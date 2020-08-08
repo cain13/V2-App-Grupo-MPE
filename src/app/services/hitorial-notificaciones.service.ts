@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
-import { RespuestaAPIGetDocumentos, ObtenerDocumentosTrabajadores, RecuentoNotificacionesResponse } from '../interfaces/interfaces-grupo-mpe';
-import { Platform } from '@ionic/angular';
-import { UsuarioService } from 'src/app/services/usuario.service';
-
-
+import { UsuarioService } from './usuario.service';
+import documentos from '../providers/documentos/mock-documentos';
 
 @Injectable({
   providedIn: 'root'
 })
-export class DocumentosTrabajadoresService {
+export class HitorialNotificacionesService {
+
   listaDocumentosTodos = [];
   Cantidad:number;
   constructor( private usuarioService: UsuarioService ) { }
@@ -41,8 +39,8 @@ export class DocumentosTrabajadoresService {
     findByName(searchKey: string) {
       console.log(searchKey);
       const key: string = searchKey.toUpperCase();
-      return Promise.resolve(this.listaDocumentosTodos.filter((documento: any) =>
-          (documento.Descripcion +  ' ' + documento.FechaDocumento).toUpperCase().indexOf(key) > -1));
+      return Promise.resolve(this.listaDocumentosTodos.filter((documento: any) => 
+          (documento.Referencia +  ' ' + documento.FechaNotificacion + ' ' + documento.TipoDocumento).toUpperCase().indexOf(key) > -1));
     }
 
     getDocumentosSinLeer(){
@@ -53,5 +51,4 @@ export class DocumentosTrabajadoresService {
     setCantidadDocumentosSinLeer(documentos){
       this.Cantidad = documentos
     }
-  
 }

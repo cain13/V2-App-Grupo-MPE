@@ -1,19 +1,16 @@
 <ion-list class="ion-no-margin ion-no-padding">
     <ion-list-header color="dark">
-      <ion-label class="fw700">Notificacions</ion-label>
+      <ion-label class="fw700">Notificaciones</ion-label>
     </ion-list-header>
-
-    <ion-item tappable *ngFor="let message of messages" routerLink="/message/{{message.id}}" (click)="close()">
-      <ion-label>
-        <h2 [ngClass]="{'fw700 text-white': !message.read}">
-          <ion-icon name="mail" slot="start" color="dark" *ngIf="!message.read"></ion-icon>
-          <ion-icon name="mail-open" slot="start" color="primary" *ngIf="message.read"></ion-icon>
-          <ion-text color="primary">{{message.title}}</ion-text>
-        </h2>
-        <p [ngClass]="{'text-light': !message.read}">
-          <ion-text color="dark">{{message.senderName}} ∙ {{message.date | date: 'dd/MM/yyyy'}}</ion-text>
-        </p>
-      </ion-label>
-    </ion-item>
-
+      <ion-item class="bg-white ion-no-padding ion-no-margin"  *ngFor="let NotificacionesMensajes of listaMensajes"  tappable (click)="close()" routerLink="/historial-notificaciones/">
+        <ion-icon style="margin: 0px !important; padding: 10px;" slot="start" [name]="NotificacionesMensajes.Icono" color="danger"></ion-icon>
+        <ion-label>
+          <h2>
+            <ion-text color="dark"><strong>{{NotificacionesMensajes.Mensaje}}</strong></ion-text>
+          </h2>
+          <p class="text-12x">
+            <ion-text color="secondary">{{NotificacionesMensajes.Fecha | date: "dd/MM/yyyy"}}</ion-text>
+          </p>
+        </ion-label>
+      </ion-item>
   </ion-list>

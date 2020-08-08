@@ -86,7 +86,11 @@ const routes: Routes = [
   {
     path: 'modal-mas-info',
     loadChildren: () => import('./pages/vistasMPE/modal-mas-info/modal-mas-info.module').then( m => m.ModalMasInfoPageModule)
+  },  {
+    path: 'historial-notificaciones',
+    loadChildren: () => import('./pages/vistasMPE/historial-notificaciones/historial-notificaciones.module').then( m => m.HistorialNotificacionesPageModule)
   },
+
 
 
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LoadingController, Platform, ToastController  } from '@ionic/angular';
 import { UsuarioLogin, CambiarPassword } from '../interfaces/usuario-interfaces';
 import { DatabaseService } from './database.service';
-import { Centro, Certificado } from '../interfaces/interfaces-grupo-mpe';
+import { Centro, Certificado, RecuentoNotificacionesResponse } from '../interfaces/interfaces-grupo-mpe';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
 
@@ -11,13 +11,14 @@ import { File } from '@ionic-native/file/ngx';
 })
 export class UsuarioService {
 
-  version = "1.0.1";
+  version = "Versión 1.0.1";
   usuario: UsuarioLogin;
   cambiarPassword: CambiarPassword;
   centros: Centro[];
   certificados: Certificado[];
   haFiltrado: boolean;
   desactivarSegundoPlano: boolean;
+  recuentoNotificaciones:number;
 
 
 
@@ -161,5 +162,5 @@ export class UsuarioService {
       duration: 2000
     });
     toast.present();
-  }
+  }  
 }

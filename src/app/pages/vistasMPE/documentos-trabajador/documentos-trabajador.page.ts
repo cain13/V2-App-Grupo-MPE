@@ -14,7 +14,7 @@ import { NotificationsComponent } from '../../../components/notifications/notifi
 import { FiltroDocumentosPage } from '../../modal/filtro-documentos/filtro-documentos.page';
 import { DocumentosService } from '../../../providers/documentos/documentos.service';
 import { CertificadosAptitudService } from '../../../providers/certificadosAptitud/certificados-aptitud.service';
-import { RespuestaAPIGetDocumentos, ObtenerDocumentosTrabajadores, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador } from '../../../interfaces/interfaces-grupo-mpe';
+import { RespuestaAPIGetDocumentos, ObtenerDocumentosTrabajadores, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse } from '../../../interfaces/interfaces-grupo-mpe';
 import { UsuarioService } from '../../../services/usuario.service';
 
 import { NgxXml2jsonService } from 'ngx-xml2json';
@@ -49,11 +49,11 @@ import { NavController, MenuController, PopoverController,
   ]
 })
 export class DocumentosTrabajadorPage {
-
-  searchKey = "";
+  
   listaDocumentos = [];
-
-  properties: Array<any>;
+  Cantidad = 0;
+  searchKey = "";
+  
 
 
 
@@ -72,7 +72,10 @@ export class DocumentosTrabajadorPage {
 
     ionViewWillEnter() {
       // this.usuarioService.desactivarSegundoPlano = false;
+      this.RecuentoNotificaciones();
       this.getDocumentos();
+    
+     
     }
 
 
@@ -109,13 +112,22 @@ export class DocumentosTrabajadorPage {
                     // tslint:disable-next-line: max-line-length
                     const a: ObtenerDocumentosTrabajadores = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerTrabajadorRelacionDocumentosResponse']['ObtenerTrabajadorRelacionDocumentosResult']));
                     console.log(a);
-                    this.listaDocumentos = a.DocumentoInfo;
+                    if (a.DocumentoInfo !== undefined && !Array.isArray(a.DocumentoInfo)) {
+
+                      this.listaDocumentos.push(a.DocumentoInfo);
+  
+                    } else {
+  
+                      this.listaDocumentos = a.DocumentoInfo;
+  
+                    }
                     this.documentosService.setDocumento(this.listaDocumentos);
                     console.log('ListaDocumentos ' + this.listaDocumentos);
                 }
             }
         };
       xmlhttp.send(sr);
+  
       this.usuarioService.dismiss();
     }catch(error){
       this.usuarioService.dismiss();
@@ -171,7 +183,44 @@ export class DocumentosTrabajadorPage {
     }
 
   }
-
+  RecuentoNotificaciones(){
+    
+    const xmlhttp = new XMLHttpRequest();
+    xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+    xmlhttp.responseType = 'document';
+      // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+    const sr =
+    '<?xml version="1.0" encoding="utf-8"?>' +
+    '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+      '<soap:Header>' +
+        '<AuthHeader xmlns="http://tempuri.org/">' +
+          '<Usuario>' + this.usuarioService.usuario.Usuario +'</Usuario>'+
+          '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
+        '</AuthHeader>' +
+      '</soap:Header>' +
+      '<soap:Body>' +
+        '<ObtenerRecuentoDocumentosNuevos xmlns="http://tempuri.org/" />' +
+      '</soap:Body>' +
+    '</soap:Envelope>';
+    xmlhttp.onreadystatechange =  () => {
+          if (xmlhttp.readyState === 4) {
+              if (xmlhttp.status === 200) {
+                  const xml = xmlhttp.responseXML;
+                  const obj: RecuentoNotificacionesResponse = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                  // tslint:disable-next-line: max-line-length
+                  const a = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerRecuentoDocumentosNuevosResponse']['ObtenerRecuentoDocumentosNuevosResult']));
+                  this.Cantidad = a;
+                  this.documentosService.setCantidadDocumentosSinLeer(this.Cantidad);
+                  console.log("a " + a);
+              } else {
+              }
+          }else{
+          }
+      };
+    xmlhttp.send(sr);
+  }
 
   async notifications() {
     const popover = await this.popoverCtrl.create({

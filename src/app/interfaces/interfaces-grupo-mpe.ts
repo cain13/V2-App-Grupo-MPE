@@ -284,3 +284,113 @@ export interface CambioPassword{
     ]
   }
 }
+
+export interface RecuentoNotificacionesResponse{
+  "soap:Envelope": {
+    "$": {
+      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
+      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "soap:Body": [
+      {
+        "ObtenerRecuentoDocumentosNuevosResponse": [
+          {
+            "$": {
+              "xmlns": "http://tempuri.org/"
+            },
+            "ObtenerRecuentoDocumentosNuevosResult": [
+             
+            ]
+          }
+        ]
+      }
+    ]
+  };
+}
+
+export interface ObtenerHistoricoNotificacionesRelacionDocumentos{
+  "soap:Envelope": {
+    "$": {
+      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
+      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/"
+    },
+    "soap:Header": [
+      {
+        "AuthHeader": [
+          {
+            "$": {
+              "xmlns": "http://tempuri.org/"
+            },
+            "Usuario": string,
+            "Password": string
+          }
+        ]
+      }
+    ],
+    "soap:Body": [
+      {
+        "ObtenerHistoricoNotificacionesRelacionDocumentos": [
+          {
+            "$": {
+              "xmlns": "http://tempuri.org/"
+            },
+            "FiltroNot": [
+              {
+                "FechaDesde": string,
+                "FechaHasta": string,
+                "NifClienteConsultor": string
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+export interface FiltroNot{
+  FechaDesde: string,
+  FechaHasta: string,
+  NifClienteConsultor: string
+}
+
+export interface RespuestaHistorial{
+  "soap:Envelope": {
+    "$": {
+      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
+      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "soap:Body": [
+      {
+        "ObtenerHistoricoNotificacionesRelacionDocumentosResponse": [
+          {
+            "$": {
+              "xmlns": "http://tempuri.org/"
+            },
+            "ObtenerHistoricoNotificacionesRelacionDocumentosResult": [
+              {
+                HistoricoNotificacionInfo: Notificacion[];
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+export interface ObtenerHistoriaDocumentos {
+
+  HistoricoNotificacionInfo: Notificacion[];
+
+}
+export interface Notificacion 
+{
+  Referencia: string,
+  FechaNotificacion: string,
+  TipoDocumento:string
+  IdDocumento:number
+}

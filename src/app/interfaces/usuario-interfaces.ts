@@ -16,3 +16,17 @@ export interface CambiarPassword {
     PassConfirmada: string;
 }
 
+export interface Notificaciones {
+
+    Cantidad: number;
+    ListaNotificaciones: NotificacionesMensajes[];
+}
+
+export interface NotificacionesMensajes {
+
+    Icono: string;
+    Ruta: string;
+    Mensaje: string;
+    Fecha: string;
+    Id: number;
+}

@@ -10,10 +10,10 @@
     </ion-title>
     <ion-buttons slot="end">
       <ion-button size="small" shape="round" color="medium" (click)="notifications()">
-        <ion-icon name="notifications"></ion-icon>
-        <ion-badge color="dark" slot="end">2</ion-badge>
+        <ion-icon name="notifications" [color]="Cantidad > 0 ? '#FFFFFF':'dark'"></ion-icon>
+        <ion-badge [color]="Cantidad > 0 ? 'danger': 'dark'" slot="end">{{Cantidad}}</ion-badge>
       </ion-button>
-      <ion-button size="small" shape="round" color="medium" tappable routerLink="/settings" routerDirection="forward">
+      <ion-button size="small" shape="round" color="medium" tappable routerLink="/edit-profile" routerDirection="forward">
         <ion-icon slot="icon-only" name="person-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
@@ -47,7 +47,5 @@
       </ion-label>
      <ion-icon slot="end" name="download-outline"></ion-icon>
     </ion-item>
-
   </ion-list>
-
 </ion-content>
