@@ -1,25 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
 import { UsuarioService } from '../../../services/usuario.service';
-import { Centro, RespuestaGetAPICertificadosAptitud, ObtenerCertificados } from '../../../interfaces/interfaces-grupo-mpe';
+import { Centro, RespuestaGetAPICertificadosAptitud, ObtenerCertificados, RespuestaCitasPendientes, RespuestaCitasiaInfo } from '../../../interfaces/interfaces-grupo-mpe';
 import * as moment from 'moment';
 import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 
-
 @Component({
-  selector: 'app-filtro-documentos',
-  templateUrl: './filtro-documentos.page.html',
-  styleUrls: ['./filtro-documentos.page.scss'],
+  selector: 'app-filtro-citas',
+  templateUrl: './filtro-citas.page.html',
+  styleUrls: ['./filtro-citas.page.scss'],
 })
-export class FiltroDocumentosPage implements OnInit {
+export class FiltroCitasPage implements OnInit {
   organizeby: any;
   proptype: any;
   wantslabel: any;
   centros: Centro[];
 
   usuario: UsuarioLogin;
-  listaCertificados = [];
+  listaCitas = [];
   ultimoMes = false;
   ultimoTrimestre = false;
   anioActual = false;
@@ -34,13 +33,7 @@ export class FiltroDocumentosPage implements OnInit {
   filtro_nombre = '';
   filtro_idCentro: string;
   filtro_idCentroEspecificado = 0;
-
-
-  public radiusmiles = 1;
-  public minmaxprice = {
-    upper: 5000000,
-    lower: 100000
-  };
+  filtro_noPresentado: boolean;
 
   constructor(private modalCtrl: ModalController, private usuarioService: UsuarioService,
               private ngxXml2jsonService: NgxXml2jsonService, private navCtrl: NavController ) { }
@@ -63,7 +56,7 @@ export class FiltroDocumentosPage implements OnInit {
   filtrar() {
     let fecha_desde_aux: string;
     let fecha_hasta_aux: string;
-    let idCentroAUX: number;
+   
 
     if (this.filtro_desde === null) {
 
@@ -82,14 +75,9 @@ export class FiltroDocumentosPage implements OnInit {
       fecha_hasta_aux = moment(this.filtro_hasta.toString()).add(1, 'days').format('YYYY-MM-DDT00:00:00');
 
     }
-    if (this.filtro_idCentro === undefined) {
+    if (this.filtro_noPresentado === undefined) {
 
-      idCentroAUX = 0;
-      this.filtro_idCentroEspecificado = 0;
-
-    } else {
-      idCentroAUX = parseInt(this.filtro_idCentro, 10);
-      this.filtro_idCentroEspecificado = 1;
+      this.filtro_noPresentado = false;
 
     }
 
@@ -98,15 +86,15 @@ export class FiltroDocumentosPage implements OnInit {
     console.log('HASTA', fecha_hasta_aux);
     console.log('NOMBRE', this.filtro_nombre);
     console.log('DNI', this.filtro_dni);
-    console.log('IDCENTRO', idCentroAUX);
-    console.log('IDCENTROESPECIFICADO', this.filtro_idCentroEspecificado);
+    console.log('filtro_noPresentado ', this.filtro_noPresentado);
 
-    this.getCertificados(fecha_desde_aux, fecha_hasta_aux, this.filtro_nombre, this.filtro_dni, idCentroAUX, this.filtro_idCentroEspecificado);
+    this.getCitas(fecha_desde_aux, fecha_hasta_aux, this.filtro_nombre, this.filtro_dni, this.filtro_noPresentado);
 
   }
 
 
-  getCertificados(fechaDesde: string, fechaHasta: string, nombre: string, dni: string, idCentro: number, idCentroEspecificado: number) {
+  getCitas(fechaDesde: string, fechaHasta: string, nombre: string, dni: string, noPresentado: boolean) {
+
     try{
       this.usuarioService.present('Cargando datos...');
       const xmlhttp = new XMLHttpRequest();
@@ -126,92 +114,82 @@ export class FiltroDocumentosPage implements OnInit {
           '</soap:Header>' +
           '<soap:Body>' +
             '<ObtenerCertificadosAptitudRelacionDocumentos xmlns="http://tempuri.org/">' +
-              '<FiltroCerApt>' +
-                '<FechaDesde>' + fechaDesde + '</FechaDesde>' +
-                '<FechaHasta>' + fechaHasta + '</FechaHasta>' +
+              '<FiltroAsist>' +
+                '<FechaDesde>' + fechaDesde + '</FechaDesde>'+
+                '<FechaHasta>' + fechaHasta + '</FechaHasta>'+
                 '<NombreTrabajador>' + nombre + '</NombreTrabajador>' +
                 '<Dni>' + dni + '</Dni>' +
-                '<NifClienteConsultor></NifClienteConsultor>' +
-                '<IdCentroTrabajo>' + idCentro + '</IdCentroTrabajo>' +
-                '<IdCentroTrabajoEspecificado>' + idCentroEspecificado + '</IdCentroTrabajoEspecificado>' +
-              '</FiltroCerApt>' +
+                '<NoPresentado>' + noPresentado + '</NoPresentado>'+
+                '<NifClienteConsultor></NifClienteConsultor>'+
+              '</FiltroAsist>' +
             '</ObtenerCertificadosAptitudRelacionDocumentos>' +
           '</soap:Body>' +
         '</soap:Envelope>';
 
 
       xmlhttp.onreadystatechange =  () => {
-          if (xmlhttp.readyState === 4) {
-              if (xmlhttp.status === 200) {
-                  const xml = xmlhttp.responseXML;
-                  const obj: RespuestaGetAPICertificadosAptitud = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                  // tslint:disable-next-line: max-line-length
-                  const a: ObtenerCertificados = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadosAptitudRelacionDocumentosResponse']['ObtenerCertificadosAptitudRelacionDocumentosResult']));
-                  if (a.CertificadoAptitudInfo !== undefined && !Array.isArray(a.CertificadoAptitudInfo)) {
+            if (xmlhttp.readyState === 4) {
+                if (xmlhttp.status === 200) {
+                    const xml = xmlhttp.responseXML;
+                    const obj: RespuestaCitasPendientes = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                    // tslint:disable-next-line: max-line-length
+                    const a: RespuestaCitasiaInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCitasPendientesRelacionResponse']['ObtenerCitasPendientesRelacionResult']));
+                    if (a.CitasInfo !== undefined && !Array.isArray(a.CitasInfo)) {
+                    
+                      this.listaCitas.push(a.CitasInfo);
 
-                    this.listaCertificados.push(a.CertificadoAptitudInfo);
+                    } else {
 
-                  } else {
+                      this.listaCitas = a.CitasInfo;
 
-                    this.listaCertificados = a.CertificadoAptitudInfo;
-
-                  }
-                  console.log('Cert: ', a.CertificadoAptitudInfo);
-                  console.log('1.', this.listaCertificados);
+                    }
+                    console.log('Citas: ', a.CitasInfo);
+                    console.log('1.', this.listaCitas);
+                    this.usuarioService.dismiss();
+                    this.usuarioService.guardarCitas(this.listaCitas);
+                    this.closeModal();
+                }else{
                   this.usuarioService.dismiss();
-                  this.usuarioService.guardarCertificados(this.listaCertificados);
                   this.closeModal();
-              }else{
-                this.usuarioService.dismiss();
-                this.closeModal();
-              }
-          }else{
-            this.usuarioService.dismiss();
-            this.closeModal();
-          }
-      };
+                }
+            }else{
+              this.usuarioService.dismiss();
+              this.closeModal();
+            }
+        };
       xmlhttp.send(sr);
-    }catch(error)
-    {
+    }catch(error){
       this.usuarioService.dismiss();
       this.closeModal();
     }
+
   }
 
-  ultimoMesF() {
-
-    const fechaDesde = moment().add(-1, 'month').format('YYYY-MM-DDT00:00:00');
-    this.filtro_desde = new Date(fechaDesde);
+  add7dias() {
+    const desdeAux = moment().format('YYYY-MM-DDT00:00:00');
+    const hastaAux = moment().add(8, 'days').format('YYYY-MM-DDT00:00:00');
+    this.filtro_desde = new Date(desdeAux);
+    this.filtro_hasta = new Date(hastaAux);
     this.filtrar();
   }
 
-  ultimoTrimestreF() {
-
-    const fechaDesde = moment().add(-3, 'month').format('YYYY-MM-DDT00:00:00');
-    this.filtro_desde = new Date(fechaDesde);
+  addMes() {
+    const desdeAux = moment().format('YYYY-MM-DDT00:00:00');
+    const hastaAux = moment().add(1, 'month').format('YYYY-MM-DDT00:00:00');
+    this.filtro_desde = new Date(desdeAux);
+    this.filtro_hasta = new Date(hastaAux);
     this.filtrar();
-
   }
 
-  anioAnteriorF() {
+  todasLasCitas() {
     const anio = moment().year() - 1 ;
-    const desdeAux = anio + '/01/01';
-    const hastaAux = anio + '/12/31';
+    const desdeAux = '1900-01-01T00:00:00';
+    const hastaAux =  moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');;
     this.filtro_desde = new Date(desdeAux);
     this.filtro_hasta = new Date(hastaAux);
     this.filtrar();
 
   }
 
-  anioActualF() {
-
-    const anio = moment().year();
-    const desdeAux = anio + '/01/01';
-    const hastaAux = anio + '/12/31';
-    this.filtro_desde = new Date(desdeAux);
-    this.filtro_hasta = new Date(hastaAux);
-    this.filtrar();
-
-
-  }
+ 
 }

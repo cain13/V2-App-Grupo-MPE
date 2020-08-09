@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Certificado, RespuestaAPIGetDocumentos,RespuestaHistorial, ObtenerHistoriaDocumentos, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse, CertificadoPDF, RespuestaObtenerCertPDF } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { Certificado, RespuestaAPIGetDocumentos,RespuestaHistorial, ObtenerHistoriaDocumentos, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse, CertificadoPDF, RespuestaObtenerCertPDF, RespuestaCitasPendientes, RespuestaCitasiaInfo } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -10,6 +10,9 @@ import { trigger,style,animate,transition,query,stagger } from '@angular/animati
 import { NotificationsComponent } from 'src/app/components/notifications/notifications.component';
 import { HitorialNotificacionesService } from 'src/app/services/hitorial-notificaciones.service';
 import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
+import { FiltroAsistenciaPage } from '../../modal/filtro-asistencia/filtro-asistencia.page';
+import { FiltroCitasPage } from '../../modal/filtro-citas/filtro-citas.page';
+import { CitasPendientesService } from '../../../services/citas-pendientes.service';
 
 
 @Component({
@@ -20,7 +23,7 @@ import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-histori
     trigger('staggerIn', [
       transition('* => *', [
         query(':enter', style({ opacity: 0, transform: 'translate3d(100px,0,0)' }), { optional: true }),
-        query(':enter', stagger('300ms', [animate('500ms', style({ opacity: 1, transform: 'translate3d(0,0,0)' }))]), { optional: true })
+        query(':enter', stagger('150ms', [animate('250ms', style({ opacity: 1, transform: 'translate3d(0,0,0)' }))]), { optional: true })
       ])
     ])
   ]
@@ -28,7 +31,7 @@ import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-histori
 export class CitasPendientesPage implements OnInit {
 
   searchKey = "";
-  listaDocumentos = [];
+  listaCitas = [];
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -37,18 +40,18 @@ export class CitasPendientesPage implements OnInit {
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
     private documentosService: DocumentosTrabajadoresService,
-    private historialService: HitorialNotificacionesService
+    private citasService: CitasPendientesService
     ) {  }
 
   ngOnInit() {
-    this.getHistorialDocumentos();
+    this.getCitasPendientes();
   }
 
-  getHistorialDocumentos(){
-   /*  try{
-      this.usuarioService.present("Cargando...");
-      let fecha_desde = '1900-01-01T00:00:00';
-      let fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
+  getCitasPendientes(){
+    try{
+      this.usuarioService.present("Cargando Citas...");
+      let fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
+      let fecha_hasta = moment().add(1,'year').format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -79,36 +82,41 @@ export class CitasPendientesPage implements OnInit {
             if (xmlhttp.readyState === 4) {
                 if (xmlhttp.status === 200) {
                     const xml = xmlhttp.responseXML;
-                    const obj: RespuestaHistorial = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                    const obj: RespuestaCitasPendientes = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                     // tslint:disable-next-line: max-line-length
-                    const a: ObtenerHistoriaDocumentos = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerHistoricoNotificacionesRelacionDocumentosResponse']['ObtenerHistoricoNotificacionesRelacionDocumentosResult']));
+                    const a: RespuestaCitasiaInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCitasPendientesRelacionResponse']['ObtenerCitasPendientesRelacionResult']));
                     console.log(a);
-                    if (a.HistoricoNotificacionInfo !== undefined && !Array.isArray(a.HistoricoNotificacionInfo)) {
+                    if (a.CitasInfo !== undefined && !Array.isArray(a.CitasInfo)) {
+                    
+                      this.listaCitas.push(a.CitasInfo);
 
-                      this.listaDocumentos.push(a.HistoricoNotificacionInfo);
-  
                     } else {
-  
-                      this.listaDocumentos = a.HistoricoNotificacionInfo;
-  
+
+                      this.listaCitas = a.CitasInfo;
+
                     }
-                    this.historialService.setDocumento(this.listaDocumentos);
-                    console.log('ListaHistorial ' + this.listaDocumentos);
+                    this.citasService.setCitaPendiente(this.listaCitas);
+                    console.log('ListaHistorial ' + this.listaCitas);
+                    this.usuarioService.dismiss();
+                }else{
+                  this.usuarioService.dismiss();
                 }
+            }else{
+              this.usuarioService.dismiss();
             }
         };
       xmlhttp.send(sr);
   
-      this.usuarioService.dismiss();
+      
     }catch(error){
       this.usuarioService.dismiss();
     }
- */
+
   }
 
  
   downloadDocumento(id) {
-    this.usuarioService.present('Descargando...');
+   /*  this.usuarioService.present('Descargando...');
     console.log(id);
     let pdf: CertificadoPDF;
     const xmlhttp = new XMLHttpRequest();
@@ -148,15 +156,15 @@ export class CitasPendientesPage implements OnInit {
               }
           }
       };
-    xmlhttp.send(sr);
+    xmlhttp.send(sr); */
 
   }
 
   onInput(event) {
     console.log(event.target.value);
-    this.historialService.findByName(event.target.value)
+    this.citasService.findByName(event.target.value)
         .then(data => {
-            this.listaDocumentos = data;
+            this.listaCitas = data;
         })
         .catch(error => alert(JSON.stringify(error)));
   }
@@ -167,20 +175,20 @@ export class CitasPendientesPage implements OnInit {
   
 
   async searchFilter () {
-   /*  const modal = await this.modalCtrl.create({
-      component: FiltroHistorialPage
+    const modal = await this.modalCtrl.create({
+      component: FiltroCitasPage
     });
     modal.onDidDismiss().then(() => {
 
       if (this.usuarioService.haFiltradoHistorial) {
-        this.listaDocumentos = this.usuarioService.getHistorial();
+        this.listaCitas = this.usuarioService.getCertificados();
       }
     });
-    return await modal.present(); */
+    return await modal.present();
   }
 
   findAll() {
-    this.listaDocumentos =this.historialService.getDocumentos();
+    this.listaCitas = this.citasService.getCertificados();
   }
 
 }

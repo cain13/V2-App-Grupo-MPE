@@ -430,3 +430,79 @@ export interface Asistencia{
     NombreCentroMedico:string;
     SituacionReconocimientoMedico:string;
 }
+
+export interface RespuestaCitasPendientes{
+  "soap:Envelope": {
+    "$": {
+      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
+      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "soap:Body": [
+      {
+        "ObtenerCitasPendientesRelacionResponse": [
+          {
+            "$": {
+              "xmlns": "http://tempuri.org/"
+            },
+            "ObtenerCitasPendientesRelacionResult":  Citas[]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+export interface RespuestaCitasiaInfo {
+
+  CitasInfo: Citas[];
+
+}
+
+export interface Citas{
+    citapendiente:string;
+}
+
+export interface RespuestaClientes{
+  "soap:Envelope": {
+    "$": {
+      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
+      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "soap:Body": [
+      {
+        "ObtenerListadoClientesResponse": [
+          {
+            "$": {
+              "xmlns": "http://tempuri.org/"
+            },
+            "ObtenerListadoClientesResult": [
+              {
+                "ClienteInfo": [
+                  {
+                    "Nif": [
+                      "B32169831"
+                    ],
+                    "NombreCliente": [
+                      "EXCLUSIVAS VILA, S.L."
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+export interface RespuestaClienteInfo {
+  ClienteInfo: Cliente[];
+}
+
+export interface Cliente{
+    Nif: string;
+    NombreCliente: string;
+  }

@@ -98,6 +98,14 @@ const routes: Routes = [
     path: 'filtro-asistencia',
     loadChildren: () => import('./pages/modal/filtro-asistencia/filtro-asistencia.module').then( m => m.FiltroAsistenciaPageModule)
   },
+  {
+    path: 'filtro-citas',
+    loadChildren: () => import('./pages/modal/filtro-citas/filtro-citas.module').then( m => m.FiltroCitasPageModule)
+  },
+  {
+    path: 'seleccionar-cliente',
+    loadChildren: () => import('./pages/modal/seleccionar-cliente/seleccionar-cliente.module').then( m => m.SeleccionarClientePageModule)
+  },
 
 
 

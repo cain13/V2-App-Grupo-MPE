@@ -21,7 +21,7 @@ import { FiltroAsistenciaPage } from '../../modal/filtro-asistencia/filtro-asist
     trigger('staggerIn', [
       transition('* => *', [
         query(':enter', style({ opacity: 0, transform: 'translate3d(100px,0,0)' }), { optional: true }),
-        query(':enter', stagger('300ms', [animate('500ms', style({ opacity: 1, transform: 'translate3d(0,0,0)' }))]), { optional: true })
+        query(':enter', stagger('150ms', [animate('250ms', style({ opacity: 1, transform: 'translate3d(0,0,0)' }))]), { optional: true })
       ])
     ])
   ]

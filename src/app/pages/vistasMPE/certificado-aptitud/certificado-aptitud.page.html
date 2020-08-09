@@ -29,7 +29,6 @@
 </ion-header>
 
 <ion-content>
-
   <ion-list class="ion-no-padding" [@staggerIn]="listaCertificados">
     <ion-item class="bg-white" *ngFor="let certificado of listaCertificados" tappable > <!--(click)="goCheckout(invoice.id)">-->
       <ion-icon slot="start" name="document-outline" color="danger" (click)="masInfo(certificado)"></ion-icon>
@@ -43,12 +42,8 @@
         <p class="text-12x">
           <ion-text color="secondary">{{certificado.FechaDocumento | date: 'dd/MM/yyyy'}}</ion-text>
         </p>
-        <!--<ion-badge *ngIf="!invoice.paid" color="warning">Pending</ion-badge>
-        <ion-badge *ngIf="invoice.paid" color="success">Paid</ion-badge>-->
       </ion-label>
      <ion-icon slot="end" name="download-outline" (click)="downloadCertificado(certificado.Id)"></ion-icon>
     </ion-item>
-
   </ion-list>
-
 </ion-content>

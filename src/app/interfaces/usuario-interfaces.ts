@@ -9,6 +9,12 @@ export interface UsuarioLogin {
 
 }
 
+export interface EmpresaConsultor {
+
+    Nif: string;
+    NombreCliente: string;
+}
+
 export interface CambiarPassword {
 
     PassOld: string;

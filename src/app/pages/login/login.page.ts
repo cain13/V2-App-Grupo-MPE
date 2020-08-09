@@ -1,12 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NavController, MenuController, ToastController, AlertController, LoadingController, IonCheckbox, Platform } from '@ionic/angular';
+import { NavController, MenuController, ToastController, AlertController, LoadingController, IonCheckbox, Platform, ModalController } from '@ionic/angular';
 import { TranslateProvider } from '../../providers';
 import { RespuestaAPIGetDatos, ObtenerDatosConsultorResult, RespuestaGetCentrosTrabajo, ObtenerCentros } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
+import { SeleccionarClientePage } from '../modal/seleccionar-cliente/seleccionar-cliente.page';
 
 
 
@@ -41,7 +42,8 @@ export class LoginPage implements OnInit {
     private formBuilder: FormBuilder,
     private ngxXml2jsonService: NgxXml2jsonService,
     private faio: FingerprintAIO,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    public modalCtrl: ModalController,
 
   ) { }
 
@@ -211,92 +213,94 @@ export class LoginPage implements OnInit {
   }
 
   getDatosLogin() {
-    this.usuarioService.present('Accediendo...');
-    const xmlhttp = new XMLHttpRequest();
-    const usuario = 'contavila@galicia.com';
-    const pass = 'mp8496';
+    try{
+      this.usuarioService.present('Accediendo...');
+      const xmlhttp = new XMLHttpRequest();
+     
 
-    xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xmlhttp.responseType = 'document';
-      // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
-    const sr =
-      '<?xml version="1.0" encoding="utf-8"?>' +
+      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+      xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+      xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+      xmlhttp.responseType = 'document';
+        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+      const sr =
+        '<?xml version="1.0" encoding="utf-8"?>' +
+        '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+          '<soap:Header>' +
+            '<AuthHeader xmlns="http://tempuri.org/">' +
+              '<Usuario>' + this.onLoginForm.value.usuario + '</Usuario>' +
+              '<Password>' + this.onLoginForm.value.password + '</Password>' +
+            '</AuthHeader>' +
+          '</soap:Header>' +
+          '<soap:Body>' +
+            '<ObtenerDatosConsultor xmlns="http://tempuri.org/" />' +
+          '</soap:Body>' +
+        '</soap:Envelope>';
 
-      // tslint:disable-next-line: max-line-length
-      '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+      xmlhttp.onreadystatechange =  () => {
+            if (xmlhttp.readyState === 4) {
+                if (xmlhttp.status === 200) {
+                    const xml = xmlhttp.responseXML;
+                    const obj: RespuestaAPIGetDatos = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                    // tslint:disable-next-line: max-line-length
+                    const a: ObtenerDatosConsultorResult = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerDatosConsultorResponse']['ObtenerDatosConsultorResult']));
 
-        '<soap:Header>' +
+                    if (this.soportaFingerID) {
+                      this.checkFinger = this.botonHuella.checked;
+                    }
+                    if (!this.soportaFingerID) {
+                      this.checkRemember = this.botonRecordarme.checked;
+                    }
 
-          '<AuthHeader xmlns="http://tempuri.org/">' +
+                    // tslint:disable-next-line: no-shadowed-variable
+                    const usuario: UsuarioLogin = {
+                      Usuario: this.onLoginForm.value.usuario,
+                      Password: this.onLoginForm.value.password,
+                      FingerID: this.checkFinger,
+                      Nombre: a.Nombre,
+                      Tipo: a.Tipo,
+                      Recordarme:  this.checkRemember
+                    };
 
-            '<Usuario>' + this.onLoginForm.value.usuario + '</Usuario>' +
-
-            '<Password>' + this.onLoginForm.value.password + '</Password>' +
-
-          '</AuthHeader>' +
-
-        '</soap:Header>' +
-
-        '<soap:Body>' +
-
-          '<ObtenerDatosConsultor xmlns="http://tempuri.org/" />' +
-
-        '</soap:Body>' +
-
-      '</soap:Envelope>';
-
-    xmlhttp.onreadystatechange =  () => {
-          if (xmlhttp.readyState === 4) {
-              if (xmlhttp.status === 200) {
-                  const xml = xmlhttp.responseXML;
-                  const obj: RespuestaAPIGetDatos = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                  // tslint:disable-next-line: max-line-length
-                  const a: ObtenerDatosConsultorResult = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerDatosConsultorResponse']['ObtenerDatosConsultorResult']));
-
-                  if (this.soportaFingerID) {
-                    this.checkFinger = this.botonHuella.checked;
-                  }
-                  if (!this.soportaFingerID) {
-                    this.checkRemember = this.botonRecordarme.checked;
-                  }
-
-                  // tslint:disable-next-line: no-shadowed-variable
-                  const usuario: UsuarioLogin = {
-                    Usuario: this.onLoginForm.value.usuario,
-                    Password: this.onLoginForm.value.password,
-                    FingerID: this.checkFinger,
-                    Nombre: a.Nombre,
-                    Tipo: a.Tipo,
-                    Recordarme:  this.checkRemember
-                  };
-
-                  this.usuarioService.login(usuario);
-                  this.usuarioService.guardarUsuario(usuario);
-
-                  if ( usuario.Tipo === 'CLIENTE') {
-                    console.log('ACCEDEMOS COMO CLIENTE');
-                    this.menuCtrl.enable(false, 'menuTrabajadores');
-                    this.menuCtrl.enable(true, 'menuCompleto');
-                    this.getCentros();
-                    this.navCtrl.navigateRoot('certificado-aptitud');
-
-                  } else {
-                    console.log('ACCEDEMOS COMO TRABAJADOR');
-                    this.menuCtrl.enable(true, 'menuTrabajadores');
-                    this.menuCtrl.enable(false, 'menuCompleto');
-                    this.navCtrl.navigateRoot('documentos-trabajador');
-
-                  }
-              } else if (xmlhttp.status === 500 ) {
-                this.presentAlert('Usuario o contraseña incorrectos', '');
-              }
-          }
-          this.usuarioService.dismiss();
-      };
-    xmlhttp.send(sr);
-
+                    this.usuarioService.login(usuario);
+                    this.usuarioService.guardarUsuario(usuario);
+                    console.log('Tipo Empleado ' + usuario.Tipo);
+                    if ( usuario.Tipo === 'CLIENTE') {
+                      console.log('ACCEDEMOS COMO CLIENTE');
+                      this.menuCtrl.enable(false, 'menuTrabajadores');
+                      this.menuCtrl.enable(true, 'menuCompleto');
+                      this.getCentros();
+                      this.navCtrl.navigateRoot('certificado-aptitud');
+                    } else if ( usuario.Tipo === 'CONSULTOR') {
+                      console.log('ACCEDEMOS COMO CLIENTE');
+                      this.menuCtrl.enable(false, 'menuTrabajadores');
+                      this.menuCtrl.enable(true, 'menuCompleto');
+                      this.searchFilter();
+                    }else {
+                      console.log('ACCEDEMOS COMO TRABAJADOR');
+                      this.menuCtrl.enable(true, 'menuTrabajadores');
+                      this.menuCtrl.enable(false, 'menuCompleto');
+                      this.navCtrl.navigateRoot('documentos-trabajador');
+                    }
+                } else if (xmlhttp.status === 500 ) {
+                  this.presentAlert('Usuario o contraseña incorrectos', '');
+                }
+            }
+            this.usuarioService.dismiss();
+        };
+      xmlhttp.send(sr);
+    }catch(error){
+      this.usuarioService.dismiss();
+    }
+  }
+  async searchFilter () {
+    const modal = await this.modalCtrl.create({
+      component: SeleccionarClientePage
+    });
+    modal.onDidDismiss().then(() => {
+      console.log('Entra a modal seleccionar cliente')
+    });
+    return await modal.present();
   }
 
   getCentros() {

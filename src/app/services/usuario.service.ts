@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { LoadingController, Platform, ToastController  } from '@ionic/angular';
-import { UsuarioLogin, CambiarPassword } from '../interfaces/usuario-interfaces';
+import { UsuarioLogin, CambiarPassword, EmpresaConsultor } from '../interfaces/usuario-interfaces';
 import { DatabaseService } from './database.service';
-import { Centro, Certificado, RecuentoNotificacionesResponse, Notificacion, Asistencia } from '../interfaces/interfaces-grupo-mpe';
+import { Centro, Certificado, RecuentoNotificacionesResponse, Notificacion, Asistencia, Citas, Cliente } from '../interfaces/interfaces-grupo-mpe';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
 
@@ -13,14 +13,18 @@ export class UsuarioService {
 
   version = "Versión 1.0.1";
   usuario: UsuarioLogin;
+  empresaConsultor:EmpresaConsultor;
   cambiarPassword: CambiarPassword;
   centros: Centro[];
   certificados: Certificado[];
+  clientes: Cliente[];
   notificacion: Notificacion[];
   asistencia: Asistencia[];
+  citas: Citas[];
   haFiltrado: boolean;
   haFiltradoHistorial:boolean;
   haFiltradoAsistencia:boolean;
+  haFiltradoCitas:boolean;
   desactivarSegundoPlano: boolean;
   recuentoNotificaciones:number;
 
@@ -58,6 +62,18 @@ export class UsuarioService {
 
   }
 
+  guardarEmpresaConsultor(empresa: EmpresaConsultor) {
+
+    this.empresaConsultor = empresa;
+
+  }
+
+  getEmpresaConsultor(): EmpresaConsultor {
+
+    return this.empresaConsultor;
+
+  }
+
   getCambiarPassword(){
     return this.cambiarPassword;
   }
@@ -80,6 +96,21 @@ export class UsuarioService {
 
   }
 
+
+  guardarNotificaciones(array: Notificacion[]) {
+    this.notificacion = [];
+    this.haFiltradoHistorial = true;
+    /* console.log('2.', this.getCertificados().length); */
+
+    this.notificacion = array;
+
+  }
+  getHistorial(): Notificacion[] {
+
+    return this.notificacion;
+
+  }
+
   guardarCertificados(array: Certificado[]) {
     this.certificados = [];
     this.haFiltrado = true;
@@ -94,17 +125,17 @@ export class UsuarioService {
     return this.certificados;
 
   }
-  guardarNotificaciones(array: Notificacion[]) {
-    this.notificacion = [];
-    this.haFiltradoHistorial = true;
-    /* console.log('2.', this.getCertificados().length); */
 
-    this.notificacion = array;
+  guardarClientes(array: Cliente[]) {
+    this.clientes = [];
+
+    this.clientes = array;
 
   }
-  getHistorial(): Notificacion[] {
 
-    return this.notificacion;
+  getClientes(): Cliente[] {
+
+    return this.clientes;
 
   }
 
@@ -121,6 +152,21 @@ export class UsuarioService {
     return this.asistencia;
 
   }
+
+  guardarCitas(array: Citas[]) {
+    this.asistencia = [];
+    this.haFiltradoCitas = true;
+    /* console.log('2.', this.getCertificados().length); */
+
+    this.citas = array;
+
+  }
+  getCitas(): Citas[] {
+
+    return this.citas;
+
+  }
+
 
 
   async present(mensaje: string) {

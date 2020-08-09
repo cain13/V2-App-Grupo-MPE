@@ -6,19 +6,12 @@
         </ion-button>
     </ion-buttons>
     <ion-title>
-    	Filtro Certificados
+    	Filtro Citas Pendientes
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-padding">
-	<ion-item>
-		<ion-label class="fw500" color="dark">Centros</ion-label>
-		<ion-select [(ngModel)]="filtro_idCentro" style="max-width: max-content;" placeholder="Nombre Centro">
-			<ion-select-option *ngFor="let centro of centros" [value]="centro.IdCentroTrabajo">{{centro.NombreCentroTrabajo}}</ion-select-option>
-		</ion-select>
-	</ion-item>
-
 	<ion-item>
 		<ion-label class="fw500" color="dark">DNI</ion-label>
 		<ion-input style="text-align: end !important;" placeholder="Introduzca DNI" [(ngModel)]="filtro_dni"></ion-input>
@@ -53,21 +46,19 @@
 		</ion-datetime>
 	</ion-item>
 	<ion-item>
-	  <ion-label class="label" color="primary" >Mostrar Ultimo mes</ion-label>
-	  <ion-toggle [(ngModel)]="ultimoMes" (click)="ultimoMesF()"></ion-toggle>
+	  <ion-label class="label" color="primary" >Prósimos 7 días</ion-label>
+	  <ion-toggle [(ngModel)]="ultimoMes" (click)="add7dias()"></ion-toggle>
 	</ion-item>
 	<ion-item>
-		<ion-label class="label" color="primary">Mostrar Ultimo trimestre</ion-label>
-		<ion-toggle [(ngModel)]="ultimoTrimestre" (click)="ultimoTrimestreF()"></ion-toggle>
+		<ion-label class="label" color="primary">Próximos 30 días</ion-label>
+		<ion-toggle [(ngModel)]="ultimoTrimestre" (click)="addMes()"></ion-toggle>
 	</ion-item>
 	<ion-item>
-		<ion-label class="label" color="primary">Mostrar Año en curso</ion-label>
-		<ion-toggle [(ngModel)]="anioActual" (click)="anioActualF()"></ion-toggle>
+		<ion-label class="label" color="primary">Todas</ion-label>
+		<ion-toggle [(ngModel)]="anioActual" (click)="todasLasCitas()"></ion-toggle>
 	</ion-item>
-	<ion-item>
-		<ion-label class="label" color="primary">Mostrar Año anterior</ion-label>
-		<ion-toggle [(ngModel)]="anioAnterior" (click)="anioAnteriorF()"></ion-toggle>
-	</ion-item>
+	
 
 	<ion-button expand="full" color="primary" (click)="filtrar()">Filtrar</ion-button>
 </ion-content>
+
