@@ -90,6 +90,14 @@ const routes: Routes = [
     path: 'historial-notificaciones',
     loadChildren: () => import('./pages/vistasMPE/historial-notificaciones/historial-notificaciones.module').then( m => m.HistorialNotificacionesPageModule)
   },
+  {
+    path: 'filtro-historial',
+    loadChildren: () => import('./pages/modal/filtro-historial/filtro-historial.module').then( m => m.FiltroHistorialPageModule)
+  },
+  {
+    path: 'filtro-asistencia',
+    loadChildren: () => import('./pages/modal/filtro-asistencia/filtro-asistencia.module').then( m => m.FiltroAsistenciaPageModule)
+  },
 
 
 

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavController, LoadingController, ToastController } from '@ionic/angular';
+import { ModalController, NavController, LoadingController, ToastController, AlertController } from '@ionic/angular';
 import { TranslateProvider } from '../../providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { CambiarPasswordPage } from '../vistasMPE/cambiar-password/cambiar-password.page';
@@ -20,6 +20,7 @@ export class EditProfilePage implements OnInit {
     public toastCtrl: ToastController,
     private translate: TranslateProvider,
     private usuarioService: UsuarioService,
+    private alertController:AlertController
     ) { }
 
   ngOnInit() {
@@ -70,4 +71,34 @@ export class EditProfilePage implements OnInit {
     this.usuarioService.presentToast("Esta funcionalidad no esta disponible en este momento...");
   }
 
+  Borrardatos(){
+    this.presentAlertConfirm();
+  }
+
+ async presentAlertConfirm() {
+    const alert = await this.alertController.create({
+      
+      header: 'Confirmar!',
+      message: '<strong>¿Desa salir y borrar los datos de acceso?<strong>',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Salir',
+          handler: () => {
+            console.log('Confirm Okay');
+            this.usuarioService.BorrarEmpleado();
+            this.navCtrl.navigateRoot('blanco');
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
 }

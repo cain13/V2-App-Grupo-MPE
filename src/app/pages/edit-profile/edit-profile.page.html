@@ -4,6 +4,12 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>{{ 'app.pages.editprofile.title.header' | translate }}</ion-title>
+    <ion-buttons slot="end" color="dark" >
+      <ion-button icon-left color="light" (click)="Borrardatos()">
+        <ion-icon name="log-out-outline" ></ion-icon> 
+        Salir
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -13,10 +19,6 @@
       <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar">
       <h1 class="fw500">{{Nombre}}</h1>
       <h2 color="light" class="ion-margin-bottom">{{Tipo}}</h2>
-      <ion-button icon-left color="secondary" (click)="searchFilter()">
-        <ion-icon name="lock-closed-outline" ></ion-icon> 
-        Cambiar Contraseña
-      </ion-button>
     </ion-card-content>
   
     <ion-grid fixed class="ion-no-padding">
@@ -29,14 +31,14 @@
             </ion-list-header>
 
             <ion-item>
-              <ion-label color="dark" position="stacked">{{ 'app.label.fullname' | translate }}:</ion-label>
+              <ion-label color="dark" position="stacked">Nombre:</ion-label>
               <ion-text>{{Nombre}}</ion-text>
             </ion-item>
-    
+    <!-- 
             <ion-item>
               <ion-label color="dark" position="stacked">{{ 'app.label.email' | translate }}:</ion-label>
               <ion-text>{{Tipo}}</ion-text>
-            </ion-item>
+            </ion-item> -->
     
           </ion-list>
           <ion-list>
@@ -65,3 +67,9 @@
     
   </div>
 </ion-content>
+<ion-footer class="no-padding">
+  <ion-button icon-left size="large" expand="full" color="dark" (click)="searchFilter()" tappable>
+    <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
+    Cambiar Contraseña
+  </ion-button>
+</ion-footer>

@@ -136,7 +136,11 @@ export class CertificadoAptitudPage {
                   this.certificadosService.setCertificado(this.listaCertificados);
                   this.usuarioService.dismiss();
                   console.log('Certificados APTITUD:' , this.listaCertificados);
+              }else{
+                this.usuarioService.dismiss();
               }
+          }else{
+            this.usuarioService.dismiss();
           }
       };
     xmlhttp.send(sr);

@@ -123,12 +123,16 @@ export class DocumentosTrabajadorPage {
                     }
                     this.documentosService.setDocumento(this.listaDocumentos);
                     console.log('ListaDocumentos ' + this.listaDocumentos);
+                    this.usuarioService.dismiss();
+                }else{
+                  this.usuarioService.dismiss();
                 }
+            }else{
+              this.usuarioService.dismiss();
             }
         };
       xmlhttp.send(sr);
   
-      this.usuarioService.dismiss();
     }catch(error){
       this.usuarioService.dismiss();
     }

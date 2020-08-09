@@ -54,31 +54,31 @@ export class AppComponent {
       },
       {
         title: 'Planificación VS',
-        url: '/documentos',
-        direct: 'root',
-        icon: 'calendar'
-      },
-      {
-        title: 'Memoria Anual',
-        url: '/messages',
-        direct: 'forward',
-        icon: 'mail'
-      },
-      {
-        title: 'Estudio Epidemiológico',
-        url: '/property-list',
-        direct: 'forward',
-        icon: 'clipboard'
-      },
-      {
-        title: 'Citas Pendientes',
-        url: '/broker-list',
+        url: '/planficacion-vs',
         direct: 'forward',
         icon: 'calendar-outline'
       },
       {
+        title: 'Memoria Anual',
+        url: '/memoria-anual',
+        direct: 'forward',
+        icon: 'folder-outline'
+      },
+      {
+        title: 'Estudio Epidemiológico',
+        url: '/estudio-epidemiologico',
+        direct: 'forward',
+        icon: 'flask-outline'
+      },
+      {
+        title: 'Citas Pendientes',
+        url: '/citas-pendientes',
+        direct: 'forward',
+        icon: 'timer-outline'
+      },
+      {
         title: 'Asistencia',
-        url: '/nearby',
+        url: '/asistencia',
         direct: 'forward',
         icon: 'help-buoy'
       },
@@ -86,7 +86,7 @@ export class AppComponent {
         title: 'Historial Documentos',
         url: '/historial-notificaciones',
         direct: 'forward',
-        icon: 'clipboard'
+        icon: 'clipboard-outline'
       }
     ];
 

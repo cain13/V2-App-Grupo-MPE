@@ -313,8 +313,8 @@ export class LoginPage implements OnInit {
     '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
       '<soap:Header>' +
         '<AuthHeader xmlns="http://tempuri.org/">' +
-          '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
-          '<Password>' + this.usuario.Password + '</Password>' +
+          '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
+          '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
         '</AuthHeader>' +
       '</soap:Header>' +
       '<soap:Body>' +

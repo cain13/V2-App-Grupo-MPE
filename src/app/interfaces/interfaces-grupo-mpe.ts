@@ -394,3 +394,39 @@ export interface Notificacion
   TipoDocumento:string
   IdDocumento:number
 }
+
+export interface RespuestaAsistencia{
+  "soap:Envelope": {
+    "$": {
+      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
+      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "soap:Body": [
+      {
+        "ObtenerAsistenciasRelacionResponse": [
+          {
+            "$": {
+              "xmlns": "http://tempuri.org/"
+            },
+            "ObtenerAsistenciasRelacionResult": Asistencia[]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+export interface RespuestaAsistenciaInfo {
+
+  AsistenciaInfo: Asistencia[];
+
+}
+
+export interface Asistencia{
+    Trabajador: string;
+    NifTrabajador:string;
+    FechaDocumento: string;
+    NombreCentroMedico:string;
+    SituacionReconocimientoMedico:string;
+}

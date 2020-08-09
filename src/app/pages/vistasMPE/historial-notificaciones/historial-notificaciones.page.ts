@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import { trigger,style,animate,transition,query,stagger } from '@angular/animations';
 import { NotificationsComponent } from 'src/app/components/notifications/notifications.component';
 import { HitorialNotificacionesService } from 'src/app/services/hitorial-notificaciones.service';
+import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
 
 @Component({
   selector: 'app-historial-notificaciones',
@@ -166,10 +167,16 @@ export class HistorialNotificacionesPage implements OnInit {
   
 
   async searchFilter () {
-    /* const modal = await this.modalCtrl.create({
-      component: FiltroDocumentosPage
+    const modal = await this.modalCtrl.create({
+      component: FiltroHistorialPage
     });
-    return await modal.present(); */
+    modal.onDidDismiss().then(() => {
+
+      if (this.usuarioService.haFiltradoHistorial) {
+        this.listaDocumentos = this.usuarioService.getHistorial();
+      }
+    });
+    return await modal.present();
   }
 
   findAll() {

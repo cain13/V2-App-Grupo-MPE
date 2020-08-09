@@ -42,7 +42,7 @@ export class NotificationsComponent {
     }else{
       const NotificacionesMensajes = 
       {
-        Icono: "notifications-outline",
+        Icono: "notifications-off-outline",
         Ruta: "/",
         Mensaje: "No hay notificaciones nuevas",
         Fecha:  moment().format('YYYY-MM-DDT00:00:00'),

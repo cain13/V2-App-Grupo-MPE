@@ -86,10 +86,18 @@ export class DatabaseService {
 
         });
     });
-
+    
 
   }
-
+  BorrarUsuario() {
+    // La siguiente sentencia SQL borra todo el contenido de la tabla:
+    this.estadoBD().then(async () => {
+      console.log('DB: Borramos todo el contenido de la tabla de BD...');
+        this.storage.executeSql('DELETE FROM usuariosTable').then(() => {
+          console.log('DB: Tabla USUARIOS vacia'); }).catch(error => { console.log('DB: ERROR AL BORRAR TABLAS USUARIO'); });
+    });
+  }
+  
   async obtenerUltimoUsuario(): Promise<UsuarioLogin> {
     const res =  await this.storage.executeSql('SELECT * FROM usuariosTable LIMIT 1', []);
     if (res.rows.length !== 0) {

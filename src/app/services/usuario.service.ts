@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LoadingController, Platform, ToastController  } from '@ionic/angular';
 import { UsuarioLogin, CambiarPassword } from '../interfaces/usuario-interfaces';
 import { DatabaseService } from './database.service';
-import { Centro, Certificado, RecuentoNotificacionesResponse } from '../interfaces/interfaces-grupo-mpe';
+import { Centro, Certificado, RecuentoNotificacionesResponse, Notificacion, Asistencia } from '../interfaces/interfaces-grupo-mpe';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
 
@@ -16,7 +16,11 @@ export class UsuarioService {
   cambiarPassword: CambiarPassword;
   centros: Centro[];
   certificados: Certificado[];
+  notificacion: Notificacion[];
+  asistencia: Asistencia[];
   haFiltrado: boolean;
+  haFiltradoHistorial:boolean;
+  haFiltradoAsistencia:boolean;
   desactivarSegundoPlano: boolean;
   recuentoNotificaciones:number;
 
@@ -36,6 +40,10 @@ export class UsuarioService {
 
     this.dataBaseService.addUsuario(usuario);
 
+  }
+
+  BorrarEmpleado(){
+    this.dataBaseService.BorrarUsuario();
   }
 
   guardarUsuario(usuario: UsuarioLogin) {
@@ -66,6 +74,12 @@ export class UsuarioService {
 
   }
 
+  getNotificaciones(): Notificacion[] {
+
+    return this.notificacion;
+
+  }
+
   guardarCertificados(array: Certificado[]) {
     this.certificados = [];
     this.haFiltrado = true;
@@ -78,6 +92,33 @@ export class UsuarioService {
   getCertificados(): Certificado[] {
 
     return this.certificados;
+
+  }
+  guardarNotificaciones(array: Notificacion[]) {
+    this.notificacion = [];
+    this.haFiltradoHistorial = true;
+    /* console.log('2.', this.getCertificados().length); */
+
+    this.notificacion = array;
+
+  }
+  getHistorial(): Notificacion[] {
+
+    return this.notificacion;
+
+  }
+
+  guardarAsistencias(array: Asistencia[]) {
+    this.asistencia = [];
+    this.haFiltradoAsistencia = true;
+    /* console.log('2.', this.getCertificados().length); */
+
+    this.asistencia = array;
+
+  }
+  getAsistencia(): Asistencia[] {
+
+    return this.asistencia;
 
   }
 

@@ -1,9 +1,42 @@
 <ion-header>
-  <ion-toolbar>
-    <ion-title>memoriaAnual</ion-title>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+        <ion-text color="light">
+        Memoria Anual
+        </ion-text>
+    </ion-title>
   </ion-toolbar>
+  <ion-toolbar color="dark">
+      <ion-searchbar [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar..."></ion-searchbar>
+      <ion-buttons slot="end">
+        <ion-button size="small" shape="round" color="medium" (click)="searchFilter()">
+          <ion-icon name="options"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
 </ion-header>
 
 <ion-content>
-
+  <!--<ion-list class="ion-no-padding" [@staggerIn]="listaDocumentos"> 
+     <ion-item class="bg-white">  *ngFor="let certificado of listaDocumentos"  tappable (click)="downloadDocumento(certificado.IdDocumento)"> 
+      <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
+      <ion-label>
+        <h2> 
+          <ion-text color="dark"><strong>{{certificado.TipoDocumento}}</strong></ion-text>
+        </h2>
+        <p class="text-12x">
+          <ion-text color="secondary">{{certificado.Referencia}}</ion-text>
+        </p>
+        <p class="text-12x">
+          <ion-text color="secondary">{{certificado.FechaNotificacion | date: 'dd/MM/yyyy'}}</ion-text>
+        </p>
+        <ion-badge *ngIf="!invoice.paid" color="warning">Pending</ion-badge>
+        <ion-badge *ngIf="invoice.paid" color="success">Paid</ion-badge>
+      </ion-label>
+      <ion-icon slot="end" name="download-outline"></ion-icon>
+    </ion-item> 
+  </ion-list>-->
 </ion-content>
