@@ -49,7 +49,7 @@ export class HistorialNotificacionesPage implements OnInit {
       if (this.usuarioService.usuario.Tipo === 'CONSULTOR') {
         nifConsultor = this.usuarioService.empresaConsultor.Nif;
       }
-      this.usuarioService.present('Cargando...');
+      this.usuarioService.present('Cargando datos...');
       const fecha_desde = '1900-01-01T00:00:00';
       const fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
@@ -97,14 +97,24 @@ export class HistorialNotificacionesPage implements OnInit {
                     }
                     this.historialService.setDocumento(this.listaDocumentos);
                     console.log('ListaHistorial ' + this.listaDocumentos);
+                } else {
+
+                  this.usuarioService.dismiss();
+
                 }
+            } else {
+
+              this.usuarioService.dismiss();
+
             }
         };
+
       xmlhttp.send(sr);
 
-      this.usuarioService.dismiss();
     } catch (error) {
+      console.log(error);
       this.usuarioService.dismiss();
+
     }
 
   }
@@ -164,7 +174,7 @@ export class HistorialNotificacionesPage implements OnInit {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel() {
+  onCancel(event) {
     this.findAll();
   }
 

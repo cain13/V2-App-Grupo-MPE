@@ -35,9 +35,9 @@ export class CambiarPasswordPage implements OnInit {
         PassConfirmada: [null, Validators.compose([
           Validators.required
         ])]
-      }, 
+      },
       {
-        validators: this.passwordIguales('PassOld','PassNew', 'PassConfirmada')
+        validators: this.passwordIguales('PassOld', 'PassNew', 'PassConfirmada')
       });
     }
 
@@ -50,27 +50,27 @@ export class CambiarPasswordPage implements OnInit {
       const pass1Control = formGroup.controls[passNew];
       const pass2Control = formGroup.controls[passConfirm];
 
-      if(passOldControl.value === this.usuarioService.usuario.Password){
+      if (passOldControl.value === this.usuarioService.usuario.Password) {
         if ( pass1Control.value === pass2Control.value) {
 
           pass2Control.setErrors(null);
-  
+
         } else {
-  
+
           pass2Control.setErrors({noEsIgual: true});
-  
+
         }
         passOldControl.setErrors(null);
-      }else{
+      } else {
         passOldControl.setErrors({noEsIgual: true});
       }
 
-      
+
 
     };
   }
-  CambiarPasswordButton(){
-    this.usuarioService.present("Actualizando contraseña...");
+  CambiarPasswordButton() {
+    this.usuarioService.present('Actualizando contraseña...');
     console.log('PassOld ' + this.onPasswordForm.get('PassOld').value);
     console.log('PassNew ' + this.onPasswordForm.get('PassNew').value);
     console.log('PassConfirmada ' + this.onPasswordForm.get('PassConfirmada').value);
@@ -88,7 +88,7 @@ export class CambiarPasswordPage implements OnInit {
     '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
       '<soap:Header>' +
         '<AuthHeader xmlns="http://tempuri.org/">' +
-          '<Usuario>' + this.usuarioService.usuario.Usuario +'</Usuario>'+
+          '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
           '<Password>' + passOld + '</Password>' +
         '</AuthHeader>' +
       '</soap:Header>' +
@@ -104,57 +104,55 @@ export class CambiarPasswordPage implements OnInit {
               if (xmlhttp.status === 200) {
                   const xml = xmlhttp.responseXML;
                   this.usuarioService.dismiss();
-                  this.usuarioService.presentToast("Contraseña Cambiada correctamente !!");
+                  this.usuarioService.presentToast('Contraseña Cambiada correctamente !!');
               } else {
                 this.usuarioService.dismiss();
-                this.usuarioService.presentToast("¡ERROR! La contraseña no se a cambiado correctamente");
+                this.usuarioService.presentToast('¡ERROR! La contraseña no se a cambiado correctamente');
               }
-          }else{
+          } else {
             this.usuarioService.dismiss();
-            this.usuarioService.presentToast("¡ERROR! La contraseña no se a cambiado correctamente");
+            this.usuarioService.presentToast('¡ERROR! La contraseña no se a cambiado correctamente');
           }
       };
     xmlhttp.send(sr);
 
     this.closeModal();
   }
-  closeModal(){
+  closeModal() {
     this.modalCtrl.dismiss();
   }
-  
+
 
 
   processForm(event) {
     event.preventDefault();
-    console.log("Click Formulario");
+    console.log('Click Formulario');
   }
 
   get passOldNoValido() {
-    let passOld : string;
+    let passOld: string;
     passOld = this.onPasswordForm.get('PassOld').value;
 
-    return  (passOld === this.usuarioService.usuario.Password && this.onPasswordForm.get('PassOld').touched && passOld.length > 0)? false: true
-
-
+    return  (passOld !== this.usuarioService.usuario.Password && this.onPasswordForm.get('PassOld').touched);
   }
 
   get passNewNoValido() {
-    let passNew : string;
+    let passNew: string;
     passNew = this.onPasswordForm.get('PassNew').value;
     return this.onPasswordForm.get('PassNew').invalid && this.onPasswordForm.get('PassNew').touched && passNew.length > 0;
 
   }
 
   get passConfirNoValido() {
-    let passNueva : string;
+    let passNueva: string;
     passNueva = this.onPasswordForm.get('PassNew').value;
-    let passConfir : string;
+    let passConfir: string;
     passConfir = this.onPasswordForm.get('PassConfirmada').value;
 
-    return (passNueva === passConfir && this.onPasswordForm.get('PassNew').touched && passConfir.length  > 0) ? false: true;
+    return (passNueva !== passConfir && this.onPasswordForm.get('PassConfirmada').touched && passConfir.length  > 0) ? true : false;
 
   }
 
- 
+
 
 }

@@ -11,8 +11,8 @@ import { CambiarPasswordPage } from '../vistasMPE/cambiar-password/cambiar-passw
 })
 export class EditProfilePage implements OnInit {
 
-  Nombre = "";
-  Tipo = "";
+  Nombre = '';
+  Tipo = '';
   constructor(
     public modalCtrl: ModalController,
     public navCtrl: NavController,
@@ -20,7 +20,7 @@ export class EditProfilePage implements OnInit {
     public toastCtrl: ToastController,
     private translate: TranslateProvider,
     private usuarioService: UsuarioService,
-    private alertController:AlertController
+    private alertController: AlertController
     ) { }
 
   ngOnInit() {
@@ -63,21 +63,21 @@ export class EditProfilePage implements OnInit {
     });
     return await modal.present();
   }
-  CambiarPassword(){
+  CambiarPassword() {
     this.navCtrl.navigateForward('/CambiarPassword');
   }
 
-  editarImagen(){
-    this.usuarioService.presentToast("Esta funcionalidad no esta disponible en este momento...");
+  editarImagen() {
+    this.usuarioService.presentToast('Esta funcionalidad no esta disponible en este momento...');
   }
 
-  Borrardatos(){
+  Borrardatos() {
     this.presentAlertConfirm();
   }
 
  async presentAlertConfirm() {
     const alert = await this.alertController.create({
-      
+
       header: 'Confirmar!',
       message: '<strong>¿Desa salir y borrar los datos de acceso?<strong>',
       buttons: [

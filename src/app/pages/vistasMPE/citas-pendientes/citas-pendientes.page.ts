@@ -84,8 +84,11 @@ export class CitasPendientesPage implements OnInit {
                     const xml = xmlhttp.responseXML;
                     const obj: RespuestaCitasPendientes = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                     // tslint:disable-next-line: max-line-length
+                    console.log('Respuesta: ', obj);
+
                     const a: RespuestaCitasiaInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCitasPendientesRelacionResponse']['ObtenerCitasPendientesRelacionResult']));
                     console.log(a);
+
                     if (a.CitasInfo !== undefined && !Array.isArray(a.CitasInfo)) {
 
                       this.listaCitas.push(a.CitasInfo);
@@ -169,7 +172,7 @@ export class CitasPendientesPage implements OnInit {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel() {
+  onCancel(event) {
     this.findAll();
   }
 

@@ -109,7 +109,7 @@ export class LoginPage implements OnInit {
 /*     this.usuarioService.desactivarSegundoPlano = true;
  */    this.menuCtrl.enable(false);
 
-    if (this.usuario.FingerID.toString() === 'true') {
+    if (this.usuario !== undefined && this.usuario.FingerID.toString() === 'true') {
       await this.usuarioService.present('Accediendo...');
 
       await this.faio.isAvailable().then( async (result: any) => {

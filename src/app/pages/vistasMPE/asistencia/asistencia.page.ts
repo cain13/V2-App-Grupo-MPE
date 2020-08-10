@@ -122,7 +122,7 @@ export class AsistenciaPage implements OnInit {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel() {
+  onCancel(event) {
     this.findAll();
   }
 
