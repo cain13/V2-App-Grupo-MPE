@@ -130,7 +130,12 @@ export class LoginPage implements OnInit {
               this.usuarioService.dismiss();
               this.navCtrl.navigateRoot('certificado-aptitud');
 
-            } else {
+            } else if ( this.usuario.Tipo === 'CONSULTOR') {
+              console.log('ACCEDEMOS COMO CLIENTE');
+              this.menuCtrl.enable(false, 'menuTrabajadores');
+              this.menuCtrl.enable(true, 'menuCompleto');
+              this.searchFilter();
+            }else {
               console.log('ACCEDEMOS COMO TRABAJADOR');
               this.menuCtrl.enable(true, 'menuTrabajadores');
               this.menuCtrl.enable(false, 'menuCompleto');

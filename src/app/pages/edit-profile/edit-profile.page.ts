@@ -93,6 +93,7 @@ export class EditProfilePage implements OnInit {
           handler: () => {
             console.log('Confirm Okay');
             this.usuarioService.BorrarEmpleado();
+            this.usuarioService.guardarUsuario(null);
             this.navCtrl.navigateRoot('blanco');
           }
         }

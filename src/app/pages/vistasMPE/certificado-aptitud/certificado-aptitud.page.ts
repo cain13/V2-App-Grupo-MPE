@@ -84,66 +84,74 @@ export class CertificadoAptitudPage {
 
 
   getCertificados() {
-    this.usuarioService.present('Cargando datos...');
-    const xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xmlhttp.responseType = 'document';
-      // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
-    const sr =
-      '<?xml version="1.0" encoding="utf-8"?>' +
-      '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
-        '<soap:Header>' +
-          '<AuthHeader xmlns="http://tempuri.org/">' +
-            '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
-            '<Password>' + this.usuario.Password + '</Password>' +
-          '</AuthHeader>' +
-        '</soap:Header>' +
-        '<soap:Body>' +
-          '<ObtenerCertificadosAptitudRelacionDocumentos xmlns="http://tempuri.org/">' +
-            '<FiltroCerApt>' +
-              '<FechaDesde>1900-01-01T00:00:00</FechaDesde>' +
-              '<FechaHasta>' + moment().format('YYYY-MM-DDT00:00:00') + '</FechaHasta>' +
-              '<NombreTrabajador></NombreTrabajador>' +
-              '<Dni></Dni>' +
-              '<NifClienteConsultor></NifClienteConsultor>' +
-              '<IdCentroTrabajo>' + 0 + '</IdCentroTrabajo>' +
-              '<IdCentroTrabajoEspecificado>' + 0 + '</IdCentroTrabajoEspecificado>' +
-            '</FiltroCerApt>' +
-          '</ObtenerCertificadosAptitudRelacionDocumentos>' +
-        '</soap:Body>' +
-      '</soap:Envelope>';
+    try{
+      let nifConsultor = "";
+      if(this.usuario.Tipo === "CONSULTOR"){
+        nifConsultor = this.usuarioService.empresaConsultor.Nif;
+      }
+      this.usuarioService.present('Cargando datos...');
+      const xmlhttp = new XMLHttpRequest();
+      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+      xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+      xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+      xmlhttp.responseType = 'document';
+        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+      const sr =
+        '<?xml version="1.0" encoding="utf-8"?>' +
+        '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+          '<soap:Header>' +
+            '<AuthHeader xmlns="http://tempuri.org/">' +
+              '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
+              '<Password>' + this.usuario.Password + '</Password>' +
+            '</AuthHeader>' +
+          '</soap:Header>' +
+          '<soap:Body>' +
+            '<ObtenerCertificadosAptitudRelacionDocumentos xmlns="http://tempuri.org/">' +
+              '<FiltroCerApt>' +
+                '<FechaDesde>1900-01-01T00:00:00</FechaDesde>' +
+                '<FechaHasta>' + moment().format('YYYY-MM-DDT00:00:00') + '</FechaHasta>' +
+                '<NombreTrabajador></NombreTrabajador>' +
+                '<Dni></Dni>' +
+                '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
+                '<IdCentroTrabajo>' + 0 + '</IdCentroTrabajo>' +
+                '<IdCentroTrabajoEspecificado>' + 0 + '</IdCentroTrabajoEspecificado>' +
+              '</FiltroCerApt>' +
+            '</ObtenerCertificadosAptitudRelacionDocumentos>' +
+          '</soap:Body>' +
+        '</soap:Envelope>';
 
 
-    xmlhttp.onreadystatechange =  () => {
-          if (xmlhttp.readyState === 4) {
-              if (xmlhttp.status === 200) {
-                  const xml = xmlhttp.responseXML;
-                  const obj: RespuestaGetAPICertificadosAptitud = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                  // tslint:disable-next-line: max-line-length
-                  const a: ObtenerCertificados = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadosAptitudRelacionDocumentosResponse']['ObtenerCertificadosAptitudRelacionDocumentosResult']));
-                  if (a.CertificadoAptitudInfo !== undefined && !Array.isArray(a.CertificadoAptitudInfo)) {
+      xmlhttp.onreadystatechange =  () => {
+            if (xmlhttp.readyState === 4) {
+                if (xmlhttp.status === 200) {
+                    const xml = xmlhttp.responseXML;
+                    const obj: RespuestaGetAPICertificadosAptitud = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                    // tslint:disable-next-line: max-line-length
+                    const a: ObtenerCertificados = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadosAptitudRelacionDocumentosResponse']['ObtenerCertificadosAptitudRelacionDocumentosResult']));
+                    if (a.CertificadoAptitudInfo !== undefined && !Array.isArray(a.CertificadoAptitudInfo)) {
 
-                    this.listaCertificados.push(a.CertificadoAptitudInfo);
+                      this.listaCertificados.push(a.CertificadoAptitudInfo);
 
-                  } else {
+                    } else {
 
-                    this.listaCertificados = a.CertificadoAptitudInfo;
+                      this.listaCertificados = a.CertificadoAptitudInfo;
 
-                  }
-                  console.log('Cert: ', a.CertificadoAptitudInfo);
-                  this.certificadosService.setCertificado(this.listaCertificados);
+                    }
+                    console.log('Cert: ', a.CertificadoAptitudInfo);
+                    this.certificadosService.setCertificado(this.listaCertificados);
+                    this.usuarioService.dismiss();
+                    console.log('Certificados APTITUD:' , this.listaCertificados);
+                }else{
                   this.usuarioService.dismiss();
-                  console.log('Certificados APTITUD:' , this.listaCertificados);
-              }else{
-                this.usuarioService.dismiss();
-              }
-          }else{
-            this.usuarioService.dismiss();
-          }
-      };
-    xmlhttp.send(sr);
+                }
+            }else{
+              this.usuarioService.dismiss();
+            }
+        };
+      xmlhttp.send(sr);
+    }catch(error){
+      this.usuarioService.dismiss();
+    }
   }
 
 

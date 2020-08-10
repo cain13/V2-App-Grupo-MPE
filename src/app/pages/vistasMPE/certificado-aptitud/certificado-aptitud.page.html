@@ -29,6 +29,7 @@
 </ion-header>
 
 <ion-content>
+  
   <ion-list class="ion-no-padding" [@staggerIn]="listaCertificados">
     <ion-item class="bg-white" *ngFor="let certificado of listaCertificados" tappable > <!--(click)="goCheckout(invoice.id)">-->
       <ion-icon slot="start" name="document-outline" color="danger" (click)="masInfo(certificado)"></ion-icon>
