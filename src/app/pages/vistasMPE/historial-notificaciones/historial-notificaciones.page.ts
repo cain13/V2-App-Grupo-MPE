@@ -10,6 +10,8 @@ import { trigger,style,animate,transition,query,stagger } from '@angular/animati
 import { NotificationsComponent } from 'src/app/components/notifications/notifications.component';
 import { HitorialNotificacionesService } from 'src/app/services/hitorial-notificaciones.service';
 import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
+import { EmpresaConsultor, UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
+import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
 
 @Component({
   selector: 'app-historial-notificaciones',
@@ -29,7 +31,10 @@ export class HistorialNotificacionesPage implements OnInit {
  
   searchKey = "";
   listaDocumentos = [];
-
+  usuario: UsuarioLogin;
+  empresaCoonsultor: EmpresaConsultor;
+  hayConsultor = false;
+  
   constructor(
     public popoverCtrl: PopoverController,
     public service: PropertyService,
@@ -38,17 +43,31 @@ export class HistorialNotificacionesPage implements OnInit {
     private ngxXml2jsonService: NgxXml2jsonService,
     private documentosService: DocumentosTrabajadoresService,
     private historialService: HitorialNotificacionesService
-    ) {  }
+    ) 
+    {
+      this.usuario = this.usuarioService.getUsuario(); 
+      this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+        if(this.usuario.Tipo === "CLIENTE"){
+          this.hayConsultor = true;
+        }
+      }
+    }
 
   ngOnInit() {
     this.getHistorialDocumentos();
+    
   }
 
   getHistorialDocumentos(){
     try{
       this.usuarioService.present("Cargando...");
+      let nifConsultor = "";
+      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+        nifConsultor = this.empresaCoonsultor.Nif;
+      }
       let fecha_desde = '1900-01-01T00:00:00';
-      let fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
+      let fecha_hasta = moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -69,12 +88,12 @@ export class HistorialNotificacionesPage implements OnInit {
             '<FiltroNot>' +
               '<FechaDesde>' + fecha_desde + '</FechaDesde>'+
               '<FechaHasta>' + fecha_hasta + '</FechaHasta>'+
-              '<NifClienteConsultor></NifClienteConsultor>'+
+              '<NifClienteConsultor>'  + nifConsultor + '</NifClienteConsultor>'+
             '</FiltroNot>' +
           '</ObtenerHistoricoNotificacionesRelacionDocumentos>' +
         '</soap:Body>' +
       '</soap:Envelope>';
-
+console.log('sr ' + sr);
       xmlhttp.onreadystatechange =  () => {
             if (xmlhttp.readyState === 4) {
                 if (xmlhttp.status === 200) {
@@ -94,12 +113,17 @@ export class HistorialNotificacionesPage implements OnInit {
                     }
                     this.historialService.setDocumento(this.listaDocumentos);
                     console.log('ListaHistorial ' + this.listaDocumentos);
+                    this.usuarioService.dismiss();
+                }else{
+                  this.usuarioService.dismiss();
+                  this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
                 }
+            }else{
+              this.usuarioService.dismiss();
             }
         };
       xmlhttp.send(sr);
   
-      this.usuarioService.dismiss();
     }catch(error){
       this.usuarioService.dismiss();
     }
@@ -182,5 +206,24 @@ export class HistorialNotificacionesPage implements OnInit {
   findAll() {
     this.listaDocumentos =this.historialService.getDocumentos();
   }
+
+  
+  seleccionarEmpresa(){
+    this.vistaSeleccionarEmpresa();
+  }
+
+  async vistaSeleccionarEmpresa(){
+    const modal = await this.modalCtrl.create({
+      component: SeleccionarClientePage
+    });
+    modal.onDidDismiss().then(() => {
+      console.log('Entra a modal seleccionar cliente');
+      this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      this.getHistorialDocumentos();
+      this.listaDocumentos = this.historialService.getDocumentosFiltro();
+    });
+    return await modal.present();
+  }
+
 
 }

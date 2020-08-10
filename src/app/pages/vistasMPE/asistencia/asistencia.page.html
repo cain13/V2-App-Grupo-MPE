@@ -17,6 +17,13 @@
         </ion-button>
       </ion-buttons>
     </ion-toolbar>
+    <ion-list-header *ngIf="hayConsultor" (click)="seleccionarEmpresa()">
+      <ion-label color="primary"  >
+        <h2>Cambiar de empresa</h2>
+        <small color="primary">{{empresaCoonsultor.NombreCliente}}</small>
+      </ion-label>
+      <ion-icon color="primary" style="padding-right: 10px !important;" name="chevron-down-outline"></ion-icon>
+    </ion-list-header>
 </ion-header>
 
 <ion-content>

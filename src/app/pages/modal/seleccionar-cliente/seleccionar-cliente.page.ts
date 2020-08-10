@@ -17,13 +17,14 @@ export class SeleccionarClientePage implements OnInit {
 
   usuario: UsuarioLogin;
   listaClientes = [];
+  listaCentros = [];
+
 
   constructor(private modalCtrl: ModalController, private usuarioService: UsuarioService,
               private ngxXml2jsonService: NgxXml2jsonService, private navCtrl: NavController ) { }
 
 
   ngOnInit() {
-    this.usuario = this.usuarioService.getUsuario();
     this.getClientes();
   }
 
@@ -33,6 +34,7 @@ export class SeleccionarClientePage implements OnInit {
 
   getClientes() {
     try{
+      this.usuario = this.usuarioService.getUsuario();
       this.usuarioService.present('Cargando datos...');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
@@ -98,7 +100,7 @@ export class SeleccionarClientePage implements OnInit {
     this.getCentros(nifCliente);
     this.closeModal();
     this.usuarioService.dismiss();
-    this.navCtrl.navigateRoot('certificado-aptitud');
+    //this.navCtrl.navigateRoot('certificado-aptitud');
   }
 
   getCentros(nif) {
@@ -126,7 +128,7 @@ export class SeleccionarClientePage implements OnInit {
           '</ObtenerCentrosTrabajo>' +
         '</soap:Body>' +
       '</soap:Envelope>';
-
+      console.log('sr ' + sr);
       xmlhttp.onreadystatechange =  () => {
             if (xmlhttp.readyState === 4) {
                 if (xmlhttp.status === 200) {
@@ -135,7 +137,16 @@ export class SeleccionarClientePage implements OnInit {
                   // tslint:disable-next-line: max-line-length
                   const a: ObtenerCentros = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCentrosTrabajoResponse']['ObtenerCentrosTrabajoResult']));
                   console.log(a.CentroTrabajoInfo);
-                  this.usuarioService.guardarCentros(a.CentroTrabajoInfo);
+                  if (a.CentroTrabajoInfo !== undefined && !Array.isArray(a.CentroTrabajoInfo)) {
+
+                    this.listaCentros.push(a.CentroTrabajoInfo);
+
+                  } else {
+
+                    this.listaCentros = a.CentroTrabajoInfo;
+
+                  }
+                  this.usuarioService.guardarCentros(this.listaCentros);
                 }
             }
         };

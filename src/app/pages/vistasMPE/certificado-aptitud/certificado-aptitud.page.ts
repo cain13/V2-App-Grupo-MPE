@@ -16,11 +16,12 @@ import { RespuestaGetAPICertificadosAptitud, ObtenerCertificados, RespuestaObten
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { UsuarioService } from '../../../services/usuario.service';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
+import { UsuarioLogin, EmpresaConsultor } from '../../../interfaces/usuario-interfaces';
 import { Certificado } from '../../../interfaces/interfaces-grupo-mpe';
 import { CertificadosService } from '../../../services/certificados.service';
 import { ModalMasInfoPage } from '../modal-mas-info/modal-mas-info.page';
 import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
+import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
 
 @Component({
   selector: 'app-certificado-aptitud',
@@ -40,9 +41,11 @@ export class CertificadoAptitudPage {
   listaCertificados = [];
   searchKey = '';
   properties: Array<any>;
-  usuario: UsuarioLogin;
   fechaHoy: string;
   Cantidad = 0;
+  usuario: UsuarioLogin;
+  empresaCoonsultor: EmpresaConsultor;
+  hayConsultor = false;
 
   constructor(
     private router: Router,
@@ -64,9 +67,15 @@ export class CertificadoAptitudPage {
   ) {
 
     this.usuario = this.usuarioService.getUsuario();
-
+    this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+    if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+      if(this.usuario.Tipo === "CLIENTE"){
+        this.hayConsultor = true;
+      }
+    }
 
   }
+  
 
   ionViewWillEnter() {
     this.RecuentoNotificaciones();
@@ -86,8 +95,8 @@ export class CertificadoAptitudPage {
   getCertificados() {
     try{
       let nifConsultor = "";
-      if(this.usuario.Tipo === "CONSULTOR"){
-        nifConsultor = this.usuarioService.empresaConsultor.Nif;
+      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+        nifConsultor = this.empresaCoonsultor.Nif;
       }
       this.usuarioService.present('Cargando datos...');
       const xmlhttp = new XMLHttpRequest();
@@ -143,13 +152,17 @@ export class CertificadoAptitudPage {
                     console.log('Certificados APTITUD:' , this.listaCertificados);
                 }else{
                   this.usuarioService.dismiss();
+                  console.log('200 ' + xmlhttp.response);
+                  this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
                 }
             }else{
               this.usuarioService.dismiss();
+              console.log('4 ' + xmlhttp.status);
             }
         };
       xmlhttp.send(sr);
     }catch(error){
+      console.log('error ', error);
       this.usuarioService.dismiss();
     }
   }
@@ -300,7 +313,22 @@ export class CertificadoAptitudPage {
     return await modal.present();
   }
 
+  seleccionarEmpresa(){
+    this.vistaSeleccionarEmpresa();
+  }
 
+  async vistaSeleccionarEmpresa(){
+    const modal = await this.modalCtrl.create({
+      component: SeleccionarClientePage
+    });
+    modal.onDidDismiss().then(() => {
+      console.log('Entra a modal seleccionar cliente');
+      this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      this. getCertificados();
+      this.listaCertificados = this.certificadosService.getCertificados();
+    });
+    return await modal.present();
+  }
 
   findAll() {
     this.listaCertificados = this.certificadosService.getCertificados();

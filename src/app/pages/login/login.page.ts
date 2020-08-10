@@ -271,11 +271,16 @@ export class LoginPage implements OnInit {
                     this.usuarioService.guardarUsuario(usuario);
                     console.log('Tipo Empleado ' + usuario.Tipo);
                     if ( usuario.Tipo === 'CLIENTE') {
-                      console.log('ACCEDEMOS COMO CLIENTE');
+                      /* console.log('ACCEDEMOS COMO CLIENTE');
                       this.menuCtrl.enable(false, 'menuTrabajadores');
                       this.menuCtrl.enable(true, 'menuCompleto');
                       this.getCentros();
-                      this.navCtrl.navigateRoot('certificado-aptitud');
+                      this.navCtrl.navigateRoot('certificado-aptitud'); */
+                      console.log('ACCEDEMOS COMO CLIENTE');
+                      this.menuCtrl.enable(false, 'menuTrabajadores');
+                      this.menuCtrl.enable(true, 'menuCompleto');
+                      this.searchFilter();
+                      
                     } else if ( usuario.Tipo === 'CONSULTOR') {
                       console.log('ACCEDEMOS COMO CLIENTE');
                       this.menuCtrl.enable(false, 'menuTrabajadores');
@@ -303,7 +308,7 @@ export class LoginPage implements OnInit {
       component: SeleccionarClientePage
     });
     modal.onDidDismiss().then(() => {
-      console.log('Entra a modal seleccionar cliente')
+      this.navCtrl.navigateRoot('certificado-aptitud');
     });
     return await modal.present();
   }

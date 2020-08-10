@@ -12,6 +12,8 @@ import { HitorialNotificacionesService } from 'src/app/services/hitorial-notific
 import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
 import { AsistenciaService } from 'src/app/services/asistencia.service';
 import { FiltroAsistenciaPage } from '../../modal/filtro-asistencia/filtro-asistencia.page';
+import { EmpresaConsultor, UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
+import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
 
 @Component({
   selector: 'app-asistencia',
@@ -29,7 +31,10 @@ import { FiltroAsistenciaPage } from '../../modal/filtro-asistencia/filtro-asist
 export class AsistenciaPage implements OnInit {
   searchKey = "";
   listaAsistencias = [];
-
+  usuario: UsuarioLogin;
+  empresaCoonsultor: EmpresaConsultor;
+  hayConsultor = false;
+  
   constructor(
     public popoverCtrl: PopoverController,
     public service: PropertyService,
@@ -38,16 +43,28 @@ export class AsistenciaPage implements OnInit {
     private ngxXml2jsonService: NgxXml2jsonService,
     private documentosService: DocumentosTrabajadoresService,
     private asistenciaService: AsistenciaService
-    ) {   }
+    ) 
+    {
+      this.usuario = this.usuarioService.getUsuario(); 
+      this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+        if(this.usuario.Tipo === "CLIENTE"){
+          this.hayConsultor = true;
+        }
+      }
+    }
 
   ngOnInit() {
-    this.usuarioService.isLoading = false;
     this.getAsistencias();
   }
 
   getAsistencias(){
     try{
       this.usuarioService.present("Cargando...");
+      let nifConsultor = "";
+      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+        nifConsultor = this.empresaCoonsultor.Nif;
+      }
       let fecha_desde = '1900-01-01T00:00:00';
       let fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
@@ -73,7 +90,7 @@ export class AsistenciaPage implements OnInit {
               '<NombreTrabajador></NombreTrabajador>' +
               '<Dni></Dni>' +
               '<NoPresentado>0</NoPresentado>'+
-              '<NifClienteConsultor></NifClienteConsultor>'+
+              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>'+
             '</FiltroAsist>' +
           '</ObtenerAsistenciasRelacion>' +
         '</soap:Body>' +
@@ -101,6 +118,7 @@ export class AsistenciaPage implements OnInit {
                     this.usuarioService.dismiss();
                 }else{
                   this.usuarioService.dismiss();
+                  this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
                 }
             }else{
               this.usuarioService.dismiss();
@@ -146,5 +164,23 @@ export class AsistenciaPage implements OnInit {
   masInfo(NifTrabajador){
 
   }
+
+  seleccionarEmpresa(){
+    this.vistaSeleccionarEmpresa();
+  }
+
+  async vistaSeleccionarEmpresa(){
+    const modal = await this.modalCtrl.create({
+      component: SeleccionarClientePage
+    });
+    modal.onDidDismiss().then(() => {
+      console.log('Entra a modal seleccionar cliente');
+      this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      this.getAsistencias();
+      this.listaAsistencias = this.asistenciaService.getAsistencias();
+    });
+    return await modal.present();
+  }
+
 
 }
