@@ -68,9 +68,11 @@ export class CertificadoAptitudPage {
 
     this.usuario = this.usuarioService.getUsuario();
     this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
-    if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
-      if(this.usuario.Tipo === "CLIENTE"){
+    if(this.usuario.Tipo === "CONSULTOR"){
+      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
         this.hayConsultor = true;
+        console.log("hayConsultor " + this.hayConsultor);
+        console.log("this.usuario.Tipo  " + this.usuario.Tipo);
       }
     }
 
@@ -95,8 +97,10 @@ export class CertificadoAptitudPage {
   getCertificados() {
     try{
       let nifConsultor = "";
-      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
-        nifConsultor = this.empresaCoonsultor.Nif;
+      if(this.usuario.Tipo === "CONSULTOR"){
+        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+          nifConsultor = this.empresaCoonsultor.Nif;
+        }
       }
       this.usuarioService.present('Cargando datos...');
       const xmlhttp = new XMLHttpRequest();

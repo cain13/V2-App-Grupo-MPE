@@ -36,15 +36,14 @@
         <p class="text-12x" >
           <ion-text color="secondary">{{certificado.NifTrabajador}}</ion-text>
         </p>
-      <!--   <p class="text-12x" >
+        <p class="text-12x" >
           <ion-text color="secondary">{{certificado.NombreCentroMedico}}</ion-text>
-        </p> -->
+        </p> 
         <p class="text-12x" style="float: left;">
           <ion-text color="secondary">{{certificado.FechaDocumento | date: 'dd/MM/yyyy HH:mm'}}</ion-text>
         </p>
         <ion-badge style="float: right;" color="success">{{certificado.SituacionReconocimientoMedico}}</ion-badge>
       </ion-label>
-      <ion-icon slot="end" name="information-circle-outline"></ion-icon>
     </ion-item> 
   </ion-list>
 </ion-content>

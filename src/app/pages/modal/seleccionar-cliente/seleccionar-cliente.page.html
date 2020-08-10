@@ -9,6 +9,10 @@
      Seleccionar Cliente
     </ion-title>
   </ion-toolbar>
+  <ion-item>
+		<ion-label class="label" color="primary">Seleccionar todos</ion-label>
+		<ion-toggle [(ngModel)]="todosClientes" (click)="todosClientesSeleccionar()"></ion-toggle>
+	</ion-item>
 </ion-header>
 
 <ion-content class="ion-padding">

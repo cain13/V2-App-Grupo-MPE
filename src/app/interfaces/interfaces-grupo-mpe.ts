@@ -427,7 +427,7 @@ export interface Asistencia{
     Trabajador: string;
     NifTrabajador:string;
     FechaDocumento: string;
-    NombreCentroMedico:string;
+    NombreCentroMedico:any;
     SituacionReconocimientoMedico:string;
 }
 

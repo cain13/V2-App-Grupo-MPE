@@ -133,7 +133,7 @@ export class CambiarPasswordPage implements OnInit {
     let passOld : string;
     passOld = this.onPasswordForm.get('PassOld').value;
 
-    return  (passOld === this.usuarioService.usuario.Password && this.onPasswordForm.get('PassOld').touched && passOld.length > 0)? false: true
+    return  (passOld !== this.usuarioService.usuario.Password && this.onPasswordForm.get('PassOld').touched);
 
 
   }
@@ -151,7 +151,7 @@ export class CambiarPasswordPage implements OnInit {
     let passConfir : string;
     passConfir = this.onPasswordForm.get('PassConfirmada').value;
 
-    return (passNueva === passConfir && this.onPasswordForm.get('PassNew').touched && passConfir.length  > 0) ? false: true;
+    return (passNueva !== passConfir && this.onPasswordForm.get('PassConfirmada').touched && passConfir.length  > 0) ? true : false;
 
   }
 

@@ -158,7 +158,7 @@ export class PlanficacionVSPage implements OnInit {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel() {
+  onCancel(event) {
     this.findAll();
   }
 

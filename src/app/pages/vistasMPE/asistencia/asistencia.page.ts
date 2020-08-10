@@ -43,8 +43,8 @@ export class AsistenciaPage implements OnInit {
     {
       this.usuario = this.usuarioService.getUsuario(); 
       this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
-      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
-        if(this.usuario.Tipo === "CLIENTE"){
+      if(this.usuario.Tipo === "CONSULTOR"){
+        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
           this.hayConsultor = true;
         }
       }
@@ -58,8 +58,10 @@ export class AsistenciaPage implements OnInit {
     try{
       this.usuarioService.present("Cargando...");
       let nifConsultor = "";
-      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
-        nifConsultor = this.empresaCoonsultor.Nif;
+      if(this.usuario.Tipo === "CONSULTOR"){
+        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+          nifConsultor = this.empresaCoonsultor.Nif;
+        }
       }
       let fecha_desde = '1900-01-01T00:00:00';
       let fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
@@ -136,7 +138,7 @@ export class AsistenciaPage implements OnInit {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel() {
+  onCancel(event) {
     this.findAll();
   }
 

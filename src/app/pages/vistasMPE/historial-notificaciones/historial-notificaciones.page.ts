@@ -45,8 +45,8 @@ export class HistorialNotificacionesPage implements OnInit {
     {
       this.usuario = this.usuarioService.getUsuario(); 
       this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
-      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
-        if(this.usuario.Tipo === "CLIENTE"){
+      if(this.usuario.Tipo === "CONSULTOR"){
+        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
           this.hayConsultor = true;
         }
       }
@@ -61,8 +61,10 @@ export class HistorialNotificacionesPage implements OnInit {
     try{
      
       let nifConsultor = "";
-      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
-        nifConsultor = this.empresaCoonsultor.Nif;
+      if(this.usuario.Tipo === "CONSULTOR"){
+        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+          nifConsultor = this.empresaCoonsultor.Nif;
+        }
       }
       this.usuarioService.present("Cargando...");
       let fecha_desde = '1900-01-01T00:00:00';
@@ -131,48 +133,51 @@ console.log('sr ' + sr);
 
 
   downloadDocumento(id) {
-    this.usuarioService.present('Descargando...');
-    console.log(id);
-    let pdf: CertificadoPDF;
-    const xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xmlhttp.responseType = 'document';
-      // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
-    const sr =
+    try{
+      this.usuarioService.present('Descargando...');
+      console.log("idDocumentos " + id);
+      let pdf: CertificadoPDF;
+      const xmlhttp = new XMLHttpRequest();
+      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+      xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+      xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+      xmlhttp.responseType = 'document';
+        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+      const sr =
 
-    '<?xml version="1.0" encoding="utf-8"?>' +
-    '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
-      '<soap:Header>' +
-        '<AuthHeader xmlns="http://tempuri.org/">' +
-          '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
-          '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
-        '</AuthHeader>' +
-      '</soap:Header>' +
-      '<soap:Body>' +
-        '<ObtenerCertificadoAptitudPdf xmlns="http://tempuri.org/">' +
-          '<IdDocumento>' + id + '</IdDocumento>' +
-        '</ObtenerCertificadoAptitudPdf>' +
-      '</soap:Body>' +
-    '</soap:Envelope>';
+      '<?xml version="1.0" encoding="utf-8"?>' +
+      '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+        '<soap:Header>' +
+          '<AuthHeader xmlns="http://tempuri.org/">' +
+            '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
+            '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
+          '</AuthHeader>' +
+        '</soap:Header>' +
+        '<soap:Body>' +
+          '<ObtenerCertificadoAptitudPdf xmlns="http://tempuri.org/">' +
+            '<IdDocumento>' + id + '</IdDocumento>' +
+          '</ObtenerCertificadoAptitudPdf>' +
+        '</soap:Body>' +
+      '</soap:Envelope>';
 
-    xmlhttp.onreadystatechange =  () => {
-          if (xmlhttp.readyState === 4) {
-              if (xmlhttp.status === 200) {
-                  const xml = xmlhttp.responseXML;
-                  const obj: RespuestaObtenerCertPDF = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                  const a: CertificadoPDF = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadoAptitudPdfResponse']['ObtenerCertificadoAptitudPdfResult']));
-                  console.log(a);
-                  pdf = a;
-                  console.log('NombreFichero ' + a.NombreFichero);
-                  this.usuarioService.dismiss();
-                  this.usuarioService.saveAndOpenPdf(pdf.Datos, pdf.NombreFichero);
-              }
-          }
-      };
-    xmlhttp.send(sr);
-
+      xmlhttp.onreadystatechange =  () => {
+            if (xmlhttp.readyState === 4) {
+                if (xmlhttp.status === 200) {
+                    const xml = xmlhttp.responseXML;
+                    const obj: RespuestaObtenerCertPDF = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                    const a: CertificadoPDF = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadoAptitudPdfResponse']['ObtenerCertificadoAptitudPdfResult']));
+                    console.log(a);
+                    pdf = a;
+                    console.log('NombreFichero ' + a.NombreFichero);
+                    this.usuarioService.dismiss();
+                    this.usuarioService.saveAndOpenPdf(pdf.Datos, pdf.NombreFichero);
+                }
+            }
+        };
+      xmlhttp.send(sr);
+    }catch(error){
+      this.usuarioService.dismiss();
+    }
   }
 
   onInput(event) {
@@ -184,7 +189,7 @@ console.log('sr ' + sr);
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel() {
+  onCancel(event) {
     this.findAll();
   }
 

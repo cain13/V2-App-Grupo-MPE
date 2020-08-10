@@ -29,7 +29,6 @@ export class UsuarioService {
   recuentoNotificaciones: number;
 
 
-
   isLoading = false;
 
   constructor(private loadingCtrl: LoadingController,
@@ -74,6 +73,7 @@ export class UsuarioService {
     return this.empresaConsultor;
 
   }
+
 
   getCambiarPassword() {
     return this.cambiarPassword;

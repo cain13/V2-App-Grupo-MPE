@@ -46,7 +46,7 @@ export class CitasPendientesPage implements OnInit {
       this.usuario = this.usuarioService.getUsuario();
       this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
       if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
-        if(this.usuario.Tipo === "CLIENTE"){
+        if(this.usuario.Tipo === "CONSULTOR"){
           this.hayConsultor = true;
         }
       }
@@ -188,7 +188,7 @@ export class CitasPendientesPage implements OnInit {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel() {
+  onCancel(event) {
     this.findAll();
   }
 

@@ -18,7 +18,7 @@ export class SeleccionarClientePage implements OnInit {
   usuario: UsuarioLogin;
   listaClientes = [];
   listaCentros = [];
-
+  todosClientes = false;
 
   constructor(private modalCtrl: ModalController, private usuarioService: UsuarioService,
               private ngxXml2jsonService: NgxXml2jsonService, private navCtrl: NavController ) { }
@@ -156,5 +156,18 @@ export class SeleccionarClientePage implements OnInit {
     } catch (error) {
 
     }
+  }
+
+  todosClientesSeleccionar(){
+    // tslint:disable-next-line: no-shadowed-variable
+    const EmpresaConsultor = {
+      Nif: "",
+      NombreCliente: "Todos los clientes"
+    };
+    this.usuarioService.guardarEmpresaConsultor(EmpresaConsultor);
+    this.getCentros("");
+    this.closeModal();
+    this.usuarioService.dismiss();
+    //this.navCtrl.navigateRoot('certificado-aptitud');
   }
 }
