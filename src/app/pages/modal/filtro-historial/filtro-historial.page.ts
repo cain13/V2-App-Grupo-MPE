@@ -29,7 +29,7 @@ export class FiltroHistorialPage implements OnInit {
 
   ngOnInit() {
     this.usuario = this.usuarioService.getUsuario();
-    
+
   }
 
 
@@ -61,7 +61,7 @@ export class FiltroHistorialPage implements OnInit {
       fecha_hasta_aux = moment(this.filtro_hasta.toString()).add(1, 'days').format('YYYY-MM-DDT00:00:00');
 
     }
-   
+
 
 
     console.log('DESDE', fecha_desde_aux);
@@ -73,10 +73,16 @@ export class FiltroHistorialPage implements OnInit {
 
 
   getNotificaciones(fechaDesde: string, fechaHasta: string) {
-    try{
-      this.usuarioService.present("Cargando...");
-      let fecha_desde = '1900-01-01T00:00:00';
-      let fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
+    try {
+
+      let nifConsultor = '';
+      if (this.usuario.Tipo === 'CONSULTOR') {
+        nifConsultor = this.usuarioService.empresaConsultor.Nif;
+      }
+
+      this.usuarioService.present('Cargando...');
+      const fecha_desde = '1900-01-01T00:00:00';
+      const fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -95,9 +101,9 @@ export class FiltroHistorialPage implements OnInit {
         '<soap:Body>' +
           '<ObtenerHistoricoNotificacionesRelacionDocumentos xmlns="http://tempuri.org/">' +
             '<FiltroNot>' +
-              '<FechaDesde>' + fechaDesde + '</FechaDesde>'+
-              '<FechaHasta>' + fechaHasta + '</FechaHasta>'+
-              '<NifClienteConsultor></NifClienteConsultor>'+
+              '<FechaDesde>' + fechaDesde + '</FechaDesde>' +
+              '<FechaHasta>' + fechaHasta + '</FechaHasta>' +
+              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
             '</FiltroNot>' +
           '</ObtenerHistoricoNotificacionesRelacionDocumentos>' +
         '</soap:Body>' +
@@ -114,11 +120,11 @@ export class FiltroHistorialPage implements OnInit {
                     if (a.HistoricoNotificacionInfo !== undefined && !Array.isArray(a.HistoricoNotificacionInfo)) {
 
                       this.listaDocumentos.push(a.HistoricoNotificacionInfo);
-  
+
                     } else {
-  
+
                       this.listaDocumentos = a.HistoricoNotificacionInfo;
-  
+
                     }
                     this.usuarioService.dismiss();
                     this.usuarioService.guardarNotificaciones(this.listaDocumentos);
@@ -127,12 +133,12 @@ export class FiltroHistorialPage implements OnInit {
             }
         };
       xmlhttp.send(sr);
-  
+
       this.usuarioService.dismiss();
-    }catch(error){
+    } catch (error) {
       this.usuarioService.dismiss();
     }
-    
+
   }
 
   Todos() {

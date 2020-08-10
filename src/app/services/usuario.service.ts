@@ -11,9 +11,9 @@ import { File } from '@ionic-native/file/ngx';
 })
 export class UsuarioService {
 
-  version = "Versión 1.0.1";
+  version = 'Versión 1.0.1';
   usuario: UsuarioLogin;
-  empresaConsultor:EmpresaConsultor;
+  empresaConsultor: EmpresaConsultor;
   cambiarPassword: CambiarPassword;
   centros: Centro[];
   certificados: Certificado[];
@@ -22,17 +22,17 @@ export class UsuarioService {
   asistencia: Asistencia[];
   citas: Citas[];
   haFiltrado: boolean;
-  haFiltradoHistorial:boolean;
-  haFiltradoAsistencia:boolean;
-  haFiltradoCitas:boolean;
+  haFiltradoHistorial: boolean;
+  haFiltradoAsistencia: boolean;
+  haFiltradoCitas: boolean;
   desactivarSegundoPlano: boolean;
-  recuentoNotificaciones:number;
+  recuentoNotificaciones: number;
 
 
 
   isLoading = false;
 
-  constructor(private loadingCtrl: LoadingController, 
+  constructor(private loadingCtrl: LoadingController,
     private dataBaseService: DatabaseService,
     private platform: Platform,
     private opener: FileOpener,
@@ -47,7 +47,7 @@ export class UsuarioService {
 
   }
 
-  BorrarEmpleado(){
+  BorrarEmpleado() {
     this.dataBaseService.BorrarUsuario();
   }
 
@@ -75,7 +75,7 @@ export class UsuarioService {
 
   }
 
-  getCambiarPassword(){
+  getCambiarPassword() {
     return this.cambiarPassword;
   }
 
@@ -217,7 +217,7 @@ export class UsuarioService {
   saveAndOpenPdf(pdf: string, filename: string) {
     console.log('path ' + this.file.dataDirectory);
     const writeDirectory = this.platform.is('ios') ? this.file.dataDirectory : this.file.dataDirectory;
-    this.file.writeFile(writeDirectory, filename, this.convertBase64ToBlob(pdf, 'data:application/pdf;base64',512), {replace: true})
+    this.file.writeFile(writeDirectory, filename, this.convertBase64ToBlob(pdf, 'data:application/pdf;base64', 512), {replace: true})
       .then(() => {
           this.opener.open(writeDirectory + filename, 'application/pdf')
               .catch(() => {
@@ -228,29 +228,29 @@ export class UsuarioService {
           console.error('Error writing pdf file');
       });
   }
-  
+
   convertBase64ToBlob(b64Data, contentType, sliceSize) {
     console.log(b64Data);
     contentType = contentType || '';
     sliceSize = sliceSize || 512;
-  
+
     const byteCharacters = atob(b64Data);
     const byteArrays = [];
-  
+
     for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
         const slice = byteCharacters.slice(offset, offset + sliceSize);
-  
+
         const byteNumbers = new Array(slice.length);
         for (let i = 0; i < slice.length; i++) {
-  
+
             byteNumbers[i] = slice.charCodeAt(i);
         }
-  
+
         const byteArray = new Uint8Array(byteNumbers);
-  
+
         byteArrays.push(byteArray);
     }
-  
+
   const blob = new Blob(byteArrays, {type: contentType});
   return blob;
   }
@@ -261,5 +261,5 @@ export class UsuarioService {
       duration: 2000
     });
     toast.present();
-  }  
+  }
 }

@@ -150,12 +150,12 @@ export class CertificadoAptitudPage {
                     this.certificadosService.setCertificado(this.listaCertificados);
                     this.usuarioService.dismiss();
                     console.log('Certificados APTITUD:' , this.listaCertificados);
-                }else{
+                } else {
                   this.usuarioService.dismiss();
                   console.log('200 ' + xmlhttp.response);
                   this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
                 }
-            }else{
+            } else {
               this.usuarioService.dismiss();
               console.log('4 ' + xmlhttp.status);
             }
@@ -215,8 +215,8 @@ export class CertificadoAptitudPage {
   }
 
 
-  RecuentoNotificaciones(){
-    
+  RecuentoNotificaciones() {
+
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
     xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -228,7 +228,7 @@ export class CertificadoAptitudPage {
     '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
       '<soap:Header>' +
         '<AuthHeader xmlns="http://tempuri.org/">' +
-          '<Usuario>' + this.usuarioService.usuario.Usuario +'</Usuario>'+
+          '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
           '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
         '</AuthHeader>' +
       '</soap:Header>' +
@@ -245,10 +245,10 @@ export class CertificadoAptitudPage {
                   const a = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerRecuentoDocumentosNuevosResponse']['ObtenerRecuentoDocumentosNuevosResult']));
                   this.Cantidad = a;
                   this.documentosService.setCantidadDocumentosSinLeer(this.Cantidad);
-                  console.log("a " + a);
+                  console.log('a ' + a);
               } else {
               }
-          }else{
+          } else {
           }
       };
     xmlhttp.send(sr);
@@ -335,6 +335,6 @@ export class CertificadoAptitudPage {
 
   }
 
-  
+
 
 }

@@ -42,7 +42,7 @@ export class FiltroCitasPage implements OnInit {
   ngOnInit() {
     this.centros = this.usuarioService.getCentros();
     this.usuario = this.usuarioService.getUsuario();
-    
+
   }
 
 
@@ -56,7 +56,7 @@ export class FiltroCitasPage implements OnInit {
   filtrar() {
     let fecha_desde_aux: string;
     let fecha_hasta_aux: string;
-   
+
 
     if (this.filtro_desde === null) {
 
@@ -95,7 +95,11 @@ export class FiltroCitasPage implements OnInit {
 
   getCitas(fechaDesde: string, fechaHasta: string, nombre: string, dni: string, noPresentado: boolean) {
 
-    try{
+    try {
+      let nifConsultor = '';
+      if (this.usuario.Tipo === 'CONSULTOR') {
+        nifConsultor = this.usuarioService.empresaConsultor.Nif;
+      }
       this.usuarioService.present('Cargando datos...');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
@@ -115,12 +119,12 @@ export class FiltroCitasPage implements OnInit {
           '<soap:Body>' +
             '<ObtenerCertificadosAptitudRelacionDocumentos xmlns="http://tempuri.org/">' +
               '<FiltroAsist>' +
-                '<FechaDesde>' + fechaDesde + '</FechaDesde>'+
-                '<FechaHasta>' + fechaHasta + '</FechaHasta>'+
+                '<FechaDesde>' + fechaDesde + '</FechaDesde>' +
+                '<FechaHasta>' + fechaHasta + '</FechaHasta>' +
                 '<NombreTrabajador>' + nombre + '</NombreTrabajador>' +
                 '<Dni>' + dni + '</Dni>' +
-                '<NoPresentado>' + noPresentado + '</NoPresentado>'+
-                '<NifClienteConsultor></NifClienteConsultor>'+
+                '<NoPresentado>' + noPresentado + '</NoPresentado>' +
+                '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
               '</FiltroAsist>' +
             '</ObtenerCertificadosAptitudRelacionDocumentos>' +
           '</soap:Body>' +
@@ -135,7 +139,7 @@ export class FiltroCitasPage implements OnInit {
                     // tslint:disable-next-line: max-line-length
                     const a: RespuestaCitasiaInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCitasPendientesRelacionResponse']['ObtenerCitasPendientesRelacionResult']));
                     if (a.CitasInfo !== undefined && !Array.isArray(a.CitasInfo)) {
-                    
+
                       this.listaCitas.push(a.CitasInfo);
 
                     } else {
@@ -148,17 +152,17 @@ export class FiltroCitasPage implements OnInit {
                     this.usuarioService.dismiss();
                     this.usuarioService.guardarCitas(this.listaCitas);
                     this.closeModal();
-                }else{
+                } else {
                   this.usuarioService.dismiss();
                   this.closeModal();
                 }
-            }else{
+            } else {
               this.usuarioService.dismiss();
               this.closeModal();
             }
         };
       xmlhttp.send(sr);
-    }catch(error){
+    } catch (error) {
       this.usuarioService.dismiss();
       this.closeModal();
     }
@@ -184,12 +188,12 @@ export class FiltroCitasPage implements OnInit {
   todasLasCitas() {
     const anio = moment().year() - 1 ;
     const desdeAux = '1900-01-01T00:00:00';
-    const hastaAux =  moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');;
+    const hastaAux =  moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
     this.filtro_desde = new Date(desdeAux);
     this.filtro_hasta = new Date(hastaAux);
     this.filtrar();
 
   }
 
- 
+
 }

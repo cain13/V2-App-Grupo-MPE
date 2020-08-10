@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Certificado, RespuestaAPIGetDocumentos,RespuestaHistorial, ObtenerHistoriaDocumentos, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse, CertificadoPDF, RespuestaObtenerCertPDF } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { RespuestaHistorial, ObtenerHistoriaDocumentos, CertificadoPDF, RespuestaObtenerCertPDF } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
 import * as moment from 'moment';
-import { trigger,style,animate,transition,query,stagger } from '@angular/animations';
-import { NotificationsComponent } from 'src/app/components/notifications/notifications.component';
+import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { HitorialNotificacionesService } from 'src/app/services/hitorial-notificaciones.service';
 import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
 import { EmpresaConsultor, UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
@@ -28,8 +27,8 @@ import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccio
 })
 
 export class HistorialNotificacionesPage implements OnInit {
- 
-  searchKey = "";
+
+  searchKey = '';
   listaDocumentos = [];
   usuario: UsuarioLogin;
   empresaCoonsultor: EmpresaConsultor;
@@ -41,7 +40,6 @@ export class HistorialNotificacionesPage implements OnInit {
     public modalCtrl: ModalController,
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
-    private documentosService: DocumentosTrabajadoresService,
     private historialService: HitorialNotificacionesService
     ) 
     {
@@ -61,11 +59,12 @@ export class HistorialNotificacionesPage implements OnInit {
 
   getHistorialDocumentos(){
     try{
-      this.usuarioService.present("Cargando...");
+     
       let nifConsultor = "";
       if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
         nifConsultor = this.empresaCoonsultor.Nif;
       }
+      this.usuarioService.present("Cargando...");
       let fecha_desde = '1900-01-01T00:00:00';
       let fecha_hasta = moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
@@ -105,11 +104,11 @@ console.log('sr ' + sr);
                     if (a.HistoricoNotificacionInfo !== undefined && !Array.isArray(a.HistoricoNotificacionInfo)) {
 
                       this.listaDocumentos.push(a.HistoricoNotificacionInfo);
-  
+
                     } else {
-  
+
                       this.listaDocumentos = a.HistoricoNotificacionInfo;
-  
+
                     }
                     this.historialService.setDocumento(this.listaDocumentos);
                     console.log('ListaHistorial ' + this.listaDocumentos);
@@ -130,7 +129,7 @@ console.log('sr ' + sr);
 
   }
 
- 
+
   downloadDocumento(id) {
     this.usuarioService.present('Descargando...');
     console.log(id);
@@ -185,10 +184,10 @@ console.log('sr ' + sr);
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel(event) {
+  onCancel() {
     this.findAll();
   }
-  
+
 
   async searchFilter () {
     const modal = await this.modalCtrl.create({
@@ -204,7 +203,7 @@ console.log('sr ' + sr);
   }
 
   findAll() {
-    this.listaDocumentos =this.historialService.getDocumentos();
+    this.listaDocumentos = this.historialService.getDocumentos();
   }
 
   

@@ -135,7 +135,7 @@ export class LoginPage implements OnInit {
               this.menuCtrl.enable(false, 'menuTrabajadores');
               this.menuCtrl.enable(true, 'menuCompleto');
               this.searchFilter();
-            }else {
+            } else {
               console.log('ACCEDEMOS COMO TRABAJADOR');
               this.menuCtrl.enable(true, 'menuTrabajadores');
               this.menuCtrl.enable(false, 'menuCompleto');
@@ -218,10 +218,10 @@ export class LoginPage implements OnInit {
   }
 
   getDatosLogin() {
-    try{
+    try {
       this.usuarioService.present('Accediendo...');
       const xmlhttp = new XMLHttpRequest();
-     
+
 
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -286,7 +286,7 @@ export class LoginPage implements OnInit {
                       this.menuCtrl.enable(false, 'menuTrabajadores');
                       this.menuCtrl.enable(true, 'menuCompleto');
                       this.searchFilter();
-                    }else {
+                    } else {
                       console.log('ACCEDEMOS COMO TRABAJADOR');
                       this.menuCtrl.enable(true, 'menuTrabajadores');
                       this.menuCtrl.enable(false, 'menuCompleto');
@@ -299,7 +299,7 @@ export class LoginPage implements OnInit {
             this.usuarioService.dismiss();
         };
       xmlhttp.send(sr);
-    }catch(error){
+    } catch (error) {
       this.usuarioService.dismiss();
     }
   }

@@ -1,16 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Certificado, RespuestaAPIGetDocumentos,RespuestaHistorial, ObtenerHistoriaDocumentos, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse, CertificadoPDF, RespuestaObtenerCertPDF, RespuestaCitasPendientes, RespuestaCitasiaInfo } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { RespuestaCitasPendientes, RespuestaCitasiaInfo } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
 import * as moment from 'moment';
-import { trigger,style,animate,transition,query,stagger } from '@angular/animations';
-import { NotificationsComponent } from 'src/app/components/notifications/notifications.component';
-import { HitorialNotificacionesService } from 'src/app/services/hitorial-notificaciones.service';
-import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
-import { FiltroAsistenciaPage } from '../../modal/filtro-asistencia/filtro-asistencia.page';
+import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { FiltroCitasPage } from '../../modal/filtro-citas/filtro-citas.page';
 import { CitasPendientesService } from '../../../services/citas-pendientes.service';
 import { UsuarioLogin, EmpresaConsultor } from 'src/app/interfaces/usuario-interfaces';
@@ -32,7 +28,7 @@ import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccio
 })
 export class CitasPendientesPage implements OnInit {
 
-  searchKey = "";
+  searchKey = '';
   listaCitas = [];
   usuario: UsuarioLogin;
   empresaCoonsultor: EmpresaConsultor;
@@ -44,7 +40,6 @@ export class CitasPendientesPage implements OnInit {
     public modalCtrl: ModalController,
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
-    private documentosService: DocumentosTrabajadoresService,
     private citasService: CitasPendientesService
     ) 
     {
@@ -63,11 +58,12 @@ export class CitasPendientesPage implements OnInit {
 
   getCitasPendientes(){
     try{
-      this.usuarioService.present("Cargando Citas...");
+     
       let nifConsultor = "";
       if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
         nifConsultor = this.empresaCoonsultor.Nif;
       }
+      this.usuarioService.present("Cargando Citas...");
       let fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
       let fecha_hasta = moment().add(1,'year').format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
@@ -108,7 +104,7 @@ export class CitasPendientesPage implements OnInit {
                     const a: RespuestaCitasiaInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCitasPendientesRelacionResponse']['ObtenerCitasPendientesRelacionResult']));
                     console.log(a);
                     if (a.CitasInfo !== undefined && !Array.isArray(a.CitasInfo)) {
-                    
+
                       this.listaCitas.push(a.CitasInfo);
 
                     } else {
@@ -119,26 +115,26 @@ export class CitasPendientesPage implements OnInit {
                     this.citasService.setCitaPendiente(this.listaCitas);
                     console.log('ListaHistorial ' + this.listaCitas);
                     this.usuarioService.dismiss();
-                }else{
+                } else {
                   this.usuarioService.dismiss();
                   console.log('200 ' + xmlhttp.response);
                   this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
                 }
-            }else{
+            } else {
               this.usuarioService.dismiss();
             }
         };
       xmlhttp.send(sr);
-  
-      
-    }catch(error){
+
+
+    } catch (error) {
       this.usuarioService.dismiss();
     }
 
   }
 
- 
-  downloadDocumento(id) {
+
+  downloadDocumento() {
    /*  this.usuarioService.present('Descargando...');
     console.log(id);
     let pdf: CertificadoPDF;
@@ -192,10 +188,10 @@ export class CitasPendientesPage implements OnInit {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel(event) {
+  onCancel() {
     this.findAll();
   }
-  
+
 
   async searchFilter () {
     const modal = await this.modalCtrl.create({
