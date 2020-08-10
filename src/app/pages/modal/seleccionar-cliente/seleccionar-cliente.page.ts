@@ -32,7 +32,7 @@ export class SeleccionarClientePage implements OnInit {
   }
 
   getClientes() {
-    try{
+    try {
       this.usuarioService.present('Cargando datos...');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
@@ -75,21 +75,22 @@ export class SeleccionarClientePage implements OnInit {
                     console.log('1.', this.listaClientes);
                     this.usuarioService.dismiss();
                     this.usuarioService.guardarClientes(this.listaClientes);
-                }else{
+                } else {
                   this.usuarioService.dismiss();
                 }
-            }else{
+            } else {
               this.usuarioService.dismiss();
             }
         };
       xmlhttp.send(sr);
-    }catch(error){
+    } catch (error) {
       this.usuarioService.dismiss();
     }
   }
 
-  SeleccionarCliente(nifCliente,NombreCliente){
-    console.log("Cliente Seleccionado " + NombreCliente +" NIF " +nifCliente );
+  SeleccionarCliente(nifCliente, NombreCliente) {
+    console.log('Cliente Seleccionado ' + NombreCliente + ' NIF ' + nifCliente );
+    // tslint:disable-next-line: no-shadowed-variable
     const EmpresaConsultor = {
       Nif: nifCliente,
       NombreCliente: NombreCliente
@@ -102,7 +103,7 @@ export class SeleccionarClientePage implements OnInit {
   }
 
   getCentros(nif) {
-    try{
+    try {
       const xmlhttp = new XMLHttpRequest();
 
 
@@ -141,9 +142,8 @@ export class SeleccionarClientePage implements OnInit {
         };
 
       xmlhttp.send(sr);
-    }catch(error)
-    {
-      
+    } catch (error) {
+
     }
   }
 }

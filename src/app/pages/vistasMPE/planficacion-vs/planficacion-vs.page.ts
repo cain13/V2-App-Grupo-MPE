@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Certificado, RespuestaAPIGetDocumentos,RespuestaHistorial, ObtenerHistoriaDocumentos, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse, CertificadoPDF, RespuestaObtenerCertPDF } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { CertificadoPDF, RespuestaObtenerCertPDF } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
-import * as moment from 'moment';
-import { trigger,style,animate,transition,query,stagger } from '@angular/animations';
-import { NotificationsComponent } from 'src/app/components/notifications/notifications.component';
+import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { HitorialNotificacionesService } from 'src/app/services/hitorial-notificaciones.service';
-import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
 
 
 @Component({
@@ -27,7 +24,7 @@ import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-histori
 })
 export class PlanficacionVSPage implements OnInit {
 
-  searchKey = "";
+  searchKey = '';
   listaDocumentos = [];
 
   constructor(
@@ -36,7 +33,6 @@ export class PlanficacionVSPage implements OnInit {
     public modalCtrl: ModalController,
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
-    private documentosService: DocumentosTrabajadoresService,
     private historialService: HitorialNotificacionesService
     ) {  }
 
@@ -44,7 +40,7 @@ export class PlanficacionVSPage implements OnInit {
     this.getHistorialDocumentos();
   }
 
-  getHistorialDocumentos(){
+  getHistorialDocumentos() {
    /*  try{
       this.usuarioService.present("Cargando...");
       let fecha_desde = '1900-01-01T00:00:00';
@@ -81,16 +77,17 @@ export class PlanficacionVSPage implements OnInit {
                     const xml = xmlhttp.responseXML;
                     const obj: RespuestaHistorial = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                     // tslint:disable-next-line: max-line-length
+
                     const a: ObtenerHistoriaDocumentos = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerHistoricoNotificacionesRelacionDocumentosResponse']['ObtenerHistoricoNotificacionesRelacionDocumentosResult']));
                     console.log(a);
                     if (a.HistoricoNotificacionInfo !== undefined && !Array.isArray(a.HistoricoNotificacionInfo)) {
 
                       this.listaDocumentos.push(a.HistoricoNotificacionInfo);
-  
+
                     } else {
-  
+
                       this.listaDocumentos = a.HistoricoNotificacionInfo;
-  
+
                     }
                     this.historialService.setDocumento(this.listaDocumentos);
                     console.log('ListaHistorial ' + this.listaDocumentos);
@@ -98,7 +95,7 @@ export class PlanficacionVSPage implements OnInit {
             }
         };
       xmlhttp.send(sr);
-  
+
       this.usuarioService.dismiss();
     }catch(error){
       this.usuarioService.dismiss();
@@ -106,7 +103,7 @@ export class PlanficacionVSPage implements OnInit {
  */
   }
 
- 
+
   downloadDocumento(id) {
     this.usuarioService.present('Descargando...');
     console.log(id);
@@ -161,10 +158,10 @@ export class PlanficacionVSPage implements OnInit {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel(event) {
+  onCancel() {
     this.findAll();
   }
-  
+
 
   async searchFilter () {
    /*  const modal = await this.modalCtrl.create({
@@ -180,7 +177,7 @@ export class PlanficacionVSPage implements OnInit {
   }
 
   findAll() {
-    this.listaDocumentos =this.historialService.getDocumentos();
+    this.listaDocumentos = this.historialService.getDocumentos();
   }
 
 }

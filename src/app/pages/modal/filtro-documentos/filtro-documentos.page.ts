@@ -49,7 +49,6 @@ export class FiltroDocumentosPage implements OnInit {
   ngOnInit() {
     this.centros = this.usuarioService.getCentros();
     this.usuario = this.usuarioService.getUsuario();
-    
   }
 
 
@@ -107,7 +106,12 @@ export class FiltroDocumentosPage implements OnInit {
 
 
   getCertificados(fechaDesde: string, fechaHasta: string, nombre: string, dni: string, idCentro: number, idCentroEspecificado: number) {
-    try{
+    try {
+
+      let nifConsultor = '';
+      if (this.usuario.Tipo === 'CONSULTOR') {
+        nifConsultor = this.usuarioService.empresaConsultor.Nif;
+      }
       this.usuarioService.present('Cargando datos...');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
@@ -131,7 +135,7 @@ export class FiltroDocumentosPage implements OnInit {
                 '<FechaHasta>' + fechaHasta + '</FechaHasta>' +
                 '<NombreTrabajador>' + nombre + '</NombreTrabajador>' +
                 '<Dni>' + dni + '</Dni>' +
-                '<NifClienteConsultor></NifClienteConsultor>' +
+                '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
                 '<IdCentroTrabajo>' + idCentro + '</IdCentroTrabajo>' +
                 '<IdCentroTrabajoEspecificado>' + idCentroEspecificado + '</IdCentroTrabajoEspecificado>' +
               '</FiltroCerApt>' +
@@ -161,18 +165,17 @@ export class FiltroDocumentosPage implements OnInit {
                   this.usuarioService.dismiss();
                   this.usuarioService.guardarCertificados(this.listaCertificados);
                   this.closeModal();
-              }else{
+              } else {
                 this.usuarioService.dismiss();
                 this.closeModal();
               }
-          }else{
+          } else {
             this.usuarioService.dismiss();
             this.closeModal();
           }
       };
       xmlhttp.send(sr);
-    }catch(error)
-    {
+    } catch (error) {
       this.usuarioService.dismiss();
       this.closeModal();
     }

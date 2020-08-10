@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Certificado, RespuestaAPIGetDocumentos,RespuestaHistorial, ObtenerHistoriaDocumentos, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse, CertificadoPDF, RespuestaObtenerCertPDF, RespuestaAsistenciaInfo, RespuestaAsistencia } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { RespuestaAsistenciaInfo, RespuestaAsistencia } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
 import * as moment from 'moment';
-import { trigger,style,animate,transition,query,stagger } from '@angular/animations';
-import { NotificationsComponent } from 'src/app/components/notifications/notifications.component';
-import { HitorialNotificacionesService } from 'src/app/services/hitorial-notificaciones.service';
-import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
+import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { AsistenciaService } from 'src/app/services/asistencia.service';
 import { FiltroAsistenciaPage } from '../../modal/filtro-asistencia/filtro-asistencia.page';
 
@@ -27,7 +24,7 @@ import { FiltroAsistenciaPage } from '../../modal/filtro-asistencia/filtro-asist
   ]
 })
 export class AsistenciaPage implements OnInit {
-  searchKey = "";
+  searchKey = '';
   listaAsistencias = [];
 
   constructor(
@@ -36,7 +33,6 @@ export class AsistenciaPage implements OnInit {
     public modalCtrl: ModalController,
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
-    private documentosService: DocumentosTrabajadoresService,
     private asistenciaService: AsistenciaService
     ) {   }
 
@@ -45,11 +41,15 @@ export class AsistenciaPage implements OnInit {
     this.getAsistencias();
   }
 
-  getAsistencias(){
-    try{
-      this.usuarioService.present("Cargando...");
-      let fecha_desde = '1900-01-01T00:00:00';
-      let fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
+  getAsistencias() {
+    try {
+      let nifConsultor = '';
+      if (this.usuarioService.usuario.Tipo === 'CONSULTOR') {
+        nifConsultor = this.usuarioService.empresaConsultor.Nif;
+      }
+      this.usuarioService.present('Cargando...');
+      const fecha_desde = '1900-01-01T00:00:00';
+      const fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -68,12 +68,12 @@ export class AsistenciaPage implements OnInit {
         '<soap:Body>' +
           '<ObtenerAsistenciasRelacion xmlns="http://tempuri.org/">' +
             '<FiltroAsist>' +
-              '<FechaDesde>' + fecha_desde + '</FechaDesde>'+
-              '<FechaHasta>' + fecha_hasta + '</FechaHasta>'+
+              '<FechaDesde>' + fecha_desde + '</FechaDesde>' +
+              '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
               '<NombreTrabajador></NombreTrabajador>' +
               '<Dni></Dni>' +
-              '<NoPresentado>0</NoPresentado>'+
-              '<NifClienteConsultor></NifClienteConsultor>'+
+              '<NoPresentado>0</NoPresentado>' +
+              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
             '</FiltroAsist>' +
           '</ObtenerAsistenciasRelacion>' +
         '</soap:Body>' +
@@ -90,25 +90,25 @@ export class AsistenciaPage implements OnInit {
                     if (a.AsistenciaInfo !== undefined && !Array.isArray(a.AsistenciaInfo)) {
 
                       this.listaAsistencias.push(a.AsistenciaInfo);
-  
+
                     } else {
-  
+
                       this.listaAsistencias = a.AsistenciaInfo;
-  
+
                     }
                     this.asistenciaService.setAsistencia(this.listaAsistencias);
                     console.log('ListaAsistencia ' + this.listaAsistencias);
                     this.usuarioService.dismiss();
-                }else{
+                } else {
                   this.usuarioService.dismiss();
                 }
-            }else{
+            } else {
               this.usuarioService.dismiss();
             }
         };
       xmlhttp.send(sr);
-  
-    }catch(error){
+
+    } catch (error) {
       this.usuarioService.dismiss();
     }
   }
@@ -122,10 +122,10 @@ export class AsistenciaPage implements OnInit {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel(event) {
+  onCancel() {
     this.findAll();
   }
-  
+
 
   async searchFilter () {
     const modal = await this.modalCtrl.create({
@@ -141,9 +141,9 @@ export class AsistenciaPage implements OnInit {
   }
 
   findAll() {
-    this.listaAsistencias =this.asistenciaService.getAsistencias();
+    this.listaAsistencias = this.asistenciaService.getAsistencias();
   }
-  masInfo(NifTrabajador){
+  masInfo() {
 
   }
 

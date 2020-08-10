@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Certificado, RespuestaAPIGetDocumentos,RespuestaHistorial, ObtenerHistoriaDocumentos, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse, CertificadoPDF, RespuestaObtenerCertPDF } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { RespuestaHistorial, ObtenerHistoriaDocumentos, CertificadoPDF, RespuestaObtenerCertPDF } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
 import * as moment from 'moment';
-import { trigger,style,animate,transition,query,stagger } from '@angular/animations';
-import { NotificationsComponent } from 'src/app/components/notifications/notifications.component';
+import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { HitorialNotificacionesService } from 'src/app/services/hitorial-notificaciones.service';
 import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
 
@@ -26,8 +25,8 @@ import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-histori
 })
 
 export class HistorialNotificacionesPage implements OnInit {
- 
-  searchKey = "";
+
+  searchKey = '';
   listaDocumentos = [];
 
   constructor(
@@ -36,7 +35,6 @@ export class HistorialNotificacionesPage implements OnInit {
     public modalCtrl: ModalController,
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
-    private documentosService: DocumentosTrabajadoresService,
     private historialService: HitorialNotificacionesService
     ) {  }
 
@@ -44,11 +42,16 @@ export class HistorialNotificacionesPage implements OnInit {
     this.getHistorialDocumentos();
   }
 
-  getHistorialDocumentos(){
-    try{
-      this.usuarioService.present("Cargando...");
-      let fecha_desde = '1900-01-01T00:00:00';
-      let fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
+  getHistorialDocumentos() {
+    try {
+
+      let nifConsultor = '';
+      if (this.usuarioService.usuario.Tipo === 'CONSULTOR') {
+        nifConsultor = this.usuarioService.empresaConsultor.Nif;
+      }
+      this.usuarioService.present('Cargando...');
+      const fecha_desde = '1900-01-01T00:00:00';
+      const fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -67,9 +70,9 @@ export class HistorialNotificacionesPage implements OnInit {
         '<soap:Body>' +
           '<ObtenerHistoricoNotificacionesRelacionDocumentos xmlns="http://tempuri.org/">' +
             '<FiltroNot>' +
-              '<FechaDesde>' + fecha_desde + '</FechaDesde>'+
-              '<FechaHasta>' + fecha_hasta + '</FechaHasta>'+
-              '<NifClienteConsultor></NifClienteConsultor>'+
+              '<FechaDesde>' + fecha_desde + '</FechaDesde>' +
+              '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
+              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
             '</FiltroNot>' +
           '</ObtenerHistoricoNotificacionesRelacionDocumentos>' +
         '</soap:Body>' +
@@ -86,11 +89,11 @@ export class HistorialNotificacionesPage implements OnInit {
                     if (a.HistoricoNotificacionInfo !== undefined && !Array.isArray(a.HistoricoNotificacionInfo)) {
 
                       this.listaDocumentos.push(a.HistoricoNotificacionInfo);
-  
+
                     } else {
-  
+
                       this.listaDocumentos = a.HistoricoNotificacionInfo;
-  
+
                     }
                     this.historialService.setDocumento(this.listaDocumentos);
                     console.log('ListaHistorial ' + this.listaDocumentos);
@@ -98,15 +101,15 @@ export class HistorialNotificacionesPage implements OnInit {
             }
         };
       xmlhttp.send(sr);
-  
+
       this.usuarioService.dismiss();
-    }catch(error){
+    } catch (error) {
       this.usuarioService.dismiss();
     }
 
   }
 
- 
+
   downloadDocumento(id) {
     this.usuarioService.present('Descargando...');
     console.log(id);
@@ -161,10 +164,10 @@ export class HistorialNotificacionesPage implements OnInit {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel(event) {
+  onCancel() {
     this.findAll();
   }
-  
+
 
   async searchFilter () {
     const modal = await this.modalCtrl.create({
@@ -180,7 +183,7 @@ export class HistorialNotificacionesPage implements OnInit {
   }
 
   findAll() {
-    this.listaDocumentos =this.historialService.getDocumentos();
+    this.listaDocumentos = this.historialService.getDocumentos();
   }
 
 }
