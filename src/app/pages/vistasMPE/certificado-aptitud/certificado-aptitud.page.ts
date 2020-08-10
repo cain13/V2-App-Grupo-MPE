@@ -135,35 +135,40 @@ export class CertificadoAptitudPage {
 
 
       xmlhttp.onreadystatechange =  () => {
-            if (xmlhttp.readyState === 4) {
-                if (xmlhttp.status === 200) {
-                    const xml = xmlhttp.responseXML;
-                    const obj: RespuestaGetAPICertificadosAptitud = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                    // tslint:disable-next-line: max-line-length
-                    const a: ObtenerCertificados = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadosAptitudRelacionDocumentosResponse']['ObtenerCertificadosAptitudRelacionDocumentosResult']));
-                    if (a.CertificadoAptitudInfo !== undefined && !Array.isArray(a.CertificadoAptitudInfo)) {
+        if (xmlhttp.readyState === 4) {
+            if (xmlhttp.status === 500) {
+              console.log('500 - nifConsultor: ', nifConsultor);
+              this.usuarioService.dismiss();
+            }else if (xmlhttp.status === 200) {
+                const xml = xmlhttp.responseXML;
+                const obj: RespuestaGetAPICertificadosAptitud = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                // tslint:disable-next-line: max-line-length
+                const a: ObtenerCertificados = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadosAptitudRelacionDocumentosResponse']['ObtenerCertificadosAptitudRelacionDocumentosResult']));
+                if (a.CertificadoAptitudInfo !== undefined && !Array.isArray(a.CertificadoAptitudInfo)) {
 
-                      this.listaCertificados.push(a.CertificadoAptitudInfo);
+                  this.listaCertificados.push(a.CertificadoAptitudInfo);
 
-                    } else {
-
-                      this.listaCertificados = a.CertificadoAptitudInfo;
-
-                    }
-                    console.log('Cert: ', a.CertificadoAptitudInfo);
-                    this.certificadosService.setCertificado(this.listaCertificados);
-                    this.usuarioService.dismiss();
-                    console.log('Certificados APTITUD:' , this.listaCertificados);
                 } else {
-                  this.usuarioService.dismiss();
-                  console.log('200 ' + xmlhttp.response);
-                  this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+
+                  this.listaCertificados = a.CertificadoAptitudInfo;
+
                 }
+                console.log('Cert: ', a.CertificadoAptitudInfo);
+                this.certificadosService.setCertificado(this.listaCertificados);
+                this.usuarioService.dismiss();
+                console.log('Certificados APTITUD:' , this.listaCertificados);
             } else {
               this.usuarioService.dismiss();
-              console.log('4 ' + xmlhttp.status);
+              console.log('200 ' + xmlhttp.response);
+              if(this.usuario.Tipo === "CONSULTOR"){
+                this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+              }
             }
-        };
+          } else {
+            this.usuarioService.dismiss();
+            console.log('4 ' + xmlhttp.status);
+          }
+      };
       xmlhttp.send(sr);
     }catch(error){
       console.log('error ', error);

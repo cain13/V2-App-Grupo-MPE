@@ -116,7 +116,9 @@ export class AsistenciaPage implements OnInit {
                     this.usuarioService.dismiss();
                 } else {
                   this.usuarioService.dismiss();
-                  this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+                  if(this.usuario.Tipo === "CONSULTOR"){
+                    this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+                  }
                 }
             } else {
               this.usuarioService.dismiss();

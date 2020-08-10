@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 // import { Router } from '@angular/router';
 
-import { Platform, MenuController, NavController } from '@ionic/angular';
+import { Platform, MenuController, NavController, IonRouterOutlet } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -20,6 +20,9 @@ import { UsuarioService } from './services/usuario.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
+
+  @ViewChild(IonRouterOutlet, { static : true }) routerOutlet: IonRouterOutlet;
+  lastBack = Date.now();
 
   public appPages: Array<Pages>;
   public appPagesVSAll: Array<Pages>;
@@ -190,6 +193,7 @@ export class AppComponent {
       this.translateService.getTranslation(environment.language).subscribe(translations => {
         this.translate.setTranslations(translations);
       });
+      this.backButtonEvent();
     }).catch(() => {
       // Set language of the app.
       this.translateService.setDefaultLang(environment.language);
@@ -210,8 +214,27 @@ export class AppComponent {
     this.platform.resume.subscribe(() => {
       console.log('VUELVE A PRIMER PLANO');
     }); */
+    
   }
-
+  backButtonEvent() {
+    this.platform.backButton.subscribeWithPriority(0, () => {
+    
+      if (this.routerOutlet.canGoBack()) {
+        console.log('Vista Fichar');
+        if(this.usuarioService.getUsuario().Tipo === "CLIENTE"){
+          this.navCtrl.navigateRoot('certificado-aptitud');
+        }else{
+          this.navCtrl.navigateRoot('documentos-trabajador');
+        }
+      } else{
+        if (Date.now() - this.lastBack > 500) {
+          navigator['app'].exitApp();
+        }
+        this.lastBack = Date.now();
+      }
+      this.usuarioService.dismiss();
+    });
+  }
   closeMenu() {
     this.menu.close();
   }

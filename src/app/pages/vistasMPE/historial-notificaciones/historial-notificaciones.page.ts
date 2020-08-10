@@ -117,7 +117,9 @@ console.log('sr ' + sr);
                     this.usuarioService.dismiss();
                 }else{
                   this.usuarioService.dismiss();
-                  this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+                  if(this.usuario.Tipo === "CONSULTOR"){
+                    this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+                  }
                 }
             }else{
               this.usuarioService.dismiss();
@@ -134,6 +136,7 @@ console.log('sr ' + sr);
 
   downloadDocumento(id) {
     try{
+     
       this.usuarioService.present('Descargando...');
       console.log("idDocumentos " + id);
       let pdf: CertificadoPDF;
@@ -159,7 +162,7 @@ console.log('sr ' + sr);
           '</ObtenerCertificadoAptitudPdf>' +
         '</soap:Body>' +
       '</soap:Envelope>';
-
+    console.log("sr ", sr);
       xmlhttp.onreadystatechange =  () => {
             if (xmlhttp.readyState === 4) {
                 if (xmlhttp.status === 200) {
@@ -171,7 +174,12 @@ console.log('sr ' + sr);
                     console.log('NombreFichero ' + a.NombreFichero);
                     this.usuarioService.dismiss();
                     this.usuarioService.saveAndOpenPdf(pdf.Datos, pdf.NombreFichero);
+                }else{
+                  this.usuarioService.presentAlert("Error","Error al descargar documento","El documento no tiene un id valido.");
+                  this.usuarioService.dismiss();
                 }
+            }else{
+              this.usuarioService.dismiss();
             }
         };
       xmlhttp.send(sr);

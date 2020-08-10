@@ -29,7 +29,7 @@
 <ion-content>
   <ion-content>
     <ion-list class="ion-no-padding" [@staggerIn]="listaDocumentos">
-      <ion-item class="bg-white"  *ngFor="let certificado of listaDocumentos"  tappable (click)="downloadDocumento(certificado.IdDocumento.trim())">
+      <ion-item class="bg-white"  *ngFor="let certificado of listaDocumentos"  tappable (click)="downloadDocumento(certificado.IdDocumento)">
         <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
         <ion-label>
           <h2> 

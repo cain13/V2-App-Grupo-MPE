@@ -36,7 +36,7 @@
         <p class="text-12x" >
           <ion-text color="secondary">{{certificado.NifTrabajador}}</ion-text>
         </p>
-        <p class="text-12x" >
+        <p class="text-12x" *ngIf="certificado.NombreCentroMedico!== undefined && certificado.NombreCentroMedico !== null && certificado.NombreCentroMedico.length > 0">
           <ion-text color="secondary">{{certificado.NombreCentroMedico}}</ion-text>
         </p> 
         <p class="text-12x" style="float: left;">
