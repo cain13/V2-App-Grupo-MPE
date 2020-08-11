@@ -9,6 +9,8 @@ import * as moment from 'moment';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { HitorialNotificacionesService } from 'src/app/services/hitorial-notificaciones.service';
 import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
+import { EmpresaConsultor, UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
+import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
 
 @Component({
   selector: 'app-historial-notificaciones',
@@ -28,6 +30,9 @@ export class HistorialNotificacionesPage implements OnInit {
 
   searchKey = '';
   listaDocumentos = [];
+  usuario: UsuarioLogin;
+  empresaCoonsultor: EmpresaConsultor;
+  hayConsultor = false;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -36,22 +41,33 @@ export class HistorialNotificacionesPage implements OnInit {
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
     private historialService: HitorialNotificacionesService
-    ) {  }
+    ) {
+      this.usuario = this.usuarioService.getUsuario();
+      this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      if (this.usuario.Tipo === 'CONSULTOR') {
+        if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
+          this.hayConsultor = true;
+        }
+      }
+    }
 
   ngOnInit() {
     this.getHistorialDocumentos();
+
   }
 
   getHistorialDocumentos() {
     try {
 
       let nifConsultor = '';
-      if (this.usuarioService.usuario.Tipo === 'CONSULTOR') {
-        nifConsultor = this.usuarioService.empresaConsultor.Nif;
+      if (this.usuario.Tipo === 'CONSULTOR') {
+        if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
+          nifConsultor = this.empresaCoonsultor.Nif;
+        }
       }
-      this.usuarioService.present('Cargando datos...');
+      this.usuarioService.present('Cargando...');
       const fecha_desde = '1900-01-01T00:00:00';
-      const fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
+      const fecha_hasta = moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -72,12 +88,12 @@ export class HistorialNotificacionesPage implements OnInit {
             '<FiltroNot>' +
               '<FechaDesde>' + fecha_desde + '</FechaDesde>' +
               '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
-              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
+              '<NifClienteConsultor>'  + nifConsultor + '</NifClienteConsultor>' +
             '</FiltroNot>' +
           '</ObtenerHistoricoNotificacionesRelacionDocumentos>' +
         '</soap:Body>' +
       '</soap:Envelope>';
-
+console.log('sr ' + sr);
       xmlhttp.onreadystatechange =  () => {
             if (xmlhttp.readyState === 4) {
                 if (xmlhttp.status === 200) {
@@ -97,22 +113,22 @@ export class HistorialNotificacionesPage implements OnInit {
                     }
                     this.historialService.setDocumento(this.listaDocumentos);
                     console.log('ListaHistorial ' + this.listaDocumentos);
+                    this.usuarioService.dismiss();
                 } else {
-
                   this.usuarioService.dismiss();
-
+                  if (this.usuario.Tipo === 'CONSULTOR') {
+                    // tslint:disable-next-line: max-line-length
+                    this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
+                  }
                 }
             } else {
-
               this.usuarioService.dismiss();
-
             }
         };
 
       xmlhttp.send(sr);
 
     } catch (error) {
-      console.log(error);
       this.usuarioService.dismiss();
 
     }
@@ -121,48 +137,57 @@ export class HistorialNotificacionesPage implements OnInit {
 
 
   downloadDocumento(id) {
-    this.usuarioService.present('Descargando...');
-    console.log(id);
-    let pdf: CertificadoPDF;
-    const xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xmlhttp.responseType = 'document';
-      // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
-    const sr =
+    try {
 
-    '<?xml version="1.0" encoding="utf-8"?>' +
-    '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
-      '<soap:Header>' +
-        '<AuthHeader xmlns="http://tempuri.org/">' +
-          '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
-          '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
-        '</AuthHeader>' +
-      '</soap:Header>' +
-      '<soap:Body>' +
-        '<ObtenerCertificadoAptitudPdf xmlns="http://tempuri.org/">' +
-          '<IdDocumento>' + id + '</IdDocumento>' +
-        '</ObtenerCertificadoAptitudPdf>' +
-      '</soap:Body>' +
-    '</soap:Envelope>';
+      this.usuarioService.present('Descargando...');
+      console.log('idDocumentos ' + id);
+      let pdf: CertificadoPDF;
+      const xmlhttp = new XMLHttpRequest();
+      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+      xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+      xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+      xmlhttp.responseType = 'document';
+        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+      const sr =
 
-    xmlhttp.onreadystatechange =  () => {
-          if (xmlhttp.readyState === 4) {
-              if (xmlhttp.status === 200) {
-                  const xml = xmlhttp.responseXML;
-                  const obj: RespuestaObtenerCertPDF = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                  const a: CertificadoPDF = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadoAptitudPdfResponse']['ObtenerCertificadoAptitudPdfResult']));
-                  console.log(a);
-                  pdf = a;
-                  console.log('NombreFichero ' + a.NombreFichero);
+      '<?xml version="1.0" encoding="utf-8"?>' +
+      '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+        '<soap:Header>' +
+          '<AuthHeader xmlns="http://tempuri.org/">' +
+            '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
+            '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
+          '</AuthHeader>' +
+        '</soap:Header>' +
+        '<soap:Body>' +
+          '<ObtenerCertificadoAptitudPdf xmlns="http://tempuri.org/">' +
+            '<IdDocumento>' + id + '</IdDocumento>' +
+          '</ObtenerCertificadoAptitudPdf>' +
+        '</soap:Body>' +
+      '</soap:Envelope>';
+    console.log('sr ', sr);
+      xmlhttp.onreadystatechange =  () => {
+            if (xmlhttp.readyState === 4) {
+                if (xmlhttp.status === 200) {
+                    const xml = xmlhttp.responseXML;
+                    const obj: RespuestaObtenerCertPDF = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                    const a: CertificadoPDF = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadoAptitudPdfResponse']['ObtenerCertificadoAptitudPdfResult']));
+                    console.log(a);
+                    pdf = a;
+                    console.log('NombreFichero ' + a.NombreFichero);
+                    this.usuarioService.dismiss();
+                    this.usuarioService.saveAndOpenPdf(pdf.Datos, pdf.NombreFichero);
+                } else {
+                  this.usuarioService.presentAlert('Error', 'Error al descargar documento', 'El documento no tiene un id valido.');
                   this.usuarioService.dismiss();
-                  this.usuarioService.saveAndOpenPdf(pdf.Datos, pdf.NombreFichero);
-              }
-          }
-      };
-    xmlhttp.send(sr);
-
+                }
+            } else {
+              this.usuarioService.dismiss();
+            }
+        };
+      xmlhttp.send(sr);
+    } catch (error) {
+      this.usuarioService.dismiss();
+    }
   }
 
   onInput(event) {
@@ -195,5 +220,24 @@ export class HistorialNotificacionesPage implements OnInit {
   findAll() {
     this.listaDocumentos = this.historialService.getDocumentos();
   }
+
+
+  seleccionarEmpresa() {
+    this.vistaSeleccionarEmpresa();
+  }
+
+  async vistaSeleccionarEmpresa() {
+    const modal = await this.modalCtrl.create({
+      component: SeleccionarClientePage
+    });
+    modal.onDidDismiss().then(() => {
+      console.log('Entra a modal seleccionar cliente');
+      this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      this.getHistorialDocumentos();
+      this.listaDocumentos = this.historialService.getDocumentosFiltro();
+    });
+    return await modal.present();
+  }
+
 
 }

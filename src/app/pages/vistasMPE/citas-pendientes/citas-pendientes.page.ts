@@ -9,6 +9,8 @@ import * as moment from 'moment';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { FiltroCitasPage } from '../../modal/filtro-citas/filtro-citas.page';
 import { CitasPendientesService } from '../../../services/citas-pendientes.service';
+import { UsuarioLogin, EmpresaConsultor } from 'src/app/interfaces/usuario-interfaces';
+import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
 
 
 @Component({
@@ -28,6 +30,9 @@ export class CitasPendientesPage implements OnInit {
 
   searchKey = '';
   listaCitas = [];
+  usuario: UsuarioLogin;
+  empresaCoonsultor: EmpresaConsultor;
+  hayConsultor = false;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -36,22 +41,31 @@ export class CitasPendientesPage implements OnInit {
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
     private citasService: CitasPendientesService
-    ) {  }
+    ) 
+    {
+      this.usuario = this.usuarioService.getUsuario();
+      this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+        if(this.usuario.Tipo === "CONSULTOR"){
+          this.hayConsultor = true;
+        }
+      }
+    }
 
   ngOnInit() {
     this.getCitasPendientes();
   }
 
-  getCitasPendientes() {
-    try {
-
-      let nifConsultor = '';
-      if (this.usuarioService.usuario.Tipo === 'CONSULTOR') {
-        nifConsultor = this.usuarioService.empresaConsultor.Nif;
+  getCitasPendientes(){
+    try{
+     
+      let nifConsultor = "";
+      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+        nifConsultor = this.empresaCoonsultor.Nif;
       }
-      this.usuarioService.present('Cargando Citas...');
-      const fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
-      const fecha_hasta = moment().add(1, 'year').format('YYYY-MM-DDT00:00:00');
+      this.usuarioService.present("Cargando Citas...");
+      let fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
+      let fecha_hasta = moment().add(1,'year').format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -68,13 +82,16 @@ export class CitasPendientesPage implements OnInit {
           '</AuthHeader>' +
         '</soap:Header>' +
         '<soap:Body>' +
-          '<ObtenerHistoricoNotificacionesRelacionDocumentos xmlns="http://tempuri.org/">' +
-            '<FiltroNot>' +
-              '<FechaDesde>' + fecha_desde + '</FechaDesde>' +
-              '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
-              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
-            '</FiltroNot>' +
-          '</ObtenerHistoricoNotificacionesRelacionDocumentos>' +
+          '<ObtenerCitasPendientesRelacion xmlns="http://tempuri.org/">' +
+            '<FiltroAsist>' +
+              '<FechaDesde>' + fecha_desde + '</FechaDesde>'+
+              '<FechaHasta>' + fecha_hasta + '</FechaHasta>'+
+              '<NombreTrabajador></NombreTrabajador>'+
+              '<Dni></Dni>'+
+              '<NoPresentado>0</NoPresentado>'+
+              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>'+
+            '</FiltroAsist>' +
+          '</ObtenerCitasPendientesRelacion>' +
         '</soap:Body>' +
       '</soap:Envelope>';
 
@@ -103,6 +120,8 @@ export class CitasPendientesPage implements OnInit {
                     this.usuarioService.dismiss();
                 } else {
                   this.usuarioService.dismiss();
+                  console.log('200 ' + xmlhttp.response);
+                  this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
                 }
             } else {
               this.usuarioService.dismiss();
@@ -194,4 +213,20 @@ export class CitasPendientesPage implements OnInit {
     this.listaCitas = this.citasService.getCertificados();
   }
 
+  seleccionarEmpresa(){
+    this.vistaSeleccionarEmpresa();
+  }
+
+  async vistaSeleccionarEmpresa(){
+    const modal = await this.modalCtrl.create({
+      component: SeleccionarClientePage
+    });
+    modal.onDidDismiss().then(() => {
+      console.log('Entra a modal seleccionar cliente');
+      this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      this. getCitasPendientes();
+      this.listaCitas = this.citasService.getCertificados();
+    });
+    return await modal.present();
+  }
 }

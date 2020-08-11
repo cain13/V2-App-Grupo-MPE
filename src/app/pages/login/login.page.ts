@@ -8,6 +8,7 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 import { UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
 import { SeleccionarClientePage } from '../modal/seleccionar-cliente/seleccionar-cliente.page';
+import { EmpresaConsultor } from '../../interfaces/usuario-interfaces';
 
 
 
@@ -276,8 +277,9 @@ export class LoginPage implements OnInit {
                       this.menuCtrl.enable(true, 'menuCompleto');
                       this.getCentros();
                       this.navCtrl.navigateRoot('certificado-aptitud');
+                    
                     } else if ( usuario.Tipo === 'CONSULTOR') {
-                      console.log('ACCEDEMOS COMO CLIENTE');
+                      console.log('ACCEDEMOS COMO CONSULTOR');
                       this.menuCtrl.enable(false, 'menuTrabajadores');
                       this.menuCtrl.enable(true, 'menuCompleto');
                       this.searchFilter();
@@ -303,7 +305,7 @@ export class LoginPage implements OnInit {
       component: SeleccionarClientePage
     });
     modal.onDidDismiss().then(() => {
-      console.log('Entra a modal seleccionar cliente');
+      this.navCtrl.navigateRoot('certificado-aptitud');
     });
     return await modal.present();
   }

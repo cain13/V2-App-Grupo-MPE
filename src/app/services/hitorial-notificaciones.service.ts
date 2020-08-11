@@ -8,15 +8,21 @@ import documentos from '../providers/documentos/mock-documentos';
 export class HitorialNotificacionesService {
 
   listaDocumentosTodos = [];
+  listaDocumentos = [];
   Cantidad:number;
   constructor( private usuarioService: UsuarioService ) { }
 
     setDocumento(listadocumentos){
       this.listaDocumentosTodos = listadocumentos;
+      this.listaDocumentos = listadocumentos;
     }
 
     findAll() {
       return Promise.resolve(this.listaDocumentosTodos);
+    }
+
+    getDocumentosFiltro(){
+      return this.listaDocumentos;
     }
 
     getDocumentos() {
@@ -42,6 +48,8 @@ export class HitorialNotificacionesService {
       return Promise.resolve(this.listaDocumentosTodos.filter((documento: any) => 
           (documento.Referencia +  ' ' + documento.FechaNotificacion + ' ' + documento.TipoDocumento).toUpperCase().indexOf(key) > -1));
     }
+
+    
 
     getDocumentosSinLeer(){
       return this.Cantidad;

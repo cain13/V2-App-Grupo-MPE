@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { LoadingController, Platform, ToastController  } from '@ionic/angular';
+import { LoadingController, Platform, ToastController, AlertController } from '@ionic/angular';
 import { UsuarioLogin, CambiarPassword, EmpresaConsultor } from '../interfaces/usuario-interfaces';
 import { DatabaseService } from './database.service';
 import { Centro, Certificado, RecuentoNotificacionesResponse, Notificacion, Asistencia, Citas, Cliente } from '../interfaces/interfaces-grupo-mpe';
@@ -29,7 +29,6 @@ export class UsuarioService {
   recuentoNotificaciones: number;
 
 
-
   isLoading = false;
 
   constructor(private loadingCtrl: LoadingController,
@@ -37,7 +36,8 @@ export class UsuarioService {
     private platform: Platform,
     private opener: FileOpener,
     private file: File,
-    private toastController: ToastController) { }
+    private toastController: ToastController,
+    private alertCtrl: AlertController) { }
 
 
   login(usuario: UsuarioLogin) {
@@ -63,7 +63,7 @@ export class UsuarioService {
   }
 
   guardarEmpresaConsultor(empresa: EmpresaConsultor) {
-
+    this.empresaConsultor = null;
     this.empresaConsultor = empresa;
 
   }
@@ -73,6 +73,7 @@ export class UsuarioService {
     return this.empresaConsultor;
 
   }
+
 
   getCambiarPassword() {
     return this.cambiarPassword;
@@ -200,8 +201,19 @@ export class UsuarioService {
     }
 
   }
+  
+  async presentAlert(titulo:string, subtitulo: string, mensaje: string) {
+    const alert = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      buttons: ['OK']
+    });
 
+    await alert.present();
+  }
 
+  
   saveAndOpenPdf(pdf: string, filename: string) {
     console.log('path ' + this.file.dataDirectory);
     const writeDirectory = this.platform.is('ios') ? this.file.dataDirectory : this.file.dataDirectory;

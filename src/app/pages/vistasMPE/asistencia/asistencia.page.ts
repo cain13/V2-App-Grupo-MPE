@@ -9,6 +9,8 @@ import * as moment from 'moment';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { AsistenciaService } from 'src/app/services/asistencia.service';
 import { FiltroAsistenciaPage } from '../../modal/filtro-asistencia/filtro-asistencia.page';
+import { EmpresaConsultor, UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
+import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
 
 @Component({
   selector: 'app-asistencia',
@@ -26,7 +28,10 @@ import { FiltroAsistenciaPage } from '../../modal/filtro-asistencia/filtro-asist
 export class AsistenciaPage implements OnInit {
   searchKey = '';
   listaAsistencias = [];
-
+  usuario: UsuarioLogin;
+  empresaCoonsultor: EmpresaConsultor;
+  hayConsultor = false;
+  
   constructor(
     public popoverCtrl: PopoverController,
     public service: PropertyService,
@@ -34,22 +39,32 @@ export class AsistenciaPage implements OnInit {
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
     private asistenciaService: AsistenciaService
-    ) {   }
+    ) 
+    {
+      this.usuario = this.usuarioService.getUsuario(); 
+      this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      if(this.usuario.Tipo === "CONSULTOR"){
+        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+          this.hayConsultor = true;
+        }
+      }
+    }
 
   ngOnInit() {
-    this.usuarioService.isLoading = false;
     this.getAsistencias();
   }
 
-  getAsistencias() {
-    try {
-      let nifConsultor = '';
-      if (this.usuarioService.usuario.Tipo === 'CONSULTOR') {
-        nifConsultor = this.usuarioService.empresaConsultor.Nif;
+  getAsistencias(){
+    try{
+      this.usuarioService.present("Cargando...");
+      let nifConsultor = "";
+      if(this.usuario.Tipo === "CONSULTOR"){
+        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+          nifConsultor = this.empresaCoonsultor.Nif;
+        }
       }
-      this.usuarioService.present('Cargando...');
-      const fecha_desde = '1900-01-01T00:00:00';
-      const fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
+      let fecha_desde = '1900-01-01T00:00:00';
+      let fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -72,8 +87,8 @@ export class AsistenciaPage implements OnInit {
               '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
               '<NombreTrabajador></NombreTrabajador>' +
               '<Dni></Dni>' +
-              '<NoPresentado>0</NoPresentado>' +
-              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
+              '<NoPresentado>0</NoPresentado>'+
+              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>'+
             '</FiltroAsist>' +
           '</ObtenerAsistenciasRelacion>' +
         '</soap:Body>' +
@@ -101,6 +116,9 @@ export class AsistenciaPage implements OnInit {
                     this.usuarioService.dismiss();
                 } else {
                   this.usuarioService.dismiss();
+                  if(this.usuario.Tipo === "CONSULTOR"){
+                    this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+                  }
                 }
             } else {
               this.usuarioService.dismiss();
@@ -146,5 +164,23 @@ export class AsistenciaPage implements OnInit {
   masInfo() {
 
   }
+
+  seleccionarEmpresa(){
+    this.vistaSeleccionarEmpresa();
+  }
+
+  async vistaSeleccionarEmpresa(){
+    const modal = await this.modalCtrl.create({
+      component: SeleccionarClientePage
+    });
+    modal.onDidDismiss().then(() => {
+      console.log('Entra a modal seleccionar cliente');
+      this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      this.getAsistencias();
+      this.listaAsistencias = this.asistenciaService.getAsistencias();
+    });
+    return await modal.present();
+  }
+
 
 }
