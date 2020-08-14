@@ -68,16 +68,16 @@ export class CertificadoAptitudPage {
 
     this.usuario = this.usuarioService.getUsuario();
     this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
-    if(this.usuario.Tipo === "CONSULTOR"){
-      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+    if (this.usuario.Tipo === 'CONSULTOR') {
+      if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
         this.hayConsultor = true;
-        console.log("hayConsultor " + this.hayConsultor);
-        console.log("this.usuario.Tipo  " + this.usuario.Tipo);
+        console.log('hayConsultor ' + this.hayConsultor);
+        console.log('this.usuario.Tipo  ' + this.usuario.Tipo);
       }
     }
 
   }
-  
+
 
   ionViewWillEnter() {
     this.RecuentoNotificaciones();
@@ -95,10 +95,10 @@ export class CertificadoAptitudPage {
 
 
   getCertificados() {
-    try{
-      let nifConsultor = "";
-      if(this.usuario.Tipo === "CONSULTOR"){
-        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+    try {
+      let nifConsultor = '';
+      if (this.usuario.Tipo === 'CONSULTOR') {
+        if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
           nifConsultor = this.empresaCoonsultor.Nif;
         }
       }
@@ -139,7 +139,7 @@ export class CertificadoAptitudPage {
             if (xmlhttp.status === 500) {
               console.log('500 - nifConsultor: ', nifConsultor);
               this.usuarioService.dismiss();
-            }else if (xmlhttp.status === 200) {
+            } else if (xmlhttp.status === 200) {
                 const xml = xmlhttp.responseXML;
                 const obj: RespuestaGetAPICertificadosAptitud = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                 // tslint:disable-next-line: max-line-length
@@ -160,8 +160,8 @@ export class CertificadoAptitudPage {
             } else {
               this.usuarioService.dismiss();
               console.log('200 ' + xmlhttp.response);
-              if(this.usuario.Tipo === "CONSULTOR"){
-                this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+              if (this.usuario.Tipo === 'CONSULTOR') {
+                this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
               }
             }
           } else {
@@ -170,7 +170,7 @@ export class CertificadoAptitudPage {
           }
       };
       xmlhttp.send(sr);
-    }catch(error){
+    } catch (error) {
       console.log('error ', error);
       this.usuarioService.dismiss();
     }
@@ -322,11 +322,11 @@ export class CertificadoAptitudPage {
     return await modal.present();
   }
 
-  seleccionarEmpresa(){
+  seleccionarEmpresa() {
     this.vistaSeleccionarEmpresa();
   }
 
-  async vistaSeleccionarEmpresa(){
+  async vistaSeleccionarEmpresa() {
     const modal = await this.modalCtrl.create({
       component: SeleccionarClientePage
     });

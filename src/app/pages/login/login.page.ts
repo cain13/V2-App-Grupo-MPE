@@ -250,7 +250,7 @@ export class LoginPage implements OnInit {
                     const obj: RespuestaAPIGetDatos = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                     // tslint:disable-next-line: max-line-length
                     const a: ObtenerDatosConsultorResult = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerDatosConsultorResponse']['ObtenerDatosConsultorResult']));
-
+                    console.log(a);
                     if (this.soportaFingerID) {
                       this.checkFinger = this.botonHuella.checked;
                     }

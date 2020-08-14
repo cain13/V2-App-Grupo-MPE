@@ -1,19 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, NavigationExtras } from '@angular/router';
 
-import {
-  InvoicesService,
-  TranslateProvider
-} from '../../../providers';
 
 import { PropertyService } from '../../../providers';
 
-import { SearchFilterPage } from '../../../pages/modal/search-filter/search-filter.page';
 
 import { NotificationsComponent } from '../../../components/notifications/notifications.component';
 import { FiltroDocumentosPage } from '../../modal/filtro-documentos/filtro-documentos.page';
-import { DocumentosService } from '../../../providers/documentos/documentos.service';
-import { CertificadosAptitudService } from '../../../providers/certificadosAptitud/certificados-aptitud.service';
 import { RespuestaAPIGetDocumentos, ObtenerDocumentosTrabajadores, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse } from '../../../interfaces/interfaces-grupo-mpe';
 import { UsuarioService } from '../../../services/usuario.service';
 
@@ -32,13 +24,13 @@ import {
   query,
   stagger
 } from '@angular/animations';
-import { NavController, MenuController, PopoverController,
-         AlertController, ModalController, ToastController, LoadingController, Platform } from '@ionic/angular';
+import { PopoverController,
+         ModalController, Platform } from '@ionic/angular';
 
 @Component({
-  selector: 'app-documentos-trabajador',
-  templateUrl: './documentos-trabajador.page.html',
-  styleUrls: ['./documentos-trabajador.page.scss'],
+  selector: 'app-documentos-covid',
+  templateUrl: './documentos-covid.page.html',
+  styleUrls: ['./documentos-covid.page.scss'],
   animations: [
     trigger('staggerIn', [
       transition('* => *', [
@@ -48,7 +40,7 @@ import { NavController, MenuController, PopoverController,
     ])
   ]
 })
-export class DocumentosTrabajadorPage {
+export class DocumentosCOVIDPage {
 
   listaDocumentos = [];
   Cantidad = 0;
@@ -63,9 +55,6 @@ export class DocumentosTrabajadorPage {
     public modalCtrl: ModalController,
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
-    private platform: Platform,
-    private opener: FileOpener,
-    private file: File,
     private documentosService: DocumentosTrabajadoresService
     ) {  }
 
@@ -244,7 +233,7 @@ export class DocumentosTrabajadorPage {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel(event) {
+  onCancel() {
     this.findAll();
   }
 
@@ -260,3 +249,4 @@ export class DocumentosTrabajadorPage {
     this.listaDocumentos = this.documentosService.getDocumentos();
   }
 }
+

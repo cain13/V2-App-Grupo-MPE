@@ -1,0 +1,45 @@
+<!-- <ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+        <ion-button color="primary" (click)="closeModal()">
+            <ion-icon name="close" color="light"></ion-icon>
+        </ion-button>
+    </ion-buttons>
+    <ion-title>
+    	Seleccione un test
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+
+    <ion-item class="bg-white ion-no-padding ion-no-margin"  *ngFor="let test of arrayTest"  tappable (click)="closeModal()" (click)="elegirTest(test)">
+      <ion-icon style="margin: 0px !important; padding: 10px;" slot="start" name="school-outline"  color="danger"></ion-icon>
+      <ion-label>
+        <h2>
+          <ion-text color="dark"><strong>{{test.Nombre}}</strong></ion-text>
+        </h2>
+        <p class="text-12x">
+          <ion-text color="secondary">{{test.Permiso}}</ion-text>
+        </p>
+      </ion-label>
+    </ion-item>
+
+</ion-content> -->
+
+<ion-list class="ion-no-margin ion-no-padding">
+  <ion-list-header color="dark">
+    <ion-label class="fw700">Seleccione un Test</ion-label>
+  </ion-list-header>
+  <ion-item class="bg-white ion-no-padding ion-no-margin"  *ngFor="let test of arrayTest"  tappable (click)="closeModal()" (click)="elegirTest(test)">
+    <ion-icon style="margin: 0px !important; padding: 10px;" slot="start" name="school-outline"  color="danger"></ion-icon>
+    <ion-label>
+      <h2>
+        <ion-text color="dark"><strong>{{test.Nombre}}</strong></ion-text>
+      </h2>
+      <p class="text-12x">
+        <ion-text color="secondary">{{test.Permiso}}</ion-text>
+      </p>
+    </ion-label>
+    </ion-item>
+</ion-list>

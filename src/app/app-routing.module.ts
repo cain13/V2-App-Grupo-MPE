@@ -86,7 +86,8 @@ const routes: Routes = [
   {
     path: 'modal-mas-info',
     loadChildren: () => import('./pages/vistasMPE/modal-mas-info/modal-mas-info.module').then( m => m.ModalMasInfoPageModule)
-  },  {
+  },
+  {
     path: 'historial-notificaciones',
     loadChildren: () => import('./pages/vistasMPE/historial-notificaciones/historial-notificaciones.module').then( m => m.HistorialNotificacionesPageModule)
   },
@@ -105,6 +106,22 @@ const routes: Routes = [
   {
     path: 'seleccionar-cliente',
     loadChildren: () => import('./pages/modal/seleccionar-cliente/seleccionar-cliente.module').then( m => m.SeleccionarClientePageModule)
+  },
+  {
+    path: 'test',
+    loadChildren: () => import('./pages/vistasMPE/test/test.module').then( m => m.TestPageModule)
+  },
+  {
+    path: 'elegir-test',
+    loadChildren: () => import('./components/elegir-test/elegir-test.module').then( m => m.ElegirTestPageModule)
+  },
+  {
+    path: 'subrespuesta-modal',
+    loadChildren: () => import('./pages/vistasMPE/subrespuesta-modal/subrespuesta-modal.module').then( m => m.SubrespuestaModalPageModule)
+  },
+  {
+    path: 'documentos-covid',
+    loadChildren: () => import('./pages/vistasMPE/documentos-covid/documentos-covid.module').then( m => m.DocumentosCOVIDPageModule)
   },
 
 

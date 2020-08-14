@@ -45,6 +45,18 @@ export class AppComponent {
         url: '/documentos-trabajador',
         direct: 'root',
         icon: 'document-outline'
+      },
+      {
+        title: 'Test',
+        url: '/test',
+        direct: 'root',
+        icon: 'school-outline'
+      },
+      {
+        title: 'Documentos COVID',
+        url: '/documentos-covid',
+        direct: 'root',
+        icon: 'clipboard-outline'
       }
     ];
 

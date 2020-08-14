@@ -19,7 +19,7 @@
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar color="dark">
-      <ion-searchbar [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar Certificado"></ion-searchbar>
+      <ion-searchbar [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel()" placeholder="Buscar Certificado"></ion-searchbar>
      <!--<ion-buttons slot="end">
         <ion-button size="small" shape="round" color="medium" (click)="searchFilter()">
           <ion-icon name="options"></ion-icon>
@@ -38,6 +38,12 @@
         <p class="text-12x">
           <ion-text color="secondary">{{certificado.FechaDocumento | date: "dd/MM/yyyy"}}</ion-text>
         </p>
+        <!--
+        <p class="text-12x">
+          <ion-text color="secondary">{{certificado.fecha | date: 'dd/MM/yyyy'}}</ion-text>
+        </p>-->
+        <!--<ion-badge *ngIf="!invoice.paid" color="warning">Pending</ion-badge>
+        <ion-badge *ngIf="invoice.paid" color="success">Paid</ion-badge>-->
       </ion-label>
      <ion-icon slot="end" name="download-outline"></ion-icon>
     </ion-item>

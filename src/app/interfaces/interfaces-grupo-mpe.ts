@@ -111,7 +111,7 @@ export interface RespuestaDocumentosTrabajador {
         ]
       }
     ]
-  }
+  };
 }
 
 
@@ -139,7 +139,7 @@ export interface RespuestaDocumentoPDFTrabajador {
       ]
     }
   ]
-}
+};
 }
 export interface ObtenerDocumentoPDFTrabajador {
 
@@ -264,43 +264,43 @@ export interface Centro {
   NombreCentroTrabajo: string;
 
 }
-export interface CambioPassword{
-  "soap:Envelope": {
-    "$": {
-      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
-      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+export interface CambioPassword {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
     },
-    "soap:Body": [
+    'soap:Body': [
       {
-        "CambiarPasswordResponse": [
+        'CambiarPasswordResponse': [
           {
-            "$": {
-              "xmlns": "http://tempuri.org/"
+            '$': {
+              'xmlns': 'http://tempuri.org/'
             }
           }
         ]
       }
     ]
-  }
+  };
 }
 
-export interface RecuentoNotificacionesResponse{
-  "soap:Envelope": {
-    "$": {
-      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
-      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+export interface RecuentoNotificacionesResponse {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
     },
-    "soap:Body": [
+    'soap:Body': [
       {
-        "ObtenerRecuentoDocumentosNuevosResponse": [
+        'ObtenerRecuentoDocumentosNuevosResponse': [
           {
-            "$": {
-              "xmlns": "http://tempuri.org/"
+            '$': {
+              'xmlns': 'http://tempuri.org/'
             },
-            "ObtenerRecuentoDocumentosNuevosResult": [
-             
+            'ObtenerRecuentoDocumentosNuevosResult': [
+
             ]
           }
         ]
@@ -309,68 +309,68 @@ export interface RecuentoNotificacionesResponse{
   };
 }
 
-export interface ObtenerHistoricoNotificacionesRelacionDocumentos{
-  "soap:Envelope": {
-    "$": {
-      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
-      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/"
+export interface ObtenerHistoricoNotificacionesRelacionDocumentos {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema',
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/'
     },
-    "soap:Header": [
+    'soap:Header': [
       {
-        "AuthHeader": [
+        'AuthHeader': [
           {
-            "$": {
-              "xmlns": "http://tempuri.org/"
+            '$': {
+              'xmlns': 'http://tempuri.org/'
             },
-            "Usuario": string,
-            "Password": string
+            'Usuario': string,
+            'Password': string
           }
         ]
       }
     ],
-    "soap:Body": [
+    'soap:Body': [
       {
-        "ObtenerHistoricoNotificacionesRelacionDocumentos": [
+        'ObtenerHistoricoNotificacionesRelacionDocumentos': [
           {
-            "$": {
-              "xmlns": "http://tempuri.org/"
+            '$': {
+              'xmlns': 'http://tempuri.org/'
             },
-            "FiltroNot": [
+            'FiltroNot': [
               {
-                "FechaDesde": string,
-                "FechaHasta": string,
-                "NifClienteConsultor": string
+                'FechaDesde': string,
+                'FechaHasta': string,
+                'NifClienteConsultor': string
               }
             ]
           }
         ]
       }
     ]
-  }
+  };
 }
 
-export interface FiltroNot{
-  FechaDesde: string,
-  FechaHasta: string,
-  NifClienteConsultor: string
+export interface FiltroNot {
+  FechaDesde: string;
+  FechaHasta: string;
+  NifClienteConsultor: string;
 }
 
-export interface RespuestaHistorial{
-  "soap:Envelope": {
-    "$": {
-      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
-      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+export interface RespuestaHistorial {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
     },
-    "soap:Body": [
+    'soap:Body': [
       {
-        "ObtenerHistoricoNotificacionesRelacionDocumentosResponse": [
+        'ObtenerHistoricoNotificacionesRelacionDocumentosResponse': [
           {
-            "$": {
-              "xmlns": "http://tempuri.org/"
+            '$': {
+              'xmlns': 'http://tempuri.org/'
             },
-            "ObtenerHistoricoNotificacionesRelacionDocumentosResult": [
+            'ObtenerHistoricoNotificacionesRelacionDocumentosResult': [
               {
                 HistoricoNotificacionInfo: Notificacion[];
               }
@@ -379,7 +379,7 @@ export interface RespuestaHistorial{
         ]
       }
     ]
-  }
+  };
 }
 
 export interface ObtenerHistoriaDocumentos {
@@ -387,34 +387,33 @@ export interface ObtenerHistoriaDocumentos {
   HistoricoNotificacionInfo: Notificacion[];
 
 }
-export interface Notificacion 
-{
-  Referencia: string,
-  FechaNotificacion: string,
-  TipoDocumento:string
-  IdDocumento:number
+export interface Notificacion {
+  Referencia: string;
+  FechaNotificacion: string;
+  TipoDocumento: string;
+  IdDocumento: number;
 }
 
-export interface RespuestaAsistencia{
-  "soap:Envelope": {
-    "$": {
-      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
-      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+export interface RespuestaAsistencia {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
     },
-    "soap:Body": [
+    'soap:Body': [
       {
-        "ObtenerAsistenciasRelacionResponse": [
+        'ObtenerAsistenciasRelacionResponse': [
           {
-            "$": {
-              "xmlns": "http://tempuri.org/"
+            '$': {
+              'xmlns': 'http://tempuri.org/'
             },
-            "ObtenerAsistenciasRelacionResult": Asistencia[]
+            'ObtenerAsistenciasRelacionResult': Asistencia[]
           }
         ]
       }
     ]
-  }
+  };
 }
 
 export interface RespuestaAsistenciaInfo {
@@ -423,34 +422,34 @@ export interface RespuestaAsistenciaInfo {
 
 }
 
-export interface Asistencia{
+export interface Asistencia {
     Trabajador: string;
-    NifTrabajador:string;
+    NifTrabajador: string;
     FechaDocumento: string;
-    NombreCentroMedico:string;
-    SituacionReconocimientoMedico:string;
+    NombreCentroMedico: string;
+    SituacionReconocimientoMedico: string;
 }
 
-export interface RespuestaCitasPendientes{
-  "soap:Envelope": {
-    "$": {
-      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
-      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+export interface RespuestaCitasPendientes {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
     },
-    "soap:Body": [
+    'soap:Body': [
       {
-        "ObtenerCitasPendientesRelacionResponse": [
+        'ObtenerCitasPendientesRelacionResponse': [
           {
-            "$": {
-              "xmlns": "http://tempuri.org/"
+            '$': {
+              'xmlns': 'http://tempuri.org/'
             },
-            "ObtenerCitasPendientesRelacionResult":  Citas[]
+            'ObtenerCitasPendientesRelacionResult':  Citas[]
           }
         ]
       }
     ]
-  }
+  };
 }
 
 export interface RespuestaCitasiaInfo {
@@ -459,33 +458,33 @@ export interface RespuestaCitasiaInfo {
 
 }
 
-export interface Citas{
-    citapendiente:string;
+export interface Citas {
+    citapendiente: string;
 }
 
-export interface RespuestaClientes{
-  "soap:Envelope": {
-    "$": {
-      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
-      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+export interface RespuestaClientes {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
     },
-    "soap:Body": [
+    'soap:Body': [
       {
-        "ObtenerListadoClientesResponse": [
+        'ObtenerListadoClientesResponse': [
           {
-            "$": {
-              "xmlns": "http://tempuri.org/"
+            '$': {
+              'xmlns': 'http://tempuri.org/'
             },
-            "ObtenerListadoClientesResult": [
+            'ObtenerListadoClientesResult': [
               {
-                "ClienteInfo": [
+                'ClienteInfo': [
                   {
-                    "Nif": [
-                      "B32169831"
+                    'Nif': [
+                      'B32169831'
                     ],
-                    "NombreCliente": [
-                      "EXCLUSIVAS VILA, S.L."
+                    'NombreCliente': [
+                      'EXCLUSIVAS VILA, S.L.'
                     ]
                   }
                 ]
@@ -495,14 +494,98 @@ export interface RespuestaClientes{
         ]
       }
     ]
-  }
+  };
 }
 
 export interface RespuestaClienteInfo {
   ClienteInfo: Cliente[];
 }
 
-export interface Cliente{
+export interface Cliente {
     Nif: string;
     NombreCliente: string;
-  }
+
+}
+
+export interface RespuestaAPITest {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
+    },
+    'soap:Body': [
+      {
+        'ObtenerTestsResponse': [
+          {
+            '$': {
+              'xmlns': 'http://tempuri.org/'
+            },
+            'ObtenerTestsResult': [
+              {
+                'TestInfo': TestInfo[];
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+}
+
+export interface TestInfo {
+
+  Nombre: String;
+  Permiso: String;
+  Preguntas: PreguntaInfo;
+
+}
+
+export interface PreguntaInfo {
+
+  PreguntaInfo: Pregunta[];
+
+
+}
+export interface Pregunta {
+
+  IdPregunta: number;
+  Pregunta: string;
+  Respuestas: RespuestaInfo;
+
+}
+
+
+export interface RespuestaInfo {
+
+  RespuestaInfo: Respuesta[];
+
+}
+
+export interface Respuesta {
+
+  Respuesta: string;
+  Valor: String;
+  SubRespuestas: SubRespuestaInfo;
+
+}
+
+export interface SubRespuestaInfo {
+
+  IdPregunta: number;
+  RespuestaSubPreguntas: RespuestaSubPreguntas;
+
+}
+
+export interface RespuestaSubPreguntas {
+
+  RespuestaSubPreguntaInfo: RespuestaSubPreguntaInfo[];
+
+}
+
+export interface RespuestaSubPreguntaInfo {
+
+  IdRespuesta: string;
+  Respuesta: string;
+
+}
