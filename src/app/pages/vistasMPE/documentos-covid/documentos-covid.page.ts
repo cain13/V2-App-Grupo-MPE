@@ -89,7 +89,9 @@ export class DocumentosCOVIDPage {
           '</AuthHeader>' +
         '</soap:Header>' +
         '<soap:Body>' +
-          '<ObtenerTrabajadorRelacionDocumentos  xmlns="http://tempuri.org/" />' +
+          '<ObtenerTrabajadorRelacionDocumentos  xmlns="http://tempuri.org/">' +
+            '<TestCovid>true</TestCovid>'+
+          '</ObtenerTrabajadorRelacionDocumentos>'+
         '</soap:Body>' +
       '</soap:Envelope>';
 
@@ -233,7 +235,7 @@ export class DocumentosCOVIDPage {
         .catch(error => alert(JSON.stringify(error)));
   }
 
-  onCancel() {
+  onCancel(event) {
     this.findAll();
   }
 
