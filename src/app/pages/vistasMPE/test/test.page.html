@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button color="tertiary"></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+        <ion-text color="light">
+          {{ 'app.name' | translate }} <ion-text color="tertiary" class="fw700"> {{ 'app.version' | translate }}</ion-text>
+        </ion-text>
+    </ion-title>
+    <ion-buttons slot="end">
+     <!--  <ion-button size="small" shape="round" color="medium" (click)="notifications()">
+        <ion-icon name="notifications" [color]="Cantidad > 0 ? '#FFFFFF':'dark'"></ion-icon>
+        <ion-badge [color]="Cantidad > 0 ? 'danger': 'dark'" slot="end">{{Cantidad}}</ion-badge>
+      </ion-button> -->
+      <ion-button size="small" shape="round" color="medium" tappable routerLink="/edit-profile" routerDirection="forward">
+        <ion-icon slot="icon-only" name="person-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-list-header *ngIf="mostrarTest" (click)="seleccionarTest()">
+    <ion-label color="primary"  >
+      <h2>Seleccionar Test</h2>
+      <small color="primary">{{test.Nombre}}</small>
+    </ion-label>
+    <ion-icon color="primary" style="padding-right: 10px !important;" name="chevron-down-outline"></ion-icon>
+  </ion-list-header>
+</ion-header>
+<ion-content class="ion-padding">
+
+  <ion-card *ngIf="mostrarTest">
+    <ion-card-header>
+      <ion-card-subtitle>Pregunta Número {{contador + 1}}</ion-card-subtitle>
+      <ion-card-title>{{test.Preguntas.PreguntaInfo[contador].Pregunta}}</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item style="width: 100%;" *ngFor="let respuesta of test.Preguntas.PreguntaInfo[contador].Respuestas.RespuestaInfo" lines="none">
+        <ion-button style="width: 100%" expand="block" (click)="guardarRespuesta(contador, respuesta.Valor, respuesta.SubRespuestas)">{{respuesta.Respuesta}}</ion-button>
+      </ion-item>
+      </ion-card-content>
+  </ion-card>
+
+</ion-content>

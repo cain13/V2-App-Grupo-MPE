@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+        <ion-button color="primary" (click)="close()">
+            <ion-icon name="close" color="light"></ion-icon>
+        </ion-button>
+    </ion-buttons>
+    <ion-title>
+    	Filtro Certificados
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item tappable>
+    <ion-list>
+        <ion-list-header color="light">
+          <ion-label class="fw700">Pregunta número {{subrespuestas.IdPregunta}}</ion-label>
+        </ion-list-header>
+
+        <ion-radio-group *ngFor="let subrespuesta of subrespuestas.RespuestaSubPreguntas.RespuestaSubPreguntaInfo" (ionChange)="guardarID(subrespuesta.IdRespuesta)" allow-empty-selection="true">
+
+        <ion-item>
+          <ion-label class="ion-text-wrap" color="primary">{{subrespuesta.Respuesta}}</ion-label>
+          <ion-radio slot="start" value="{{subrespuesta.IdRespuesta}}" ></ion-radio>
+        </ion-item>
+
+      </ion-radio-group>
+    </ion-list>    
+  </ion-item>
+
+  <ion-button expand="block" (click)="guardarRespuesta()">Siguiente Pregunta</ion-button>
+
+</ion-content>>

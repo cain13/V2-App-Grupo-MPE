@@ -33,7 +33,7 @@ export class HistorialNotificacionesPage implements OnInit {
   usuario: UsuarioLogin;
   empresaCoonsultor: EmpresaConsultor;
   hayConsultor = false;
-  
+
   constructor(
     public popoverCtrl: PopoverController,
     public service: PropertyService,
@@ -41,12 +41,11 @@ export class HistorialNotificacionesPage implements OnInit {
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
     private historialService: HitorialNotificacionesService
-    ) 
-    {
-      this.usuario = this.usuarioService.getUsuario(); 
+    ) {
+      this.usuario = this.usuarioService.getUsuario();
       this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
-      if(this.usuario.Tipo === "CONSULTOR"){
-        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+      if (this.usuario.Tipo === 'CONSULTOR') {
+        if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
           this.hayConsultor = true;
         }
       }
@@ -54,21 +53,21 @@ export class HistorialNotificacionesPage implements OnInit {
 
   ngOnInit() {
     this.getHistorialDocumentos();
-    
+
   }
 
-  getHistorialDocumentos(){
-    try{
-     
-      let nifConsultor = "";
-      if(this.usuario.Tipo === "CONSULTOR"){
-        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+  getHistorialDocumentos() {
+    try {
+
+      let nifConsultor = '';
+      if (this.usuario.Tipo === 'CONSULTOR') {
+        if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
           nifConsultor = this.empresaCoonsultor.Nif;
         }
       }
-      this.usuarioService.present("Cargando...");
-      let fecha_desde = '1900-01-01T00:00:00';
-      let fecha_hasta = moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
+      this.usuarioService.present('Cargando...');
+      const fecha_desde = '1900-01-01T00:00:00';
+      const fecha_hasta = moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -87,9 +86,9 @@ export class HistorialNotificacionesPage implements OnInit {
         '<soap:Body>' +
           '<ObtenerHistoricoNotificacionesRelacionDocumentos xmlns="http://tempuri.org/">' +
             '<FiltroNot>' +
-              '<FechaDesde>' + fecha_desde + '</FechaDesde>'+
-              '<FechaHasta>' + fecha_hasta + '</FechaHasta>'+
-              '<NifClienteConsultor>'  + nifConsultor + '</NifClienteConsultor>'+
+              '<FechaDesde>' + fecha_desde + '</FechaDesde>' +
+              '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
+              '<NifClienteConsultor>'  + nifConsultor + '</NifClienteConsultor>' +
             '</FiltroNot>' +
           '</ObtenerHistoricoNotificacionesRelacionDocumentos>' +
         '</soap:Body>' +
@@ -115,30 +114,33 @@ console.log('sr ' + sr);
                     this.historialService.setDocumento(this.listaDocumentos);
                     console.log('ListaHistorial ' + this.listaDocumentos);
                     this.usuarioService.dismiss();
-                }else{
+                } else {
                   this.usuarioService.dismiss();
-                  if(this.usuario.Tipo === "CONSULTOR"){
-                    this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+                  if (this.usuario.Tipo === 'CONSULTOR') {
+                    // tslint:disable-next-line: max-line-length
+                    this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
                   }
                 }
-            }else{
+            } else {
               this.usuarioService.dismiss();
             }
         };
+
       xmlhttp.send(sr);
-  
-    }catch(error){
+
+    } catch (error) {
       this.usuarioService.dismiss();
+
     }
 
   }
 
 
   downloadDocumento(id) {
-    try{
-     
+    try {
+
       this.usuarioService.present('Descargando...');
-      console.log("idDocumentos " + id);
+      console.log('idDocumentos ' + id);
       let pdf: CertificadoPDF;
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
@@ -162,7 +164,7 @@ console.log('sr ' + sr);
           '</ObtenerCertificadoAptitudPdf>' +
         '</soap:Body>' +
       '</soap:Envelope>';
-    console.log("sr ", sr);
+    console.log('sr ', sr);
       xmlhttp.onreadystatechange =  () => {
             if (xmlhttp.readyState === 4) {
                 if (xmlhttp.status === 200) {
@@ -174,16 +176,16 @@ console.log('sr ' + sr);
                     console.log('NombreFichero ' + a.NombreFichero);
                     this.usuarioService.dismiss();
                     this.usuarioService.saveAndOpenPdf(pdf.Datos, pdf.NombreFichero);
-                }else{
-                  this.usuarioService.presentAlert("Error","Error al descargar documento","El documento no tiene un id valido.");
+                } else {
+                  this.usuarioService.presentAlert('Error', 'Error al descargar documento', 'El documento no tiene un id valido.');
                   this.usuarioService.dismiss();
                 }
-            }else{
+            } else {
               this.usuarioService.dismiss();
             }
         };
       xmlhttp.send(sr);
-    }catch(error){
+    } catch (error) {
       this.usuarioService.dismiss();
     }
   }
@@ -219,12 +221,12 @@ console.log('sr ' + sr);
     this.listaDocumentos = this.historialService.getDocumentos();
   }
 
-  
-  seleccionarEmpresa(){
+
+  seleccionarEmpresa() {
     this.vistaSeleccionarEmpresa();
   }
 
-  async vistaSeleccionarEmpresa(){
+  async vistaSeleccionarEmpresa() {
     const modal = await this.modalCtrl.create({
       component: SeleccionarClientePage
     });
