@@ -215,8 +215,8 @@ export class UsuarioService {
 
   
   saveAndOpenPdf(pdf: string, filename: string) {
-    console.log('path ' + this.file.dataDirectory);
-    const writeDirectory = this.platform.is('ios') ? this.file.dataDirectory : this.file.dataDirectory;
+    console.log('path ' + this.file.externalRootDirectory + '/Download/' + filename);
+    const writeDirectory = this.platform.is('ios') ? this.file.dataDirectory : this.file.externalRootDirectory + '/Download/';
     this.file.writeFile(writeDirectory, filename, this.convertBase64ToBlob(pdf, 'data:application/pdf;base64', 512), {replace: true})
       .then(() => {
           this.opener.open(writeDirectory + filename, 'application/pdf')

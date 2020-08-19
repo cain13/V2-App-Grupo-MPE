@@ -126,14 +126,13 @@ export class FiltroHistorialPage implements OnInit {
                       this.listaDocumentos = a.HistoricoNotificacionInfo;
 
                     }
-                    this.usuarioService.dismiss();
+                    
                     this.usuarioService.guardarNotificaciones(this.listaDocumentos);
-                    this.closeModal();
                 }
             }
         };
       xmlhttp.send(sr);
-
+      this.closeModal();
       this.usuarioService.dismiss();
     } catch (error) {
       this.usuarioService.dismiss();
@@ -144,7 +143,9 @@ export class FiltroHistorialPage implements OnInit {
   Todos() {
 
     const fechaDesde = '1900-01-01T00:00:00';
+    const fechaHasta = '1900-01-01T00:00:00';
     this.filtro_desde = new Date(fechaDesde);
+    this.filtro_hasta = new Date(moment().format('YYYY-MM-DDT00:00:00'));
     this.filtrar();
   }
 
