@@ -101,8 +101,8 @@ export class DocumentosTrabajadorPage {
         '</soap:Header>' +
         '<soap:Body>' +
           '<ObtenerTrabajadorRelacionDocumentos  xmlns="http://tempuri.org/">' +
-            '<TestCovid>false</TestCovid>'+
-          '</ObtenerTrabajadorRelacionDocumentos>'+
+            '<TestCovid>false</TestCovid>' +
+          '</ObtenerTrabajadorRelacionDocumentos>' +
         '</soap:Body>' +
       '</soap:Envelope>';
 

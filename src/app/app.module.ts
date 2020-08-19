@@ -33,18 +33,23 @@ import { NotificationsComponent } from './components/notifications/notifications
 // Pipes
 import { PipesModule } from './pipes/pipes.module';
 
-//Bade de Datos 
+// Base de Datos
 
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { SQLite } from '@ionic-native/sqlite/ngx';
 
-//DEDO
+// DEDO
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
 
 
 // Para convertir PDFs.
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
+
+
+// Para Notificaciones PUSH
+
+import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -88,7 +93,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     SQLite,
     FileOpener,
     File,
-    FingerprintAIO
+    FingerprintAIO,
+    FCM
   ],
   bootstrap: [AppComponent]
 })

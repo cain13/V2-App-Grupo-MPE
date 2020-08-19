@@ -27,29 +27,21 @@ export class SubrespuestaModalPage implements OnInit {
   }
 
   close() {
-    this.modalCtrl.dismiss({
-
-      'arrayRespuestas': this.respuestasRadioButton
-
-    });
-  }
-
-  guardarID(id: string) {
-
-    if ( this.respuestasRadioButton.indexOf(id) === -1 ) {
-
-      this.respuestasRadioButton.push(id);
-      console.log(this.respuestasRadioButton);
-
-    } else {
-
-      this.respuestasRadioButton.splice(this.respuestasRadioButton.indexOf(id), 1);
-      console.log(this.respuestasRadioButton);
-    }
-
+    this.modalCtrl.dismiss();
   }
 
   guardarRespuesta() {
+
+    this.respuestasRadioButton = [];
+    for (const res of this.subrespuestas.RespuestaSubPreguntas.RespuestaSubPreguntaInfo) {
+
+      if (res.ValorCheck === true ) {
+
+        this.respuestasRadioButton.push(res.IdRespuesta);
+
+      }
+
+    }
 
     this.modalCtrl.dismiss({
 

@@ -2,13 +2,15 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NavController, MenuController, ToastController, AlertController, LoadingController, IonCheckbox, Platform, ModalController } from '@ionic/angular';
 import { TranslateProvider } from '../../providers';
-import { RespuestaAPIGetDatos, ObtenerDatosConsultorResult, RespuestaGetCentrosTrabajo, ObtenerCentros } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { RespuestaAPIGetDatos, ObtenerDatosConsultorResult, RespuestaGetCentrosTrabajo, ObtenerCentros, MandarTokenAPI } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
 import { FingerprintAIO } from '@ionic-native/fingerprint-aio/ngx';
 import { SeleccionarClientePage } from '../modal/seleccionar-cliente/seleccionar-cliente.page';
 import { EmpresaConsultor } from '../../interfaces/usuario-interfaces';
+import { Token } from '@angular/compiler/src/ml_parser/lexer';
+import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 
 
 
@@ -28,6 +30,7 @@ export class LoginPage implements OnInit {
   usuario: UsuarioLogin;
   recordarme = true;
   loginFinger: boolean;
+  tokenAPI: string;
 
 
 
@@ -45,11 +48,18 @@ export class LoginPage implements OnInit {
     private faio: FingerprintAIO,
     private usuarioService: UsuarioService,
     public modalCtrl: ModalController,
+    private fcm: FCM,
+    private platform: Platform
 
-  ) { }
+  ) {}
 
 
   ngOnInit() {
+
+    this.fcm.getToken().then(token => {
+      console.log('TOKEN: ', token);
+      this.tokenAPI = token;
+    });
 
     this.usuario = this.usuarioService.getUsuario();
 
@@ -243,7 +253,7 @@ export class LoginPage implements OnInit {
           '</soap:Body>' +
         '</soap:Envelope>';
 
-      xmlhttp.onreadystatechange =  () => {
+      xmlhttp.onreadystatechange = () => {
             if (xmlhttp.readyState === 4) {
                 if (xmlhttp.status === 200) {
                     const xml = xmlhttp.responseXML;
@@ -270,6 +280,7 @@ export class LoginPage implements OnInit {
 
                     this.usuarioService.login(usuario);
                     this.usuarioService.guardarUsuario(usuario);
+                    this.guardarTokenAPI();
                     console.log('Tipo Empleado ' + usuario.Tipo);
                     if ( usuario.Tipo === 'CLIENTE') {
                       console.log('ACCEDEMOS COMO CLIENTE');
@@ -277,7 +288,7 @@ export class LoginPage implements OnInit {
                       this.menuCtrl.enable(true, 'menuCompleto');
                       this.getCentros();
                       this.navCtrl.navigateRoot('certificado-aptitud');
-                    
+
                     } else if ( usuario.Tipo === 'CONSULTOR') {
                       console.log('ACCEDEMOS COMO CONSULTOR');
                       this.menuCtrl.enable(false, 'menuTrabajadores');
@@ -349,6 +360,34 @@ export class LoginPage implements OnInit {
       };
 
     xmlhttp.send(sr);
+  }
+
+
+  async guardarTokenAPI() {
+    const tokenAPI: MandarTokenAPI = {
+
+      Usuario: this.onLoginForm.value.usuario,
+      Token: this.tokenAPI
+    };
+    console.log('GUARDAR TOKEN EN API: ', tokenAPI);
+
+
+    await this.usuarioService.mandarTokenAPI(tokenAPI).then( resp => {
+      console.log('Resp API token: ', resp);
+
+      if (resp.Codigo === 200) {
+
+        console.log('TOKEN del movil guardado en la API correctamente: ', resp);
+
+      }
+
+    }).catch(error => {
+
+      console.log('ERROR al mandar TOKEN a API');
+
+    });
+
+
   }
 
   async presentAlert(subtitulo: string, mensaje: string) {

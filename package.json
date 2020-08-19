@@ -40,6 +40,7 @@
     "@ionic-native/base64": "^5.27.0",
     "@ionic-native/core": "5.19.1",
     "@ionic-native/document-viewer": "^5.26.0",
+    "@ionic-native/fcm": "^5.28.0",
     "@ionic-native/file": "^5.27.0",
     "@ionic-native/file-opener": "^5.27.0",
     "@ionic-native/fingerprint-aio": "^5.27.0",
@@ -57,9 +58,12 @@
     "@ngx-translate/http-loader": "4.0.0",
     "chart.js": "2.8.0",
     "com-badrit-base64": "^0.2.0",
-    "cordova-android": "^8.1.0",
+    "cordova-android": "^8.0.0",
+    "cordova-plugin-androidx": "^2.0.0",
+    "cordova-plugin-androidx-adapter": "^1.1.1",
     "cordova-plugin-appavailability": "^0.4.2",
     "cordova-plugin-device": "^2.0.3",
+    "cordova-plugin-fcm-with-dependecy-updated": "^7.1.1",
     "cordova-plugin-file": "^6.0.2",
     "cordova-plugin-file-opener2": "^3.0.4",
     "cordova-plugin-fingerprint-aio": "^3.0.1",
@@ -124,7 +128,15 @@
         "ANDROID_SUPPORT_V4_VERSION": "27.+"
       },
       "cordova-plugin-file": {},
-      "cordova-plugin-fingerprint-aio": {}
+      "cordova-plugin-fingerprint-aio": {},
+      "cordova-plugin-fcm-with-dependecy-updated": {
+        "ANDROID_FCM_VERSION": "19.0.0",
+        "ANDROID_GRADLE_TOOLS_VERSION": "3.5.3",
+        "ANDROID_GOOGLE_SERVICES_VERSION": "4.3.3",
+        "ANDROID_DEFAULT_NOTIFICATION_ICON": "@mipmap/ic_launcher"
+      },
+      "cordova-plugin-androidx": {},
+      "cordova-plugin-androidx-adapter": {}
     },
     "platforms": [
       "android"

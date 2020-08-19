@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { LoadingController, Platform, ToastController, AlertController } from '@ionic/angular';
 import { UsuarioLogin, CambiarPassword, EmpresaConsultor } from '../interfaces/usuario-interfaces';
 import { DatabaseService } from './database.service';
-import { Centro, Certificado, RecuentoNotificacionesResponse, Notificacion, Asistencia, Citas, Cliente } from '../interfaces/interfaces-grupo-mpe';
+import { Centro, Certificado, RecuentoNotificacionesResponse, Notificacion, Asistencia, Citas, Cliente, MandarTokenAPI, RespuestaAPItoken } from '../interfaces/interfaces-grupo-mpe';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,9 @@ export class UsuarioService {
   desactivarSegundoPlano: boolean;
   recuentoNotificaciones: number;
 
+  header = new HttpHeaders().set('Content-Type', 'application/json');
+
+
 
   isLoading = false;
 
@@ -37,7 +41,8 @@ export class UsuarioService {
     private opener: FileOpener,
     private file: File,
     private toastController: ToastController,
-    private alertCtrl: AlertController) { }
+    private alertCtrl: AlertController,
+    private http: HttpClient) { }
 
 
   login(usuario: UsuarioLogin) {
@@ -48,6 +53,19 @@ export class UsuarioService {
 
   BorrarEmpleado() {
     this.dataBaseService.BorrarUsuario();
+  }
+
+
+  async mandarTokenAPI(tokenAPI: MandarTokenAPI): Promise <RespuestaAPItoken> {
+    // tslint:disable-next-line: no-shadowed-variable
+    const URL = 'https://mpecronos.com/api/CommonAPI/AddUsuarioNotificacion';
+
+
+    const respuesta = await  this.http.post<RespuestaAPItoken>(URL, tokenAPI, {headers: this.header}).toPromise();
+
+    return respuesta;
+
+
   }
 
   guardarUsuario(usuario: UsuarioLogin) {
@@ -201,8 +219,8 @@ export class UsuarioService {
     }
 
   }
-  
-  async presentAlert(titulo:string, subtitulo: string, mensaje: string) {
+
+  async presentAlert(titulo: string, subtitulo: string, mensaje: string) {
     const alert = await this.alertCtrl.create({
       header: titulo,
       subHeader: subtitulo,
@@ -213,7 +231,7 @@ export class UsuarioService {
     await alert.present();
   }
 
-  
+
   saveAndOpenPdf(pdf: string, filename: string) {
     console.log('path ' + this.file.dataDirectory);
     const writeDirectory = this.platform.is('ios') ? this.file.dataDirectory : this.file.dataDirectory;
@@ -262,4 +280,8 @@ export class UsuarioService {
     });
     toast.present();
   }
+
+
+
+
 }

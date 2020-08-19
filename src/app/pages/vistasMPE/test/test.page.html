@@ -28,16 +28,27 @@
 </ion-header>
 <ion-content class="ion-padding">
 
-  <ion-card *ngIf="mostrarTest">
+  <ion-card *ngIf="mostrarTest && !isFinTest">
     <ion-card-header>
       <ion-card-subtitle>Pregunta Número {{contador + 1}}</ion-card-subtitle>
       <ion-card-title>{{test.Preguntas.PreguntaInfo[contador].Pregunta}}</ion-card-title>
     </ion-card-header>
     <ion-card-content>
-      <ion-item style="width: 100%;" *ngFor="let respuesta of test.Preguntas.PreguntaInfo[contador].Respuestas.RespuestaInfo" lines="none">
-        <ion-button style="width: 100%" expand="block" (click)="guardarRespuesta(contador, respuesta.Valor, respuesta.SubRespuestas)">{{respuesta.Respuesta}}</ion-button>
-      </ion-item>
-      </ion-card-content>
+      <ion-item style="width: 100%;" *ngFor="let respuesta of test.Preguntas.PreguntaInfo[contador].Respuestas.RespuestaInfo; let i = index" lines="none" (click)="guardarRespuesta(test.Preguntas.PreguntaInfo[contador].IdPregunta, respuesta.Valor, respuesta.SubRespuestas, i)">
+        <ion-label class="ion-text-wrap" color="primary">{{respuesta.Respuesta}}</ion-label>
+        <ion-checkbox #CheckRespuesta [(ngModel)] = "respuesta.ValorCheck" name={{respuesta.Valor}} slot="start" ></ion-checkbox>
+<!--         <ion-radio #CheckRespuesta name={{respuesta.Valor}} slot="start"></ion-radio>
+ -->   </ion-item>
+    </ion-card-content>
   </ion-card>
+
+
+  <ion-button expand="block" class="flex-margin" *ngIf="mostrarTest && contador !==0 && !isFinTest" (click)="preguntaAnterior()">
+    <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
+    <span>Pregunta Anterior</span>
+  </ion-button>
+
+  
+
 
 </ion-content>

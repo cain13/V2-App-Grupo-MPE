@@ -18,17 +18,14 @@
           <ion-label class="fw700">Pregunta número {{subrespuestas.IdPregunta}}</ion-label>
         </ion-list-header>
 
-        <ion-radio-group *ngFor="let subrespuesta of subrespuestas.RespuestaSubPreguntas.RespuestaSubPreguntaInfo" (ionChange)="guardarID(subrespuesta.IdRespuesta)" allow-empty-selection="true">
-
-        <ion-item>
+        <ion-item *ngFor="let subrespuesta of subrespuestas.RespuestaSubPreguntas.RespuestaSubPreguntaInfo; let i = index" >
           <ion-label class="ion-text-wrap" color="primary">{{subrespuesta.Respuesta}}</ion-label>
-          <ion-radio slot="start" value="{{subrespuesta.IdRespuesta}}" ></ion-radio>
+          <ion-checkbox [(ngModel)] = "subrespuesta.ValorCheck" value={{subrespuesta.IdRespuesta}} slot="start" ></ion-checkbox>
         </ion-item>
 
-      </ion-radio-group>
     </ion-list>    
   </ion-item>
 
   <ion-button expand="block" (click)="guardarRespuesta()">Siguiente Pregunta</ion-button>
 
-</ion-content>>
+</ion-content>

@@ -11,6 +11,7 @@ import { environment } from '../environments/environment';
 
 import { Pages } from './interfaces/pages';
 import { UsuarioService } from './services/usuario.service';
+import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 
 
 
@@ -27,7 +28,7 @@ export class AppComponent {
   public appPages: Array<Pages>;
   public appPagesVSAll: Array<Pages>;
   public appPagesTrabajador: Array<Pages>;
-  public Version = "Versión 1.0.1";
+  public Version = 'Versión 1.0.1';
   constructor(
     private platform: Platform,
     private menu: MenuController,
@@ -36,7 +37,8 @@ export class AppComponent {
     private translate: TranslateProvider,
     private translateService: TranslateService,
     private usuarioService: UsuarioService,
-    private navCtrl: NavController
+    private navCtrl: NavController,
+    private fcm: FCM
     // public router: Router
   ) {
     this.appPagesTrabajador = [
@@ -58,7 +60,7 @@ export class AppComponent {
         direct: 'root',
         icon: 'school-outline'
       }
-      
+
     ];
 
     this.appPagesVSAll = [
@@ -195,6 +197,14 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+
+      this.fcm.onNotification().subscribe(data => {
+        if (data.wasTapped) {
+          console.log('Received in background: ', data);
+        } else {
+          console.log('Received in foreground: ', data);
+        }
+      });
       this.statusBar.styleDefault();
       setTimeout(() => {
         this.splashScreen.hide();
@@ -227,19 +237,19 @@ export class AppComponent {
     this.platform.resume.subscribe(() => {
       console.log('VUELVE A PRIMER PLANO');
     }); */
-    
+
   }
   backButtonEvent() {
     this.platform.backButton.subscribeWithPriority(0, () => {
-    
+
       if (this.routerOutlet.canGoBack()) {
         console.log('Vista Fichar');
-        if(this.usuarioService.getUsuario().Tipo === "CLIENTE"){
+        if (this.usuarioService.getUsuario().Tipo === 'CLIENTE') {
           this.navCtrl.navigateRoot('certificado-aptitud');
-        }else{
+        } else {
           this.navCtrl.navigateRoot('documentos-trabajador');
         }
-      } else{
+      } else {
         if (Date.now() - this.lastBack > 500) {
           navigator['app'].exitApp();
         }

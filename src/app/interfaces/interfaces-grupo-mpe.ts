@@ -567,6 +567,7 @@ export interface Respuesta {
   Respuesta: string;
   Valor: String;
   SubRespuestas: SubRespuestaInfo;
+  ValorCheck: boolean;
 
 }
 
@@ -587,5 +588,38 @@ export interface RespuestaSubPreguntaInfo {
 
   IdRespuesta: string;
   Respuesta: string;
+  ValorCheck: boolean;
+
+}
+
+export interface RespuestasTestAPI {
+
+  Usuario: string;
+  Password: string;
+  NombreTest: String;
+  Permiso: String;
+  Respuestas: RespuestaTest[];
+
+}
+
+export interface RespuestaTest {
+
+  IdPregunta: string;
+  ValorRespuesta: string;
+  SubRespuesta?: string[];
+
+}
+
+export interface MandarTokenAPI {
+
+  Usuario: string;
+  Token: string;
+
+}
+
+export interface RespuestaAPItoken {
+
+  Codigo: number;
+  Mensaje: string;
 
 }
