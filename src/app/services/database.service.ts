@@ -5,6 +5,7 @@ import { Platform, IonItemSliding } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
 import { UsuarioLogin, Notificacion } from '../interfaces/usuario-interfaces';
+import { NotificacionesService } from './notificaciones.service';
 
 @Injectable({
   providedIn: 'root'
@@ -118,8 +119,10 @@ export class DatabaseService {
 
     this.estadoBD().then(async () => {
         const data = [notificacion.Titulo, notificacion.Mensaje, notificacion.Leido, notificacion.TipoDocumento, notificacion.Fecha,notificacion.Ruta,notificacion.Icono];
-        const respuesta = this.storage.executeSql('INSERT INTO notificacion (Titulo, Mensaje, Leido, TipoDocumento, Fecha,Ruta,Icono) VALUES (?, ?, ?, ?, ?, ?, ?)', data).then(() => {
+        const respuesta = await this.storage.executeSql('INSERT INTO notificacion (Titulo, Mensaje, Leido, TipoDocumento, Fecha,Ruta,Icono) VALUES (?, ?, ?, ?, ?, ?, ?)', data).then(() => {
           console.log('DB: Notificacion añadida a la BD');
+
+          
         });
     });
   }
@@ -160,7 +163,7 @@ export class DatabaseService {
 /*     const sql = 'SELECT * FROM notificacion WHERE Leido = ?';
  */
     try {
-      const response = await this.storage.executeSql('SELECT * FROM notificacion WHERE Leido = ?', [false]);
+      const response = await this.storage.executeSql('SELECT * FROM notificacion WHERE Leido = ?', [0]);
       const notificaciones = [];
       for (let index = 0; index < response.rows.length; index++) {
         notificaciones.push(response.rows.item(index));
@@ -175,7 +178,7 @@ export class DatabaseService {
   }
 
   async marcarNotificacionLeida(id) {
-    const data = [true, id];
+    const data = [1, id];
     // tslint:disable-next-line: max-line-length
     const res = await this.storage.executeSql('UPDATE notificacion SET Leido=? WHERE IdNotificacion = ?', data);
 

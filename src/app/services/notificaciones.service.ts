@@ -11,8 +11,8 @@ import { Notificacion } from '../interfaces/usuario-interfaces';
 export class NotificacionesService {
 
 
-  private numNotificaciones$ = new Subject<number>();
-  private numNot: number;
+  numNotificaciones$ = new Subject<number>();
+  numNot: number;
   listaMensajes: Array<Notificacion> = [];
 
 
@@ -27,6 +27,12 @@ export class NotificacionesService {
 
     });
 
+  }
+
+  SumaUnaNotificaciones(){
+      this.numNot = this.numNot + 1;;
+      this.numNotificaciones$.next(this.numNot);
+      console.log('aumentarNot: ', this.numNot);
   }
 
   getNotifiaciones$(): Observable<number>{

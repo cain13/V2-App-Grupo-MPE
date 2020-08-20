@@ -62,7 +62,7 @@ export class NotificacionesPage implements OnInit {
         Ruta: "/",
         Mensaje: "No hay notificaciones nuevas",
         Fecha:  moment().format('YYYY-MM-DDT00:00:00'),
-        Leido: true,
+        Leido: 1,
         TipoDocumento: "Docuemento"
       };
       this.listaMensajes.push(Notificacion);
@@ -74,7 +74,7 @@ export class NotificacionesPage implements OnInit {
     this.messages = this.messageService.getMessages();
   }
 
-  async close(idNotificacion: number, ruta: string) {
+  async close(idNotificacion: number, ruta: string, tipoDocumento:string) {
     //const rutaAux = ruta.concat(':')
     await this.db.marcarNotificacionLeida(idNotificacion).then(() => {
 
