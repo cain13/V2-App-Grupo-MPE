@@ -209,6 +209,7 @@ export class AppComponent {
         body: "Prueba mensaje notificacion"
         title: "Titulo prueba"
         wasTapped: false*/
+        console.log('dataaaa:', data);
         if (data.wasTapped) {
           console.log('Received in background: ', data);
           console.log("Tipo Documento " + data['TipoDocumento']);

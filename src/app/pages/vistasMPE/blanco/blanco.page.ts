@@ -3,7 +3,7 @@ import { DatabaseService } from '../../../services/database.service';
 import { UsuarioService } from '../../../services/usuario.service';
 import { NavController } from '@ionic/angular';
 import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
-import { NavigationExtras } from '@angular/router';
+
 
 @Component({
   selector: 'app-blanco',
@@ -16,9 +16,11 @@ export class BlancoPage implements OnInit {
 
   constructor(private databaseService: DatabaseService,
               private usuarioService: UsuarioService,
-              private navCtrl: NavController) { }
+              private navCtrl: NavController
+             ) { }
 
   async ngOnInit() {
+
 
     await this.usuarioService.dismiss();
     this.databaseService.estadoBD().then( async () => {
