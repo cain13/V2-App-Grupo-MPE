@@ -598,6 +598,7 @@ export interface RespuestasTestAPI {
   Password: string;
   NombreTest: String;
   Permiso: String;
+  FechaRealizacion: String;
   Respuestas: RespuestaTest[];
 
 }

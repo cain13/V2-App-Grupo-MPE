@@ -9,6 +9,7 @@ import { TestService } from '../../../services/test.service';
 import { SubrespuestaModalPage } from '../subrespuesta-modal/subrespuesta-modal.page';
 import { SubRespuestaInfo, RespuestaSubPreguntas, RespuestaSubPreguntaInfo } from '../../../interfaces/interfaces-grupo-mpe';
 import { isArray } from 'util';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-test',
@@ -85,7 +86,8 @@ export class TestPage implements OnInit {
         Permiso: this.test.Permiso,
         Password: this.usuario.Password,
         Usuario: this.usuario.Usuario,
-        Respuestas: []
+        Respuestas: [],
+        FechaRealizacion: ''
 
       };
       this.numeroPreguntasSinResponder = (this.test.Preguntas.PreguntaInfo.length - this.respuestasTest.Respuestas.length);
@@ -253,18 +255,13 @@ export class TestPage implements OnInit {
               resp.SubRespuestas['SubRespuestaInfo'].RespuestaSubPreguntas.RespuestaSubPreguntaInfo.map((subAux) => {
 
                   if (subAux.IdRespuesta === dat) {
- 
+
                     subAux.ValorCheck = true;
 
                   }
-
                 });
-
               }
-
             } else {
-
-
               resp.SubRespuestas['SubRespuestaInfo'].RespuestaSubPreguntas.RespuestaSubPreguntaInfo.map(subAux => {
                 if (subAux.IdRespuesta === datos['arrayRespuestas'][0]) {
 
@@ -325,7 +322,8 @@ export class TestPage implements OnInit {
 
     }
 
-    
+
+    this.numeroPreguntasSinResponder = (this.test.Preguntas.PreguntaInfo.length - this.respuestasTest.Respuestas.length);
 
     console.log('Array Respuestas: ', this.respuestasTest);
   }
@@ -372,10 +370,119 @@ export class TestPage implements OnInit {
     await alert.present();
   }
 
+
+
+
   enviarRespuestas() {
+    this.respuestasTest.FechaRealizacion = moment().locale('es').format('YYYY-MM-DDT00:00:00');
+
+    let auxResp = '';
+    for (const resp of this.respuestasTest.Respuestas) {
+      let aux = '';
+
+      if  ( resp.SubRespuesta !== undefined && resp.SubRespuesta !== null) {
+        let auxSubRespuesta = '';
+
+        if (Array.isArray(resp.SubRespuesta['arrayRespuestas'])) {
+          for ( const sub of resp.SubRespuesta['arrayRespuestas'] ) {
+
+            let auxString = '';
+            auxString = '<string>' + sub + '</string>';
+            auxSubRespuesta = auxSubRespuesta.concat(auxString);
+
+          }
+
+        } else {
+
+          auxSubRespuesta = '<string>' + resp.SubRespuesta['arrayRespuestas'] + '</string>';
+
+        }
+        aux = auxSubRespuesta;
+      }
+      if (aux === '') {
+
+        aux = '<RespuestaTestSTInfo>' +
+                '<IdPregunta>' + resp.IdPregunta + '</IdPregunta>' +
+                '<Respuesta>' + resp.ValorRespuesta + '</Respuesta>' +
+              '</RespuestaTestSTInfo>';
+      } else {
+
+        aux = '<RespuestaTestSTInfo>' +
+                '<IdPregunta>' + resp.IdPregunta + '</IdPregunta>' +
+                '<Respuesta>' + resp.ValorRespuesta + '</Respuesta>' +
+                '<SubRespuestas>' +
+                  aux +
+                '</SubRespuestas>' +
+              '</RespuestaTestSTInfo>';
 
 
-    console.log('MANDAR TEST: ', this.respuestasTest);
+      }
+
+      auxResp = auxResp.concat(aux);
+
+    }
+
+    try {
+
+      this.usuarioService.present('Enviando Test...');
+      const xmlhttp = new XMLHttpRequest();
+      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+      xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+      xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+      xmlhttp.responseType = 'document';
+        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+      const sr =
+        '<?xml version="1.0" encoding="utf-8"?>' +
+        '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+          '<soap:Header>' +
+            '<AuthHeader xmlns="http://tempuri.org/">' +
+              '<Usuario>' + this.respuestasTest.Usuario + '</Usuario>' +
+              '<Password>' + this.respuestasTest.Password + '</Password>' +
+            '</AuthHeader>' +
+          '</soap:Header>' +
+          '<soap:Body>' +
+            '<InsertarTest xmlns="http://tempuri.org/">' +
+              '<TestRespuestas>' +
+                '<TestResultInfo>' +
+                  '<Nombre>' + this.respuestasTest.NombreTest + '</Nombre>' +
+                  '<Permiso>' + this.respuestasTest.Permiso + '</Permiso>' +
+                  '<FechaRealizacion>' + this.respuestasTest.FechaRealizacion + '</FechaRealizacion>' +
+                  '<Respuestas>' +
+                    auxResp +
+                  '</Respuestas>' +
+                '</TestResultInfo>' +
+              '</TestRespuestas>' +
+            '</InsertarTest>' +
+          '</soap:Body>' +
+        '</soap:Envelope>';
+
+      console.log('STR PARA LA API: ', sr);
+      xmlhttp.send(sr);
+
+
+      xmlhttp.onreadystatechange =  async () => {
+        if (xmlhttp.readyState === 4) {
+            if (xmlhttp.status === 500) {
+              this.usuarioService.dismiss();
+            } else if (xmlhttp.status === 200) {
+              this.mostrarTest = false;
+              this.usuarioService.dismiss();
+              this.isFinTest = false;
+              this.mostrarBtnFin = false;
+              this.seleccionarTest();
+            } else {
+              this.usuarioService.dismiss();
+              console.log('200 ' + xmlhttp.response);
+            }
+          } else {
+            this.usuarioService.dismiss();
+            console.log('4 ' + xmlhttp.status);
+          }
+      };
+    } catch (error) {
+      console.log('error ', error);
+      this.usuarioService.dismiss();
+    }
 
   }
 

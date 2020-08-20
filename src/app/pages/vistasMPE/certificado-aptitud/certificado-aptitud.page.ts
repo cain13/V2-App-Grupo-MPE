@@ -144,7 +144,7 @@ export class CertificadoAptitudPage {
         if (xmlhttp.readyState === 4) {
             if (xmlhttp.status === 500) {
               console.log('500 - nifConsultor: ', nifConsultor);
-              this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+              this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
               this.usuarioService.dismiss();
             } else if (xmlhttp.status === 200) {
                 const xml = xmlhttp.responseXML;
