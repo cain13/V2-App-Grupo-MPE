@@ -231,8 +231,7 @@ export class DocumentosTrabajadorPage {
       console.log('FICHAR ERROR: Obtener Lista Motivos');
       this.getSinNotificaciones();
     });
-    // AQUI CARGO LISTA NOTIFICACION DE BD
-    // SI LA LISTA ES VACIA CREO NOTIFICACION DE NO HAY NOTIFICACIONES
+    
   }
   getSinNotificaciones() {
   
@@ -244,7 +243,7 @@ export class DocumentosTrabajadorPage {
         Ruta: "/",
         Mensaje: "No hay notificaciones nuevas",
         Fecha:  moment().format('YYYY-MM-DDT00:00:00'),
-        Leido: true,
+        Leido: 1,
         TipoDocumento: "Docuemento"
       };
       this.listaMensajes.push(notificacion);
