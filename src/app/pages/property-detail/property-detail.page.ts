@@ -2,14 +2,13 @@ import { Component } from '@angular/core';
 import { NavController, ActionSheetController, ModalController, ToastController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { ImagePage } from './../modal/image/image.page';
+import { ImagePage } from '../modal/image/image.page';
 
 import {
   PropertyService,
   // BrokerService,
 } from '../../providers';
 
-import { environment } from '../../../environments/environment';
 
 import {
   trigger,

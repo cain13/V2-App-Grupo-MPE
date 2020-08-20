@@ -41,14 +41,33 @@
  -->   </ion-item>
     </ion-card-content>
   </ion-card>
-
-
-  <ion-button expand="block" class="flex-margin" *ngIf="mostrarTest && contador !==0 && !isFinTest" (click)="preguntaAnterior()">
-    <ion-icon slot="start" name="arrow-back-outline"></ion-icon>
-    <span>Pregunta Anterior</span>
-  </ion-button>
-
-  
+  <ion-grid>
+    
+    <ion-row>
+      <ion-col>
+        <ion-button expand="full" *ngIf="mostrarTest && contador !==0 && !isFinTest" (click)="preguntaAnterior()">
+          <ion-icon slot="start" name="chevron-back-outline"></ion-icon>
+          <label> Anterior</label>
+        </ion-button>
+      </ion-col>
+      <ion-col>
+        <ion-button expand="full" *ngIf="mostrarTest && contador < (numeroPreguntas-1) && !isFinTest" (click)="preguntaSiguiente()">
+          <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+          <span> Siguiente</span>
+        </ion-button>
+        <ion-button color="danger" expand="full" *ngIf="mostrarTest && mostrarBtnFin && !isFinTest" (click)="finalizarTest()">
+          <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
+          <span> Finalizar</span>
+        </ion-button>
+        
+      </ion-col>
+    </ion-row>
+    <ion-row *ngIf="mostrarTest &&  numeroPreguntasSinResponder > 0" style="background: #FFE294!important; padding:10px !important;">
+      <ion-col >
+        <label> Tienes {{numeroPreguntasSinResponder}} preguntas sin responer, complete todas para poder finalizar el test.</label>        
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 
 </ion-content>
