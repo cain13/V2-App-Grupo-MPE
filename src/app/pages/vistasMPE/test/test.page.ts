@@ -24,9 +24,9 @@ export class TestPage implements OnInit {
   respuestasTest: RespuestasTestAPI;
   isCheck = true;
   numeroPreguntas: number;
+  numeroPreguntasSinResponder: number;
   isFinTest = false;
-
-
+  mostrarBtnFin = false;
   @ViewChildren('CheckRespuesta') botonRespuestas: QueryList<IonCheckbox>;
 
 
@@ -78,6 +78,7 @@ export class TestPage implements OnInit {
 
       console.log('TEST ELEGIDO: ', this.test , 'NUMERO PREGUNTAS: ', this.test.Preguntas.PreguntaInfo.length);
       this.numeroPreguntas = this.test.Preguntas.PreguntaInfo.length;
+      
       this.respuestasTest = {
 
         NombreTest: this.test.Nombre,
@@ -87,6 +88,7 @@ export class TestPage implements OnInit {
         Respuestas: []
 
       };
+      this.numeroPreguntasSinResponder = (this.test.Preguntas.PreguntaInfo.length - this.respuestasTest.Respuestas.length);
       this.mostrarTest = true;
       this.isFinTest = false;
 
@@ -184,24 +186,39 @@ export class TestPage implements OnInit {
 
 
       await this.lanzarSubrespuestas(idPregunta, valorRespuesta, subRespuesta, id);
+      
 
     } else {
 
       this.addRespuesta(idPregunta, valorRespuesta);
       const aux = this.contador + 1;
+      this.numeroPreguntasSinResponder = (this.test.Preguntas.PreguntaInfo.length - this.respuestasTest.Respuestas.length);
+        console.log("this.numeroPreguntasSinResponder ", this.numeroPreguntasSinResponder);
       if ( aux === this.numeroPreguntas) {
+        
+        if (this.respuestasTest.Respuestas.length === this.test.Preguntas.PreguntaInfo.length) {
 
-        this.isFinTest = true;
-        this.finTest('Test terminado', '¿Desea enviarlo?', '');
+          this.mostrarBtnFin = true;
+
+
+        } else {
+
+          this.usuarioService.presentAlert('ALERTA', 'Tiene ' + this.numeroPreguntasSinResponder +' sin responder, reviselo.', '');
+
+        }
+      
 
       }
-      this.contador++;
-
+      if(aux < this.numeroPreguntas && this.contador < this.numeroPreguntas && !this.mostrarBtnFin){
+        
+        this.usuarioService.present("Cargando siguiente pregunta...");
+        setTimeout(() => {
+          this.usuarioService.dismiss();
+          this.contador++;
+        }, 1000);
+      }
 
     }
-
-
-
   }
 
   isSubRespuesta( obj: any) {
@@ -314,8 +331,16 @@ export class TestPage implements OnInit {
   }
 
   preguntaAnterior() {
+    this.mostrarBtnFin = false;
     this.contador = this.contador - 1;
+  }
 
+  preguntaSiguiente() {
+    this.contador = this.contador + 1;
+  }
+  finalizarTest(){
+    this.finTest('Test terminado', '¿Desea enviarlo?', '');
+    
   }
 
   async finTest(titulo: string, subtitulo: string, mensaje: string) {
@@ -337,6 +362,7 @@ export class TestPage implements OnInit {
         }, {
           text: 'Confirmar',
           handler: () => {
+            this.isFinTest = true;
             this.enviarRespuestas();
           }
         }

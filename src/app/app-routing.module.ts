@@ -122,7 +122,11 @@ const routes: Routes = [
   {
     path: 'documentos-covid',
     loadChildren: () => import('./pages/vistasMPE/documentos-covid/documentos-covid.module').then( m => m.DocumentosCOVIDPageModule)
+  },  {
+    path: 'notificaciones',
+    loadChildren: () => import('./pages/vistasMPE/notificaciones/notificaciones.module').then( m => m.NotificacionesPageModule)
   },
+
 
 
 

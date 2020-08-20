@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RespuestaHistorial, ObtenerHistoriaDocumentos, CertificadoPDF, RespuestaObtenerCertPDF } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { CertificadoPDF, RespuestaObtenerCertPDF, RespuestaHistorial, ObtenerHistoriaDocumentos } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';

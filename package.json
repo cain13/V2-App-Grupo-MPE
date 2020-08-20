@@ -58,7 +58,7 @@
     "@ngx-translate/http-loader": "4.0.0",
     "chart.js": "2.8.0",
     "com-badrit-base64": "^0.2.0",
-    "cordova-android": "^8.0.0",
+    "cordova-android": "^8.1.0",
     "cordova-plugin-androidx": "^2.0.0",
     "cordova-plugin-androidx-adapter": "^1.1.1",
     "cordova-plugin-appavailability": "^0.4.2",

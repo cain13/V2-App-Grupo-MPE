@@ -22,6 +22,7 @@ import { CertificadosService } from '../../../services/certificados.service';
 import { ModalMasInfoPage } from '../modal-mas-info/modal-mas-info.page';
 import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
 import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
+import { DatabaseService } from '../../../services/database.service';
 
 @Component({
   selector: 'app-certificado-aptitud',
@@ -63,7 +64,8 @@ export class CertificadoAptitudPage {
     private file: File,
     private platform: Platform,
     private certificadosService: CertificadosService,
-    private documentosService: DocumentosTrabajadoresService
+    private documentosService: DocumentosTrabajadoresService,
+    private db:DatabaseService
   ) {
 
     this.usuario = this.usuarioService.getUsuario();
@@ -80,7 +82,11 @@ export class CertificadoAptitudPage {
 
 
   ionViewWillEnter() {
-    this.RecuentoNotificaciones();
+    this.db.obtenerTodasNotificacion().then( resp => {
+
+      this.Cantidad = resp.length;
+
+    });
     this.menuCtrl.enable(true);
     if ( this.usuarioService.haFiltrado) {
       this.listaCertificados = [];
@@ -225,44 +231,6 @@ export class CertificadoAptitudPage {
   }
 
 
-  RecuentoNotificaciones() {
-
-    const xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xmlhttp.responseType = 'document';
-      // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
-    const sr =
-    '<?xml version="1.0" encoding="utf-8"?>' +
-    '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
-      '<soap:Header>' +
-        '<AuthHeader xmlns="http://tempuri.org/">' +
-          '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
-          '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
-        '</AuthHeader>' +
-      '</soap:Header>' +
-      '<soap:Body>' +
-        '<ObtenerRecuentoDocumentosNuevos xmlns="http://tempuri.org/" />' +
-      '</soap:Body>' +
-    '</soap:Envelope>';
-    xmlhttp.onreadystatechange =  () => {
-          if (xmlhttp.readyState === 4) {
-              if (xmlhttp.status === 200) {
-                  const xml = xmlhttp.responseXML;
-                  const obj: RecuentoNotificacionesResponse = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                  // tslint:disable-next-line: max-line-length
-                  const a = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerRecuentoDocumentosNuevosResponse']['ObtenerRecuentoDocumentosNuevosResult']));
-                  this.Cantidad = a;
-                  this.documentosService.setCantidadDocumentosSinLeer(this.Cantidad);
-                  console.log('a ' + a);
-              } else {
-              }
-          } else {
-          }
-      };
-    xmlhttp.send(sr);
-  }
 
   async masInfo(cert: Certificado) {
 

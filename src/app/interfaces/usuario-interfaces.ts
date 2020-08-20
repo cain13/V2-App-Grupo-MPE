@@ -9,6 +9,17 @@ export interface UsuarioLogin {
 
 }
 
+export interface Notificacion {
+    IdNotificacion: number;
+    Titulo: string;
+    Mensaje: string;
+    Leido: boolean;
+    TipoDocumento: string;
+    Fecha: string;
+    Ruta: string;
+    Icono: string;
+}
+
 export interface EmpresaConsultor {
 
     Nif: string;

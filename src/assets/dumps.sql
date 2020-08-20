@@ -8,3 +8,14 @@ CREATE TABLE IF NOT EXISTS usuariosTable (
     Nombre TEXT NOT NULL,
 	Recordarme BOOLEAN DEFAULT NULL
 );
+
+CREATE TABLE IF NOT EXISTS notificacion (
+	IdNotificacion INTEGER PRIMARY KEY AUTOINCREMENT,
+	Titulo TEXT  NOT NULL,
+	Mensaje TEXT  NOT NULL,
+    Leido BOOLEAN DEFAULT NULL,
+	TipoDocumento TEXT NOT NULL,
+    Fecha TEXT NOT NULL,
+	Ruta TEXT NOT NULL,
+	Icono TEXT NOT NULL
+);

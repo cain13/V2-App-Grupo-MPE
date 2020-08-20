@@ -12,6 +12,9 @@ import { environment } from '../environments/environment';
 import { Pages } from './interfaces/pages';
 import { UsuarioService } from './services/usuario.service';
 import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
+import { DatabaseService } from './services/database.service';
+import { Notificacion } from './interfaces/usuario-interfaces';
+import { NotificacionesService } from './services/notificaciones.service';
 
 
 
@@ -38,7 +41,9 @@ export class AppComponent {
     private translateService: TranslateService,
     private usuarioService: UsuarioService,
     private navCtrl: NavController,
-    private fcm: FCM
+    private db: DatabaseService,
+    private fcm: FCM,
+    private notificacionesService: NotificacionesService
     // public router: Router
   ) {
     this.appPagesTrabajador = [
@@ -51,13 +56,13 @@ export class AppComponent {
       {
         title: 'Documentos COVID',
         url: '/documentos-covid',
-        direct: 'root',
+        direct: 'forward',
         icon: 'clipboard-outline'
       },
       {
         title: 'Test',
         url: '/test',
-        direct: 'root',
+        direct: 'forward',
         icon: 'school-outline'
       }
 
@@ -199,10 +204,54 @@ export class AppComponent {
     this.platform.ready().then(() => {
 
       this.fcm.onNotification().subscribe(data => {
+       /* FechaNotificacion: "2020-08-13T17:58:00"
+        TipoDocumento: "Documento"
+        body: "Prueba mensaje notificacion"
+        title: "Titulo prueba"
+        wasTapped: false*/
         if (data.wasTapped) {
           console.log('Received in background: ', data);
+
         } else {
           console.log('Received in foreground: ', data);
+          console.log("Tipo Documento " + data['TipoDocumento']);
+          const titulo = data['title'];
+          const tipoDocumento = data['TipoDocumento'];
+          console.log('TITULO: ', titulo);
+          let notificacion: Notificacion = {
+            IdNotificacion: 1,
+            Fecha: '',
+            Titulo: '',
+            Mensaje: '',
+            Icono: '',
+            Leido: false,
+            Ruta: '',
+            TipoDocumento: ''
+          }; 
+
+          notificacion.Titulo = titulo;
+          notificacion.Leido = false;
+          notificacion.Mensaje = data['body'];
+          notificacion.Fecha = data['FechaNotificacion'];
+          notificacion.TipoDocumento = data['TipoDocumento'];
+          if(tipoDocumento.toUpperCase() === "DOCUMENTO"){
+            notificacion.Icono = "document-text-outline";
+            if(this.usuarioService.getUsuario().Tipo === "CLIENTE"){
+              notificacion.Ruta = "/historial-notificaciones";
+            }else{
+              notificacion.Ruta = "/documentos-trabajador";
+            }
+          }else if(tipoDocumento.toUpperCase() === "MENSAJE"){
+            notificacion.Icono = "mail-outline";
+            notificacion.Ruta = "/messages"
+          }else
+          {
+            notificacion.Icono = "alert-circle-outline";
+            notificacion.Ruta = "/"
+          }
+          this.db.addNotificacion(notificacion);
+          this.notificacionesService.aumentarNotificaciones();
+
         }
       });
       this.statusBar.styleDefault();

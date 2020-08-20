@@ -1,35 +1,34 @@
 import { Component, OnInit } from '@angular/core';
-import { PopoverController, NavController } from '@ionic/angular';
-import { MessageService } from '../../providers/message/message.service';
-import { Validators } from '@angular/forms';
 import { Notificaciones, Notificacion } from 'src/app/interfaces/usuario-interfaces';
-import { DocumentosTrabajadoresService } from '../../services/documentos-trabajadores.service';
+import { MessageService } from 'src/app/providers';
+import { NavController, ModalController } from '@ionic/angular';
+import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
+import { UsuarioService } from 'src/app/services/usuario.service';
+import { DatabaseService } from 'src/app/services/database.service';
+import { async } from 'rxjs/internal/scheduler/async';
 import * as moment from 'moment';
-import { NotificacionesMensajes } from '../../interfaces/usuario-interfaces';
-import { DatabaseService } from '../../services/database.service';
-import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
-  selector: 'app-notifications',
-  templateUrl: './notifications.component.html',
-  styleUrls: ['./notifications.component.scss']
+  selector: 'app-notificaciones',
+  templateUrl: './notificaciones.page.html',
+  styleUrls: ['./notificaciones.page.scss'],
 })
-export class NotificationsComponent implements OnInit {
+export class NotificacionesPage implements OnInit {
+  
   messages: Array<any> = [];
 
   listaNotificaciones: Array<Notificaciones> = [];
   listaMensajes: Array<Notificacion> = [];
   constructor(
     public messageService: MessageService,
-    public popoverController: PopoverController,
+    public modalCtrl: ModalController,
     private documentosService: DocumentosTrabajadoresService,
     private usuarioService: UsuarioService,
     private navController: NavController,
     private db: DatabaseService
-  ) {
-    
-  }
+  ) {}
 
+  
   async ngOnInit() {
     await this.getNotificaciones();
   }
@@ -52,6 +51,7 @@ export class NotificationsComponent implements OnInit {
     // AQUI CARGO LISTA NOTIFICACION DE BD
     // SI LA LISTA ES VACIA CREO NOTIFICACION DE NO HAY NOTIFICACIONES
   }
+
   getSinNotificaciones() {
   
       const Notificacion = 
@@ -79,13 +79,19 @@ export class NotificationsComponent implements OnInit {
     await this.db.marcarNotificacionLeida(idNotificacion).then(() => {
 
       this.navController.navigateForward(ruta);
-      this.popoverController.dismiss();
+      this.modalCtrl.dismiss();
 
     }).catch( error => {
 
-      this.popoverController.dismiss();
+      this.modalCtrl.dismiss();
 
     } );
+
+  }
+
+  closeModal() {
+
+    this.modalCtrl.dismiss();
 
   }
 

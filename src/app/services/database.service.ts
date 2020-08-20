@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { SQLiteObject, SQLite } from '@ionic-native/sqlite/ngx';
 import { BehaviorSubject } from 'rxjs';
-import { Platform } from '@ionic/angular';
+import { Platform, IonItemSliding } from '@ionic/angular';
 import { HttpClient } from '@angular/common/http';
 import { SQLitePorter } from '@ionic-native/sqlite-porter/ngx';
-import { UsuarioLogin } from '../interfaces/usuario-interfaces';
+import { UsuarioLogin, Notificacion } from '../interfaces/usuario-interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -86,9 +86,10 @@ export class DatabaseService {
 
         });
     });
-    
-
   }
+
+
+
   BorrarUsuario() {
     // La siguiente sentencia SQL borra todo el contenido de la tabla:
     this.estadoBD().then(async () => {
@@ -108,6 +109,90 @@ export class DatabaseService {
         Nombre: res.rows.item(0).Nombre,
         FingerID: res.rows.item(0).FingerID,
         Recordarme: res.rows.item(0).Recordarme
+      };
+    } else { return null; }
+
+  }
+
+  addNotificacion(notificacion: Notificacion) {
+
+    this.estadoBD().then(async () => {
+        const data = [notificacion.Titulo, notificacion.Mensaje, notificacion.Leido, notificacion.TipoDocumento, notificacion.Fecha,notificacion.Ruta,notificacion.Icono];
+        const respuesta = this.storage.executeSql('INSERT INTO notificacion (Titulo, Mensaje, Leido, TipoDocumento, Fecha,Ruta,Icono) VALUES (?, ?, ?, ?, ?, ?, ?)', data).then(() => {
+          console.log('DB: Notificacion añadida a la BD');
+        });
+    });
+  }
+
+
+  
+  BorrarNotificacion(id) {
+    // La siguiente sentencia SQL borra todo el contenido de la tabla:
+    this.estadoBD().then(async () => {
+      console.log('DB: Borramos notificacion BD...');
+        this.storage.executeSql('DELETE FROM notificacion WHERE IdNotificacion='+id).then(() => {
+          console.log('DB: Notificacion Borrada'); }).catch(error => { console.log('DB: ERROR AL BORRAR NOTIFICACION'); });
+    });
+  }
+  
+
+  async obtenerTodasNotificacion() {
+
+    const sql = 'SELECT * FROM notificacion';
+
+    try {
+      const response = await this.storage.executeSql(sql, []);
+      const notificaciones = [];
+      console.log('obtener notificacion index ' + notificaciones);
+      for (let index = 0; index < response.rows.length; index++) {
+        notificaciones.push(response.rows.item(index));
+        console.log('obtener notificacion index ' + response.rows.item(index));
+      }
+      return Promise.resolve<Notificacion[]>(notificaciones);
+    } catch (error) {
+      Promise.reject(error);
+    }
+
+  }
+
+  async obtenerTodasSinLeerNotificacion() {
+
+/*     const sql = 'SELECT * FROM notificacion WHERE Leido = ?';
+ */
+    try {
+      const response = await this.storage.executeSql('SELECT * FROM notificacion WHERE Leido = ?', [false]);
+      const notificaciones = [];
+      for (let index = 0; index < response.rows.length; index++) {
+        notificaciones.push(response.rows.item(index));
+        console.log('obtener notificacion Leido2 ' + response.rows.item(index));
+      }
+      
+      return Promise.resolve<Notificacion[]>(notificaciones);
+    } catch (error) {
+      Promise.reject(error);
+    }
+
+  }
+
+  async marcarNotificacionLeida(id) {
+    const data = [true, id];
+    // tslint:disable-next-line: max-line-length
+    const res = await this.storage.executeSql('UPDATE notificacion SET Leido=? WHERE IdNotificacion = ?', data);
+
+  }
+
+  async obtenerNotificacion(id): Promise<Notificacion> {
+    const res =  await this.storage.executeSql('SELECT * FROM notificacion WHERE IdNotificacion='+id, []);
+    if (res.rows.length !== 0) {
+      return {
+        IdNotificacion: res.rows.item(0).IdNotificacion,
+        Titulo: res.rows.item(0).Titulo,
+        Mensaje: res.rows.item(0).Mensaje,
+        TipoDocumento: res.rows.item(0).TipoDocumento,
+        Leido: res.rows.item(0).Leido,
+        Fecha: res.rows.item(0).Fecha,
+        Ruta: res.rows.item(0).Ruta,
+        Icono: res.rows.item(0).Icono,
       };
     } else { return null; }
 

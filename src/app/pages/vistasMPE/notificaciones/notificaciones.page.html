@@ -1,8 +1,19 @@
-<ion-list class="ion-no-margin ion-no-padding" style="Position:absolute !important">
-    <ion-list-header color="dark">
-      <ion-label class="fw700">Notificaciones</ion-label>
-    </ion-list-header>
-      <ion-item class="bg-white ion-no-padding ion-no-margin"  *ngFor="let NotificacionesMensajes of listaMensajes"  tappable>
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+        <ion-button color="primary" (click)="closeModal()">
+            <ion-icon name="close" color="light"></ion-icon>
+        </ion-button>
+    </ion-buttons>
+    <ion-title>
+    	Notificaciones 
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-list>
+      <ion-item class="bg-white ion-no-padding ion-no-margin"  *ngFor="let NotificacionesMensajes of listaMensajes"  tappable  >
         <ion-icon style="margin: 0px !important; padding: 10px;" slot="start" [name]="NotificacionesMensajes.Icono" color="danger"></ion-icon>
         <ion-label (click)="close(NotificacionesMensajes.IdNotificacion,NotificacionesMensajes.Ruta)">
           <h2>
@@ -14,3 +25,4 @@
         </ion-label>
       </ion-item>
   </ion-list>
+</ion-content>

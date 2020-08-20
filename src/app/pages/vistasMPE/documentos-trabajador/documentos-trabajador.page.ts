@@ -16,6 +16,7 @@ import { DocumentosService } from '../../../providers/documentos/documentos.serv
 import { CertificadosAptitudService } from '../../../providers/certificadosAptitud/certificados-aptitud.service';
 import { RespuestaAPIGetDocumentos, ObtenerDocumentosTrabajadores, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse } from '../../../interfaces/interfaces-grupo-mpe';
 import { UsuarioService } from '../../../services/usuario.service';
+import { Notificaciones, Notificacion } from 'src/app/interfaces/usuario-interfaces';
 
 import { NgxXml2jsonService } from 'ngx-xml2json';
 
@@ -23,6 +24,8 @@ import { NgxXml2jsonService } from 'ngx-xml2json';
 import { File } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { DocumentosTrabajadoresService } from '../../../services/documentos-trabajadores.service';
+import { DatabaseService } from '../../../services/database.service';
+import { NotificacionesService } from '../../../services/notificaciones.service';
 
 import {
   trigger,
@@ -34,6 +37,9 @@ import {
 } from '@angular/animations';
 import { NavController, MenuController, PopoverController,
          AlertController, ModalController, ToastController, LoadingController, Platform } from '@ionic/angular';
+import { Observable } from 'rxjs';
+import * as moment from 'moment';
+import { NotificacionesPage } from '../notificaciones/notificaciones.page';
 
 @Component({
   selector: 'app-documentos-trabajador',
@@ -51,8 +57,12 @@ import { NavController, MenuController, PopoverController,
 export class DocumentosTrabajadorPage {
 
   listaDocumentos = [];
-  Cantidad = 0;
+  cantidad$: Observable<number>;
+  Cantidad: number;
   searchKey = '';
+  listaMensajes: Array<Notificacion> = [];
+
+  
 
 
 
@@ -66,13 +76,19 @@ export class DocumentosTrabajadorPage {
     private platform: Platform,
     private opener: FileOpener,
     private file: File,
-    private documentosService: DocumentosTrabajadoresService
+    private documentosService: DocumentosTrabajadoresService,
+    private db: DatabaseService,
+    private notificacionesService: NotificacionesService
     ) {  }
 
 
     ionViewWillEnter() {
-      // this.usuarioService.desactivarSegundoPlano = false;
-      this.RecuentoNotificaciones();
+      this.notificacionesService.aumentarNotificaciones();
+      this.cantidad$ = this.notificacionesService.getNotifiaciones$();
+      this.cantidad$.subscribe(num => this.Cantidad = num);
+      console.log('cnatidad$: ', this.Cantidad)
+
+    
       this.getDocumentos();
 
 
@@ -189,52 +205,50 @@ export class DocumentosTrabajadorPage {
     }
 
   }
-  RecuentoNotificaciones() {
-
-    const xmlhttp = new XMLHttpRequest();
-    xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-    xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xmlhttp.responseType = 'document';
-      // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
-    const sr =
-    '<?xml version="1.0" encoding="utf-8"?>' +
-    '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
-      '<soap:Header>' +
-        '<AuthHeader xmlns="http://tempuri.org/">' +
-          '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
-          '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
-        '</AuthHeader>' +
-      '</soap:Header>' +
-      '<soap:Body>' +
-        '<ObtenerRecuentoDocumentosNuevos xmlns="http://tempuri.org/" />' +
-      '</soap:Body>' +
-    '</soap:Envelope>';
-    xmlhttp.onreadystatechange =  () => {
-          if (xmlhttp.readyState === 4) {
-              if (xmlhttp.status === 200) {
-                  const xml = xmlhttp.responseXML;
-                  const obj: RecuentoNotificacionesResponse = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                  // tslint:disable-next-line: max-line-length
-                  const a = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerRecuentoDocumentosNuevosResponse']['ObtenerRecuentoDocumentosNuevosResult']));
-                  this.Cantidad = a;
-                  this.documentosService.setCantidadDocumentosSinLeer(this.Cantidad);
-                  console.log('a ' + a);
-              } else {
-              }
-          } else {
-          }
-      };
-    xmlhttp.send(sr);
-  }
+ 
 
   async notifications() {
-    const popover = await this.popoverCtrl.create({
-      component: NotificationsComponent,
-      animated: true,
-      showBackdrop: true
+    const modal = await this.modalCtrl.create({
+      component: NotificacionesPage
     });
-    return await popover.present();
+    
+    return await modal.present();
+  }
+
+  async getNotificaciones(){
+    this.usuarioService.present("Cargando notificaciones...");
+
+    await this.db.obtenerTodasNotificacion().then( async res => {
+      
+      console.log('FICHAR: respuestaBD motivos: ', res);
+      this.listaMensajes = res;
+      if(res.length == 0){
+        this.getSinNotificaciones();
+      }
+      this.usuarioService.dismiss();
+    }).catch(() => {
+      this.usuarioService.dismiss();
+      console.log('FICHAR ERROR: Obtener Lista Motivos');
+      this.getSinNotificaciones();
+    });
+    // AQUI CARGO LISTA NOTIFICACION DE BD
+    // SI LA LISTA ES VACIA CREO NOTIFICACION DE NO HAY NOTIFICACIONES
+  }
+  getSinNotificaciones() {
+  
+      const notificacion = 
+      {
+        IdNotificacion: 1,
+        Titulo: "No tienes notificaciones",
+        Icono: "notifications-off-outline",
+        Ruta: "/",
+        Mensaje: "No hay notificaciones nuevas",
+        Fecha:  moment().format('YYYY-MM-DDT00:00:00'),
+        Leido: true,
+        TipoDocumento: "Docuemento"
+      };
+      this.listaMensajes.push(notificacion);
+      return this.listaMensajes;
   }
 
   onInput(event) {
