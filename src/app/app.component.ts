@@ -252,11 +252,11 @@ export class AppComponent {
 
         } else {
           console.log('Received in foreground: ', data);
-          console.log("Tipo Documento " + data['TipoDocumento']);
+          console.log('Tipo Documento ' + data['TipoDocumento']);
           const titulo = data['title'];
           const tipoDocumento = data['TipoDocumento'];
           console.log('TITULO: ', titulo);
-          let notificacion: Notificacion = {
+          const notificacion: Notificacion = {
             IdNotificacion: 1,
             Fecha: '',
             Titulo: '',
@@ -265,27 +265,26 @@ export class AppComponent {
             Leido: 0,
             Ruta: '',
             TipoDocumento: ''
-          }; 
+          };
 
           notificacion.Titulo = titulo;
           notificacion.Leido = 0;
           notificacion.Mensaje = data['body'];
           notificacion.Fecha = data['FechaNotificacion'];
           notificacion.TipoDocumento = data['TipoDocumento'];
-          if(tipoDocumento.toUpperCase() === "DOCUMENTO"){
-            notificacion.Icono = "document-text-outline";
-            if(this.usuarioService.getUsuario().Tipo === "CLIENTE"){
-              notificacion.Ruta = "/historial-notificaciones";
-            }else{
-              notificacion.Ruta = "/documentos-trabajador";
+          if (tipoDocumento.toUpperCase() === 'DOCUMENTO') {
+            notificacion.Icono = 'document-text-outline';
+            if (this.usuarioService.getUsuario().Tipo === 'CLIENTE') {
+              notificacion.Ruta = '/historial-notificaciones';
+            } else {
+              notificacion.Ruta = '/documentos-trabajador';
             }
-          }else if(tipoDocumento.toUpperCase() === "MENSAJE"){
-            notificacion.Icono = "mail-outline";
-            notificacion.Ruta = "/messages"
-          }else
-          {
-            notificacion.Icono = "alert-circle-outline";
-            notificacion.Ruta = "/"
+          } else if (tipoDocumento.toUpperCase() === 'MENSAJE') {
+            notificacion.Icono = 'mail-outline';
+            notificacion.Ruta = '/messages';
+          } else {
+            notificacion.Icono = 'alert-circle-outline';
+            notificacion.Ruta = '/';
           }
           this.db.addNotificacion(notificacion);
           this.notificacionesService.SumaUnaNotificaciones();

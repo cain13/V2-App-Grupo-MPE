@@ -79,7 +79,7 @@ export class TestPage implements OnInit {
 
       console.log('TEST ELEGIDO: ', this.test , 'NUMERO PREGUNTAS: ', this.test.Preguntas.PreguntaInfo.length);
       this.numeroPreguntas = this.test.Preguntas.PreguntaInfo.length;
-      
+
       this.respuestasTest = {
 
         NombreTest: this.test.Nombre,
@@ -188,16 +188,16 @@ export class TestPage implements OnInit {
 
 
       await this.lanzarSubrespuestas(idPregunta, valorRespuesta, subRespuesta, id);
-      
+
 
     } else {
 
       this.addRespuesta(idPregunta, valorRespuesta);
       const aux = this.contador + 1;
       this.numeroPreguntasSinResponder = (this.test.Preguntas.PreguntaInfo.length - this.respuestasTest.Respuestas.length);
-        console.log("this.numeroPreguntasSinResponder ", this.numeroPreguntasSinResponder);
+        console.log('this.numeroPreguntasSinResponder ', this.numeroPreguntasSinResponder);
       if ( aux === this.numeroPreguntas) {
-        
+
         if (this.respuestasTest.Respuestas.length === this.test.Preguntas.PreguntaInfo.length) {
 
           this.mostrarBtnFin = true;
@@ -205,15 +205,15 @@ export class TestPage implements OnInit {
 
         } else {
 
-          this.usuarioService.presentAlert('ALERTA', 'Tiene ' + this.numeroPreguntasSinResponder +' sin responder, reviselo.', '');
+          this.usuarioService.presentAlert('ALERTA', 'Tiene ' + this.numeroPreguntasSinResponder + ' sin responder, reviselo.', '');
 
         }
-      
+
 
       }
-      if(aux < this.numeroPreguntas && this.contador < this.numeroPreguntas && !this.mostrarBtnFin){
-        
-        this.usuarioService.present("Cargando siguiente pregunta...");
+      if (aux < this.numeroPreguntas && this.contador < this.numeroPreguntas && !this.mostrarBtnFin) {
+
+        this.usuarioService.present('Cargando siguiente pregunta...');
         setTimeout(() => {
           this.usuarioService.dismiss();
           this.contador++;
@@ -302,9 +302,18 @@ export class TestPage implements OnInit {
         ValorRespuesta: valorRespuesta,
         SubRespuesta: datos
       };
+      const index = this.respuestasTest.Respuestas.findIndex(resp => resp.IdPregunta === idPregunta);
+      console.log(this.respuestasTest.Respuestas.findIndex(resp => resp.IdPregunta === idPregunta));
+      if ( index === -1 ) {
 
-      const aux = parseInt(idPregunta, 10) - 1;
-      this.respuestasTest.Respuestas.splice(aux, 1, auxRespuesta);
+        this.respuestasTest.Respuestas.push(auxRespuesta);
+
+      } else {
+
+        this.respuestasTest.Respuestas.splice(index, 1, auxRespuesta);
+
+
+      }
 
 
     } else {
@@ -317,8 +326,18 @@ export class TestPage implements OnInit {
 
       };
 
-      const aux = parseInt(idPregunta, 10) - 1;
-      this.respuestasTest.Respuestas.splice(aux, 1, auxRespuesta);
+      const index = this.respuestasTest.Respuestas.findIndex(resp => resp.IdPregunta === idPregunta);
+      console.log(this.respuestasTest.Respuestas.findIndex(resp => resp.IdPregunta === idPregunta));
+      if ( index === -1 ) {
+
+        this.respuestasTest.Respuestas.push(auxRespuesta);
+
+      } else {
+
+        this.respuestasTest.Respuestas.splice(index, 1, auxRespuesta);
+
+
+      }
 
     }
 
@@ -336,9 +355,9 @@ export class TestPage implements OnInit {
   preguntaSiguiente() {
     this.contador = this.contador + 1;
   }
-  finalizarTest(){
+  finalizarTest() {
     this.finTest('Test terminado', '¿Desea enviarlo?', '');
-    
+
   }
 
   async finTest(titulo: string, subtitulo: string, mensaje: string) {
@@ -485,7 +504,6 @@ export class TestPage implements OnInit {
     }
 
   }
-
 
 
 }

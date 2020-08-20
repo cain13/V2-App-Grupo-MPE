@@ -65,7 +65,7 @@ export class CertificadoAptitudPage {
     private platform: Platform,
     private certificadosService: CertificadosService,
     private documentosService: DocumentosTrabajadoresService,
-    private db:DatabaseService
+    private db: DatabaseService
   ) {
 
     this.usuario = this.usuarioService.getUsuario();
