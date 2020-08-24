@@ -25,6 +25,7 @@ import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccio
 import { DatabaseService } from '../../../services/database.service';
 import { NotificacionesService } from 'src/app/services/notificaciones.service';
 import { Observable } from 'rxjs';
+import { NotificacionesPage } from '../notificaciones/notificaciones.page';
 
 @Component({
   selector: 'app-certificado-aptitud',
@@ -269,13 +270,12 @@ export class CertificadoAptitudPage {
         .catch(error => alert(JSON.stringify(error)));
   }
 
+
   async notifications() {
-    const popover = await this.popoverCtrl.create({
-      component: NotificationsComponent,
-      animated: true,
-      showBackdrop: true
-    });
-    return await popover.present();
+    const modal = await this.modalCtrl.create({
+      component: NotificacionesPage
+        });
+    return await modal.present();
   }
 
   onCancel(event) {

@@ -89,7 +89,7 @@ export class NotificacionesPage implements OnInit {
     this.usuarioService.presentToast("Todas las notificaciones han sido marcadas como leídas");
     this.modalCtrl.dismiss();
     console.log("Usuario Notificaciones ",this.usuario);
-    if(this.usuario.Tipo === "CLIENTE"){
+    if(this.usuario.Tipo !== "TRABAJADOR"){
       this.navController.navigateRoot("/certificado-aptitud");
 
     }else{
