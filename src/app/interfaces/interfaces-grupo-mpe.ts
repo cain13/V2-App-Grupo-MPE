@@ -615,6 +615,7 @@ export interface MandarTokenAPI {
 
   Usuario: string;
   Token: string;
+  TipoUsuario: string;
 
 }
 

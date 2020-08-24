@@ -23,6 +23,8 @@ import { ModalMasInfoPage } from '../modal-mas-info/modal-mas-info.page';
 import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
 import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
 import { DatabaseService } from '../../../services/database.service';
+import { NotificacionesService } from 'src/app/services/notificaciones.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-certificado-aptitud',
@@ -47,6 +49,7 @@ export class CertificadoAptitudPage {
   usuario: UsuarioLogin;
   empresaCoonsultor: EmpresaConsultor;
   hayConsultor = false;
+  cantidad$: Observable<number>;
 
   constructor(
     private router: Router,
@@ -65,7 +68,8 @@ export class CertificadoAptitudPage {
     private platform: Platform,
     private certificadosService: CertificadosService,
     private documentosService: DocumentosTrabajadoresService,
-    private db: DatabaseService
+    private db: DatabaseService,
+    private notificacionesService: NotificacionesService
   ) {
 
     this.usuario = this.usuarioService.getUsuario();
@@ -82,11 +86,11 @@ export class CertificadoAptitudPage {
 
 
   ionViewWillEnter() {
-    this.db.obtenerTodasNotificacion().then( resp => {
-
-      this.Cantidad = resp.length;
-
-    });
+    this.notificacionesService.aumentarNotificaciones();
+    this.cantidad$ = this.notificacionesService.getNotifiaciones$();
+    this.cantidad$.subscribe(num => this.Cantidad = num);
+    console.log('cnatidad$: ', this.Cantidad);
+    
     this.menuCtrl.enable(true);
     if ( this.usuarioService.haFiltrado) {
       this.listaCertificados = [];

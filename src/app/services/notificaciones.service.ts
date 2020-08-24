@@ -29,6 +29,11 @@ export class NotificacionesService {
 
   }
 
+  marcarNotificacionesLeidas(){
+    this.numNot = 0;
+    this.numNotificaciones$.next(this.numNot);
+  }
+
   SumaUnaNotificaciones(){
       this.numNot = this.numNot + 1;;
       this.numNotificaciones$.next(this.numNot);
@@ -39,6 +44,14 @@ export class NotificacionesService {
 
     return this.numNotificaciones$.asObservable();
 
+  }
+
+  async getNotificacion(id): Promise<Notificacion> {
+    let notificacion:Notificacion;
+    await this.db.obtenerNotificacion(id).then((noti) => {
+      notificacion = noti;
+    });
+    return notificacion;
   }
 
 

@@ -86,7 +86,7 @@ export class DocumentosTrabajadorPage {
       this.notificacionesService.aumentarNotificaciones();
       this.cantidad$ = this.notificacionesService.getNotifiaciones$();
       this.cantidad$.subscribe(num => this.Cantidad = num);
-      console.log('cnatidad$: ', this.Cantidad)
+      console.log('cnatidad$: ', this.Cantidad);
 
     
       this.getDocumentos();

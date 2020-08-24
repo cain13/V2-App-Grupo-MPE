@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Notificaciones, Notificacion } from 'src/app/interfaces/usuario-interfaces';
 import { MessageService } from 'src/app/providers';
-import { NavController, ModalController } from '@ionic/angular';
+import { NavController, ModalController, ToastController } from '@ionic/angular';
 import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { async } from 'rxjs/internal/scheduler/async';
 import * as moment from 'moment';
+import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
+import { NotificacionesService } from '../../../services/notificaciones.service';
 
 @Component({
   selector: 'app-notificaciones',
@@ -19,17 +21,20 @@ export class NotificacionesPage implements OnInit {
 
   listaNotificaciones: Array<Notificaciones> = [];
   listaMensajes: Array<Notificacion> = [];
+  usuario: UsuarioLogin;
   constructor(
     public messageService: MessageService,
     public modalCtrl: ModalController,
     private documentosService: DocumentosTrabajadoresService,
     private usuarioService: UsuarioService,
     private navController: NavController,
-    private db: DatabaseService
+    private db: DatabaseService,
+    private notificacionesService: NotificacionesService
   ) {}
 
   
   async ngOnInit() {
+    this.usuario = this.usuarioService.getUsuario();
     await this.getNotificaciones();
   }
     async getNotificaciones(){
@@ -69,16 +74,37 @@ export class NotificacionesPage implements OnInit {
       return this.listaMensajes;
   }
 
+  delete(notificacion: Notificacion){
+    this.db.BorrarNotificacion(notificacion.IdNotificacion);
+    this.usuarioService.presentToast("Notificación eliminada correctamente!!");
+    this.modalCtrl.dismiss();
+  }
 
+  
   getMessages() {
     this.messages = this.messageService.getMessages();
   }
+   MarcarComoLeidas(){
+    this.db.marcarTodasNotificacionLeidas();
+    this.usuarioService.presentToast("Todas las notificaciones han sido marcadas como leídas");
+    this.modalCtrl.dismiss();
+    console.log("Usuario Notificaciones ",this.usuario);
+    if(this.usuario.Tipo === "CLIENTE"){
+      this.navController.navigateRoot("/certificado-aptitud");
 
-  async close(idNotificacion: number, ruta: string, tipoDocumento:string) {
+    }else{
+      this.navController.navigateRoot("/documentos-trabajador");
+    }
+    this.notificacionesService.marcarNotificacionesLeidas();
+  }
+
+  async abrirNotificacion(idNotificacion: number, ruta: string, tipoDocumento:string) {
     //const rutaAux = ruta.concat(':')
     await this.db.marcarNotificacionLeida(idNotificacion).then(() => {
-
-      this.navController.navigateForward(ruta);
+      console.log("Ruta "+ ruta);
+      const rutaMensaje = ruta + idNotificacion.toString();
+       console.log("rutaMensaje "+ rutaMensaje);
+      this.navController.navigateForward(rutaMensaje);
       this.modalCtrl.dismiss();
 
     }).catch( error => {

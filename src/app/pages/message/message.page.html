@@ -11,17 +11,22 @@
 
     <ion-card class="ion-no-margin bg-white">
       <ion-card-header>
-          <ion-card-subtitle>{{message.date | date: 'dd/MM/yyyy'}} ∙ por <strong>{{message.senderName}}</strong></ion-card-subtitle>
+          <ion-card-subtitle>{{message.Fecha | date: 'dd/MM/yyyy HH:mm'}} ∙ por <strong>sistema</strong></ion-card-subtitle>
           <ion-card-title>
             <ion-text color="primary">
-              {{message.title}}
+              {{message.Titulo}}
             </ion-text>
           </ion-card-title>
       </ion-card-header>
         <ion-card-content>
 					<p class="ion-margin-top">
             <ion-text color="primary">
-              {{message.message}}
+              {{message.Mensaje}}
+            </ion-text>
+          </p>
+          <p class="ion-margin-top">
+            <ion-text color="primary">
+              {{message.TipoDocumento}}
             </ion-text>
           </p>
         </ion-card-content>

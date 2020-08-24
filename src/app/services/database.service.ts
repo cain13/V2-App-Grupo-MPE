@@ -120,10 +120,11 @@ export class DatabaseService {
     this.estadoBD().then(async () => {
         const data = [notificacion.Titulo, notificacion.Mensaje, notificacion.Leido, notificacion.TipoDocumento, notificacion.Fecha,notificacion.Ruta,notificacion.Icono];
         const respuesta = await this.storage.executeSql('INSERT INTO notificacion (Titulo, Mensaje, Leido, TipoDocumento, Fecha,Ruta,Icono) VALUES (?, ?, ?, ?, ?, ?, ?)', data).then(() => {
-          console.log('DB: Notificacion añadida a la BD');
+          console.log('DB: Notificacion añadida');
 
           
         });
+        console.log('DB: Respuesta Notificacion',respuesta);
     });
   }
 
@@ -176,7 +177,12 @@ export class DatabaseService {
     }
 
   }
-
+  async marcarTodasNotificacionLeidas(): Promise<Notificacion> {
+    const data = [1,0];
+    // tslint:disable-next-line: max-line-length
+    const res = await this.storage.executeSql('UPDATE notificacion SET Leido=? WHERE Leido = ?', data);
+    return null;
+  }
   async marcarNotificacionLeida(id) {
     const data = [1, id];
     // tslint:disable-next-line: max-line-length
@@ -197,6 +203,28 @@ export class DatabaseService {
         Ruta: res.rows.item(0).Ruta,
         Icono: res.rows.item(0).Icono,
       };
+    } else { return null; }
+
+  }
+
+  async ModificarRutaNotificacion() {
+    const res =  await this.storage.executeSql('SELECT * FROM notificacion ORDER BY IdNotificacion DESC LIMIT 1', []);
+    if (res.rows.length !== 0) {
+      const Notificacion = {
+        IdNotificacion: res.rows.item(0).IdNotificacion,
+        Titulo: res.rows.item(0).Titulo,
+        Mensaje: res.rows.item(0).Mensaje,
+        TipoDocumento: res.rows.item(0).TipoDocumento,
+        Leido: res.rows.item(0).Leido,
+        Fecha: res.rows.item(0).Fecha,
+        Ruta: res.rows.item(0).Ruta,
+        Icono: res.rows.item(0).Icono,
+      };
+      console.log("Notificacion.IdNotificacion " + Notificacion.IdNotificacion);
+      const NuevaRuta = '/message/'+Notificacion.IdNotificacion;
+      const data = [NuevaRuta, Notificacion.IdNotificacion];
+    // tslint:disable-next-line: max-line-length
+     const resultado = await this.storage.executeSql('UPDATE notificacion SET Ruta=? WHERE IdNotificacion = ?', data);
     } else { return null; }
 
   }

@@ -27,7 +27,7 @@ export class AppComponent {
 
   @ViewChild(IonRouterOutlet, { static : true }) routerOutlet: IonRouterOutlet;
   lastBack = Date.now();
-
+  
   public appPages: Array<Pages>;
   public appPagesVSAll: Array<Pages>;
   public appPagesTrabajador: Array<Pages>;
@@ -202,107 +202,152 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-
-      this.fcm.onNotification().subscribe(data => {
-       /* FechaNotificacion: "2020-08-13T17:58:00"
-        TipoDocumento: "Documento"
-        body: "Prueba mensaje notificacion"
-        title: "Titulo prueba"
-        wasTapped: false*/
-        console.log('dataaaa:', data);
-        if (data.wasTapped) {
-          console.log('Received in background: ', data);
-          console.log("Tipo Documento " + data['TipoDocumento']);
-          const titulo = data['title'];
-          const tipoDocumento = data['TipoDocumento'];
-          console.log('TITULO: ', titulo);
-          let notificacion: Notificacion = {
-            IdNotificacion: 1,
-            Fecha: '',
-            Titulo: '',
-            Mensaje: '',
-            Icono: '',
-            Leido: 0,
-            Ruta: '',
-            TipoDocumento: ''
-          }; 
-
-          notificacion.Titulo = titulo;
-          notificacion.Leido = 0;
-          notificacion.Mensaje = data['body'];
-          notificacion.Fecha = data['FechaNotificacion'];
-          notificacion.TipoDocumento = data['TipoDocumento'];
-          if(tipoDocumento.toUpperCase() === "DOCUMENTO"){
-            notificacion.Icono = "document-text-outline";
-            if(this.usuarioService.getUsuario().Tipo === "CLIENTE"){
-              notificacion.Ruta = "/historial-notificaciones";
-            }else{
-              notificacion.Ruta = "/documentos-trabajador";
-            }
-          }else if(tipoDocumento.toUpperCase() === "MENSAJE"){
-            notificacion.Icono = "mail-outline";
-            notificacion.Ruta = "/messages"
-          }else
-          {
-            notificacion.Icono = "alert-circle-outline";
-            notificacion.Ruta = "/"
-          }
-          this.db.addNotificacion(notificacion);
-          this.notificacionesService.SumaUnaNotificaciones();
-
-        } else {
-          console.log('Received in foreground: ', data);
-          console.log('Tipo Documento ' + data['TipoDocumento']);
-          const titulo = data['title'];
-          const tipoDocumento = data['TipoDocumento'];
-          console.log('TITULO: ', titulo);
-          const notificacion: Notificacion = {
-            IdNotificacion: 1,
-            Fecha: '',
-            Titulo: '',
-            Mensaje: '',
-            Icono: '',
-            Leido: 0,
-            Ruta: '',
-            TipoDocumento: ''
-          };
-
-          notificacion.Titulo = titulo;
-          notificacion.Leido = 0;
-          notificacion.Mensaje = data['body'];
-          notificacion.Fecha = data['FechaNotificacion'];
-          notificacion.TipoDocumento = data['TipoDocumento'];
-          if (tipoDocumento.toUpperCase() === 'DOCUMENTO') {
-            notificacion.Icono = 'document-text-outline';
-            if (this.usuarioService.getUsuario().Tipo === 'CLIENTE') {
-              notificacion.Ruta = '/historial-notificaciones';
-            } else {
-              notificacion.Ruta = '/documentos-trabajador';
-            }
-          } else if (tipoDocumento.toUpperCase() === 'MENSAJE') {
-            notificacion.Icono = 'mail-outline';
-            notificacion.Ruta = '/messages';
-          } else {
-            notificacion.Icono = 'alert-circle-outline';
-            notificacion.Ruta = '/';
-          }
-          this.db.addNotificacion(notificacion);
-          this.notificacionesService.SumaUnaNotificaciones();
-          this.usuarioService.presentAlert("NUEVA NOTIFICACIÓN!!", "Tiene una notificación nueva!!","");
-        }
-      });
-      this.statusBar.styleDefault();
       setTimeout(() => {
-        this.splashScreen.hide();
-      }, 1000);
-      // this.splashScreen.hide();
-      // Set language of the app.
-      this.translateService.setDefaultLang(environment.language);
-      this.translateService.use(environment.language);
-      this.translateService.getTranslation(environment.language).subscribe(translations => {
-        this.translate.setTranslations(translations);
-      });
-      this.backButtonEvent();
+
+        this.fcm.getInitialPushPayload().then(data => {
+            console.log("data app closed ",data);
+            if(data === undefined || data === null){
+              return;
+            }
+            console.log('Received Inicio in background: ', data);
+            console.log("TipoUsuario " + data['TipoUsuario']);
+            const titulo = data['Titulo'];
+            const tipoDocumento = data['TipoDocumento'];
+            console.log('TITULO: ', titulo);
+            let notificacion: Notificacion = {
+              IdNotificacion: 1,
+              Fecha: '',
+              Titulo: '',
+              Mensaje: '',
+              Icono: '',
+              Leido: 0,
+              Ruta: '',
+              TipoDocumento: ''
+            }; 
+
+            notificacion.Titulo = titulo;
+            notificacion.Leido = 0;
+            notificacion.Mensaje = data['Mensaje'];
+            notificacion.Fecha = data['FechaNotificacion'];
+            notificacion.TipoDocumento = data['TipoDocumento'];
+            if(tipoDocumento.toUpperCase() === "DOCUMENTO"){
+              notificacion.Icono = "document-text-outline";
+              if(data['TipoUsuario'] !== 'TRABAJADOR'){
+                notificacion.Ruta = "/historial-notificaciones";
+              }else{
+                notificacion.Ruta = "/documentos-trabajador";
+              }
+            }else if(tipoDocumento.toUpperCase() === "MENSAJE"){
+              notificacion.Icono = "mail-outline";
+              notificacion.Ruta = "/message/"
+            }else
+            {
+              notificacion.Icono = "alert-circle-outline";
+              notificacion.Ruta = "/"
+            }
+           
+            this.db.addNotificacion(notificacion);
+       //  this.db.ModificarRutaNotificacion();
+            this.notificacionesService.SumaUnaNotificaciones();
+        });
+
+
+        this.fcm.onNotification().subscribe(data => {
+      
+          if (data.wasTapped) {
+            console.log('Received Segundo in background: ', data);
+            console.log("Tipo Documento " + data['TipoDocumento']);
+            const titulo = data['Titulo'];
+            const tipoDocumento = data['TipoDocumento'];
+            console.log('TITULO: ', titulo);
+            let notificacion: Notificacion = {
+              IdNotificacion: 1,
+              Fecha: '',
+              Titulo: '',
+              Mensaje: '',
+              Icono: '',
+              Leido: 0,
+              Ruta: '',
+              TipoDocumento: ''
+            }; 
+
+            notificacion.Titulo = titulo;
+            notificacion.Leido = 0;
+            notificacion.Mensaje = data['Mensaje'];
+            notificacion.Fecha = data['FechaNotificacion'];
+            notificacion.TipoDocumento = data['TipoDocumento'];
+            if(tipoDocumento.toUpperCase() === "DOCUMENTO"){
+              notificacion.Icono = "document-text-outline";
+              if (this.usuarioService.getUsuario().Tipo !== 'TRABAJADOR') {
+                notificacion.Ruta = "/historial-notificaciones";
+              }else{
+                notificacion.Ruta = "/documentos-trabajador";
+              }
+            }else if(tipoDocumento.toUpperCase() === "MENSAJE"){
+              notificacion.Icono = "mail-outline";
+              notificacion.Ruta = "/message/"
+            }else
+            {
+              notificacion.Icono = "alert-circle-outline";
+              notificacion.Ruta = "/"
+            }
+            this.db.addNotificacion(notificacion);
+            this.notificacionesService.SumaUnaNotificaciones();
+
+          } else {
+            console.log('Received in foreground: ', data);
+            console.log('Tipo Documento ' + data['TipoDocumento']);
+            const titulo = data['title'];
+            const tipoDocumento = data['TipoDocumento'];
+            console.log('TITULO: ', titulo);
+            const notificacion: Notificacion = {
+              IdNotificacion: 1,
+              Fecha: '',
+              Titulo: '',
+              Mensaje: '',
+              Icono: '',
+              Leido: 0,
+              Ruta: '',
+              TipoDocumento: ''
+            };
+
+            notificacion.Titulo = titulo;
+            notificacion.Leido = 0;
+            notificacion.Mensaje = data['body'];
+            notificacion.Fecha = data['FechaNotificacion'];
+            notificacion.TipoDocumento = data['TipoDocumento'];
+            if (tipoDocumento.toUpperCase() === 'DOCUMENTO') {
+              notificacion.Icono = 'document-text-outline';
+              if (this.usuarioService.getUsuario().Tipo !== 'TRABAJADOR') {
+                notificacion.Ruta = '/historial-notificaciones';
+              } else {
+                notificacion.Ruta = '/documentos-trabajador';
+              }
+            } else if (tipoDocumento.toUpperCase() === 'MENSAJE') {
+              notificacion.Icono = 'mail-outline';
+              notificacion.Ruta = '/message/';
+            } else {
+              notificacion.Icono = 'alert-circle-outline';
+              notificacion.Ruta = '/';
+            }
+            this.db.addNotificacion(notificacion);
+            this.notificacionesService.SumaUnaNotificaciones();
+            this.usuarioService.presentAlert("NUEVA NOTIFICACIÓN!!", "Tiene una notificación nueva!!","");
+          }
+        });
+        this.statusBar.styleDefault();
+        setTimeout(() => {
+          this.splashScreen.hide();
+        }, 1000);
+        // this.splashScreen.hide();
+        // Set language of the app.
+        this.translateService.setDefaultLang(environment.language);
+        this.translateService.use(environment.language);
+        this.translateService.getTranslation(environment.language).subscribe(translations => {
+          this.translate.setTranslations(translations);
+        });
+        this.backButtonEvent();
+    }, 100);
     }).catch(() => {
       // Set language of the app.
       this.translateService.setDefaultLang(environment.language);

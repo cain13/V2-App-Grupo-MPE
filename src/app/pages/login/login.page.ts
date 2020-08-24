@@ -280,7 +280,7 @@ export class LoginPage implements OnInit {
 
                     this.usuarioService.login(usuario);
                     this.usuarioService.guardarUsuario(usuario);
-                    this.guardarTokenAPI();
+                    this.guardarTokenAPI(usuario.Tipo);
                     console.log('Tipo Empleado ' + usuario.Tipo);
                     if ( usuario.Tipo === 'CLIENTE') {
                       console.log('ACCEDEMOS COMO CLIENTE');
@@ -363,11 +363,12 @@ export class LoginPage implements OnInit {
   }
 
 
-  async guardarTokenAPI() {
+  async guardarTokenAPI(tipoUsuario: string) {
     const tokenAPI: MandarTokenAPI = {
 
       Usuario: this.onLoginForm.value.usuario,
-      Token: this.tokenAPI
+      Token: this.tokenAPI,
+      TipoUsuario: tipoUsuario
     };
     console.log('GUARDAR TOKEN EN API: ', tokenAPI);
 

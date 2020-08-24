@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { PopoverController, ModalController, IonCheckbox, IonRadio, AlertController } from '@ionic/angular';
+import { PopoverController, ModalController, IonCheckbox, IonRadio, AlertController, NavController } from '@ionic/angular';
 import { ElegirTestPage } from 'src/app/components/elegir-test/elegir-test.page';
 import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 import { UsuarioService } from '../../../services/usuario.service';
@@ -36,7 +36,8 @@ export class TestPage implements OnInit {
               private ngxXml2jsonService: NgxXml2jsonService,
               private testServices: TestService,
               private popoverController: PopoverController,
-              private alertController: AlertController
+              private alertController: AlertController,
+              private navCtrl: NavController
               ) { }
 
   ngOnInit() {
@@ -197,19 +198,7 @@ export class TestPage implements OnInit {
       this.numeroPreguntasSinResponder = (this.test.Preguntas.PreguntaInfo.length - this.respuestasTest.Respuestas.length);
         console.log('this.numeroPreguntasSinResponder ', this.numeroPreguntasSinResponder);
       if ( aux === this.numeroPreguntas) {
-
-        if (this.respuestasTest.Respuestas.length === this.test.Preguntas.PreguntaInfo.length) {
-
-          this.mostrarBtnFin = true;
-
-
-        } else {
-
-          this.usuarioService.presentAlert('ALERTA', 'Tiene ' + this.numeroPreguntasSinResponder + ' sin responder, reviselo.', '');
-
-        }
-
-
+        this.mostrarBtnFin = true;
       }
       if (aux < this.numeroPreguntas && this.contador < this.numeroPreguntas && !this.mostrarBtnFin) {
 
@@ -354,10 +343,18 @@ export class TestPage implements OnInit {
 
   preguntaSiguiente() {
     this.contador = this.contador + 1;
+    if ( this.contador === this.numeroPreguntas) {
+      if (this.respuestasTest.Respuestas.length === this.test.Preguntas.PreguntaInfo.length) {
+        this.mostrarBtnFin = true;
+      }
+    }
   }
   finalizarTest() {
-    this.finTest('Test terminado', '¿Desea enviarlo?', '');
-
+    if (this.respuestasTest.Respuestas.length === this.test.Preguntas.PreguntaInfo.length) {
+      this.finTest('Test terminado', '¿Desea enviarlo?', '');
+    } else {
+      this.usuarioService.presentAlert('ALERTA', 'Tiene ' + this.numeroPreguntasSinResponder + ' preguntas sin responder... Reviselo.', '');
+    }
   }
 
   async finTest(titulo: string, subtitulo: string, mensaje: string) {
@@ -488,7 +485,9 @@ export class TestPage implements OnInit {
               this.usuarioService.dismiss();
               this.isFinTest = false;
               this.mostrarBtnFin = false;
-              this.seleccionarTest();
+              this.usuarioService.presentAlert("Correcto !!","Su test ha sido enviado con éxito !!","");
+              this.navCtrl.navigateRoot('/documentos-trabajador');
+              //this.seleccionarTest();
             } else {
               this.usuarioService.dismiss();
               console.log('200 ' + xmlhttp.response);
@@ -504,6 +503,8 @@ export class TestPage implements OnInit {
     }
 
   }
+
+  
 
 
 }

@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { MessageService } from '../../providers/message/message.service';
+import { NotificacionesService } from '../../services/notificaciones.service';
+import { Notificacion } from 'src/app/interfaces/usuario-interfaces';
+import { DatabaseService } from '../../services/database.service';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-message',
@@ -9,17 +13,38 @@ import { MessageService } from '../../providers/message/message.service';
   styleUrls: ['./message.page.scss'],
 })
 export class MessagePage implements OnInit {
-  message: any;
+  message = {
+    IdNotificacion: 0,
+        TipoDocumento: '',
+        Titulo:'',
+        Leido:1,
+        Mensaje:'',
+        Fecha: new Date(),
+        Icono: '',
+        Ruta:''
+  };
+ 
   messageID: any = this.route.snapshot.paramMap.get('id');
 
   constructor(
     public route: ActivatedRoute,
-    public messageService: MessageService
+    public db: DatabaseService
   ) { }
 
-  ngOnInit() {
-    // tslint:disable-next-line: max-line-length
-    this.message = this.messageService.getItem(this.messageID) ? this.messageService.getItem(this.messageID) : this.messageService.getMessages()[0];
+  async ngOnInit() {
+    console.log("messageID ",this.messageID);
+    await this.db.obtenerNotificacion(this.messageID).then((noti) => {
+      this.message = {
+        IdNotificacion: noti.IdNotificacion,
+        TipoDocumento: noti.TipoDocumento,
+        Titulo:noti.Titulo,
+        Leido:noti.Leido,
+        Mensaje:noti.Mensaje,
+        Fecha:  new Date(noti.Fecha),
+        Icono: noti.Icono,
+        Ruta:noti.Ruta
+      };
+    });
   }
 
 }
