@@ -28,6 +28,7 @@ export class TestPage implements OnInit {
   numeroPreguntasSinResponder: number;
   isFinTest = false;
   mostrarBtnFin = false;
+  testEnviadoCorrectamente = false;
   @ViewChildren('CheckRespuesta') botonRespuestas: QueryList<IonCheckbox>;
 
 
@@ -50,6 +51,26 @@ export class TestPage implements OnInit {
 
   async seleccionarTest() {
 
+    if (this.mostrarTest) {
+
+      if (this.testEnviadoCorrectamente === false && this.numeroPreguntasSinResponder !== this.test.Preguntas.PreguntaInfo.length) {
+
+        await this.comprobacionTest('Test Incompleto', '¿Seguro que desea cambiar de test?', 'Perderá todas sus respuestas');
+
+      } else {
+
+        await this.mostrarPopoverSeleccionarTest();
+
+      }
+    } else {
+
+      await this.mostrarPopoverSeleccionarTest();
+
+    }
+  }
+
+  async mostrarPopoverSeleccionarTest() {
+    this.testEnviadoCorrectamente = false;
     const popover = await this.popoverController.create({
       component: ElegirTestPage,
       animated: true,
@@ -386,6 +407,32 @@ export class TestPage implements OnInit {
     await alert.present();
   }
 
+  async comprobacionTest(titulo: string, subtitulo: string, mensaje: string) {
+    const alert = await this.alertController.create({
+      cssClass: 'my-custom-class',
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Seleccion Test Cancelada');
+          }
+        }, {
+          text: 'Confirmar',
+          handler: () => {
+            this.mostrarPopoverSeleccionarTest();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
 
 
 
@@ -485,21 +532,25 @@ export class TestPage implements OnInit {
               this.usuarioService.dismiss();
               this.isFinTest = false;
               this.mostrarBtnFin = false;
-              this.usuarioService.presentAlert("Correcto !!","Su test ha sido enviado con éxito !!","");
+              this.testEnviadoCorrectamente = true;
+              this.usuarioService.presentAlert('Enhorabuena!!', 'Su test ha sido enviado con éxito !!', '');
               this.navCtrl.navigateRoot('/documentos-trabajador');
               //this.seleccionarTest();
             } else {
               this.usuarioService.dismiss();
+              this.usuarioService.presentAlert('Fallo!!', 'Su test no ha podido ser enviado !!', 'Intentelo de nuevo más tarde');
               console.log('200 ' + xmlhttp.response);
             }
           } else {
             this.usuarioService.dismiss();
+            this.usuarioService.presentAlert('Fallo!!', 'Su test no ha podido ser enviado !!', 'Intentelo de nuevo más tarde');
             console.log('4 ' + xmlhttp.status);
           }
       };
     } catch (error) {
       console.log('error ', error);
       this.usuarioService.dismiss();
+      this.usuarioService.presentAlert('Fallo!!', 'Su test no ha podido ser enviado !!', 'Intentelo de nuevo más tarde');
     }
 
   }
