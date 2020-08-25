@@ -133,6 +133,27 @@ export class DocumentosTrabajadorPage {
                       }
                       this.documentosService.setDocumento(this.listaDocumentos);
                       console.log('ListaDocumentos ' + this.listaDocumentos);
+
+                      if ( event ) {
+
+                        event.target.complete();
+
+                        if ( Array.isArray(aux) ) {
+                          if (aux.length === 0) {
+                            console.log('No hay mas documentos');
+
+                            event.target.disabled = true;
+
+                          }
+
+                        } else {
+                          console.log('No hay mas documentos');
+
+                          event.target.disabled = true;
+
+                        }
+
+                      }
                       this.usuarioService.dismiss();
                     }
                 } else {
@@ -151,26 +172,7 @@ export class DocumentosTrabajadorPage {
     this.pagina = this.pagina + 1;
 
 
-    if ( event ) {
 
-      event.target.complete();
-
-      if ( Array.isArray(aux) ) {
-        if (aux.length === 0) {
-          console.log('No hay mas documentos');
-
-          event.target.disabled = true;
-
-        }
-
-      } else {
-        console.log('No hay mas documentos');
-
-        event.target.disabled = true;
-
-      }
-
-    }
   }
 
   downloadDocumento(id) {

@@ -11,6 +11,7 @@ import { AsistenciaService } from 'src/app/services/asistencia.service';
 import { FiltroAsistenciaPage } from '../../modal/filtro-asistencia/filtro-asistencia.page';
 import { EmpresaConsultor, UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
 import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
+import { Asistencia } from '../../../interfaces/interfaces-grupo-mpe';
 
 @Component({
   selector: 'app-asistencia',
@@ -31,7 +32,8 @@ export class AsistenciaPage implements OnInit {
   usuario: UsuarioLogin;
   empresaCoonsultor: EmpresaConsultor;
   hayConsultor = false;
-  
+  pagina = 0;
+
   constructor(
     public popoverCtrl: PopoverController,
     public service: PropertyService,
@@ -39,12 +41,11 @@ export class AsistenciaPage implements OnInit {
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
     private asistenciaService: AsistenciaService
-    ) 
-    {
-      this.usuario = this.usuarioService.getUsuario(); 
+    ) {
+      this.usuario = this.usuarioService.getUsuario();
       this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
-      if(this.usuario.Tipo === "CONSULTOR"){
-        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+      if (this.usuario.Tipo === 'CONSULTOR') {
+        if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
           this.hayConsultor = true;
         }
       }
@@ -54,17 +55,20 @@ export class AsistenciaPage implements OnInit {
     this.getAsistencias();
   }
 
-  getAsistencias(){
-    try{
-      this.usuarioService.present("Cargando...");
-      let nifConsultor = "";
-      if(this.usuario.Tipo === "CONSULTOR"){
-        if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+  getAsistencias(event?) {
+
+    let aux: Asistencia[];
+
+    try {
+      this.usuarioService.present('Cargando...');
+      let nifConsultor = '';
+      if (this.usuario.Tipo === 'CONSULTOR') {
+        if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
           nifConsultor = this.empresaCoonsultor.Nif;
         }
       }
-      let fecha_desde = '1900-01-01T00:00:00';
-      let fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
+      const fecha_desde = '1900-01-01T00:00:00';
+      const fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -87,9 +91,11 @@ export class AsistenciaPage implements OnInit {
               '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
               '<NombreTrabajador></NombreTrabajador>' +
               '<Dni></Dni>' +
-              '<NoPresentado>0</NoPresentado>'+
-              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>'+
+              '<NoPresentado>0</NoPresentado>' +
+              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
             '</FiltroAsist>' +
+            '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
+            '<NumeroRegistro>15</NumeroRegistro>' +
           '</ObtenerAsistenciasRelacion>' +
         '</soap:Body>' +
       '</soap:Envelope>';
@@ -102,22 +108,53 @@ export class AsistenciaPage implements OnInit {
                     // tslint:disable-next-line: max-line-length
                     const a: RespuestaAsistenciaInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerAsistenciasRelacionResponse']['ObtenerAsistenciasRelacionResult']));
                     console.log(a);
-                    if (a.AsistenciaInfo !== undefined && !Array.isArray(a.AsistenciaInfo)) {
+                    if (a.AsistenciaInfo !== undefined) {
+                      if (!Array.isArray(a.AsistenciaInfo)) {
 
-                      this.listaAsistencias.push(a.AsistenciaInfo);
+                        this.listaAsistencias.push(a.AsistenciaInfo);
+                        aux = a.AsistenciaInfo;
 
-                    } else {
+                      } else {
 
-                      this.listaAsistencias = a.AsistenciaInfo;
+                        for (const cert of a.AsistenciaInfo) {
 
-                    }
+                          this.listaAsistencias.push(cert);
+
+                        }
+
+                        aux = a.AsistenciaInfo;
+                      }
+
+
                     this.asistenciaService.setAsistencia(this.listaAsistencias);
                     console.log('ListaAsistencia ' + this.listaAsistencias);
+
+                    if ( event ) {
+
+                      event.target.complete();
+                      console.log('AUXXXX: ', aux);
+
+                      if ( Array.isArray(aux) ) {
+                        if (aux.length === 0) {
+                          console.log('No hay mas documentos');
+
+                          event.target.disabled = true;
+
+                        }
+
+                      } else {
+                        console.log('No hay mas documentos');
+                        event.target.disabled = true;
+                      }
+
+                    }
                     this.usuarioService.dismiss();
+                    }
                 } else {
                   this.usuarioService.dismiss();
-                  if(this.usuario.Tipo === "CONSULTOR"){
-                    this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+                  if (this.usuario.Tipo === 'CONSULTOR') {
+                    // tslint:disable-next-line: max-line-length
+                    this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
                   }
                 }
             } else {
@@ -129,6 +166,11 @@ export class AsistenciaPage implements OnInit {
     } catch (error) {
       this.usuarioService.dismiss();
     }
+
+    this.pagina = this.pagina + 1;
+
+
+
   }
 
   onInput(event) {
@@ -165,11 +207,11 @@ export class AsistenciaPage implements OnInit {
 
   }
 
-  seleccionarEmpresa(){
+  seleccionarEmpresa() {
     this.vistaSeleccionarEmpresa();
   }
 
-  async vistaSeleccionarEmpresa(){
+  async vistaSeleccionarEmpresa() {
     const modal = await this.modalCtrl.create({
       component: SeleccionarClientePage
     });

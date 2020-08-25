@@ -39,8 +39,10 @@
 
   <ion-list class="ion-no-padding" [@staggerIn]="listaCertificados">
     <ion-item class="bg-white" *ngFor="let certificado of listaCertificados" tappable > <!--(click)="goCheckout(invoice.id)">-->
-      <ion-icon slot="start" name="information-circle-outline" color="primary" (click)="masInfo(certificado)"></ion-icon>
-      <ion-label (click)="downloadCertificado(certificado.Id)">
+       <ion-icon slot="start" name="information-circle-outline" color="primary" (click)="masInfo(certificado)"></ion-icon>
+   
+<!--       <ion-checkbox checked="false" (click)="seleccionarCert(certificado.Id)"></ion-checkbox>  
+ -->      <ion-label (click)="masInfo(certificado)">
         <h2>
           <ion-text color="dark"><strong>{{certificado.Descripcion}}</strong></ion-text>
         </h2>
@@ -56,7 +58,7 @@
   </ion-list>
   
   <ion-infinite-scroll threshold="100px" (ionInfinite)="getCertificados($event)">
-    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando mas documentos..">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando documentos..">
       
     </ion-infinite-scroll-content>
   </ion-infinite-scroll>

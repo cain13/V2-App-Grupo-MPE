@@ -11,6 +11,7 @@ import { FiltroCitasPage } from '../../modal/filtro-citas/filtro-citas.page';
 import { CitasPendientesService } from '../../../services/citas-pendientes.service';
 import { UsuarioLogin, EmpresaConsultor } from 'src/app/interfaces/usuario-interfaces';
 import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
+import { Citas } from '../../../interfaces/interfaces-grupo-mpe';
 
 
 @Component({
@@ -33,6 +34,7 @@ export class CitasPendientesPage implements OnInit {
   usuario: UsuarioLogin;
   empresaCoonsultor: EmpresaConsultor;
   hayConsultor = false;
+  pagina = 0;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -41,12 +43,11 @@ export class CitasPendientesPage implements OnInit {
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
     private citasService: CitasPendientesService
-    ) 
-    {
+    ) {
       this.usuario = this.usuarioService.getUsuario();
       this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
-      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
-        if(this.usuario.Tipo === "CONSULTOR"){
+      if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
+        if (this.usuario.Tipo === 'CONSULTOR') {
           this.hayConsultor = true;
         }
       }
@@ -56,16 +57,19 @@ export class CitasPendientesPage implements OnInit {
     this.getCitasPendientes();
   }
 
-  getCitasPendientes(){
-    try{
-     
-      let nifConsultor = "";
-      if(this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null){
+  getCitasPendientes(event?) {
+
+    let aux: Citas[];
+
+    try {
+
+      let nifConsultor = '';
+      if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
         nifConsultor = this.empresaCoonsultor.Nif;
       }
-      this.usuarioService.present("Cargando Citas...");
-      let fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
-      let fecha_hasta = moment().add(1,'year').format('YYYY-MM-DDT00:00:00');
+      this.usuarioService.present('Cargando Citas...');
+      const fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
+      const fecha_hasta = moment().add(1, 'year').format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -84,13 +88,15 @@ export class CitasPendientesPage implements OnInit {
         '<soap:Body>' +
           '<ObtenerCitasPendientesRelacion xmlns="http://tempuri.org/">' +
             '<FiltroAsist>' +
-              '<FechaDesde>' + fecha_desde + '</FechaDesde>'+
-              '<FechaHasta>' + fecha_hasta + '</FechaHasta>'+
-              '<NombreTrabajador></NombreTrabajador>'+
-              '<Dni></Dni>'+
-              '<NoPresentado>0</NoPresentado>'+
-              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>'+
+              '<FechaDesde>' + fecha_desde + '</FechaDesde>' +
+              '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
+              '<NombreTrabajador></NombreTrabajador>' +
+              '<Dni></Dni>' +
+              '<NoPresentado>0</NoPresentado>' +
+              '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
             '</FiltroAsist>' +
+            '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
+            '<NumeroRegistro>15</NumeroRegistro>' +
           '</ObtenerCitasPendientesRelacion>' +
         '</soap:Body>' +
       '</soap:Envelope>';
@@ -106,22 +112,50 @@ export class CitasPendientesPage implements OnInit {
                     const a: RespuestaCitasiaInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCitasPendientesRelacionResponse']['ObtenerCitasPendientesRelacionResult']));
                     console.log(a);
 
-                    if (a.CitasInfo !== undefined && !Array.isArray(a.CitasInfo)) {
+                    if (a.CitasInfo !== undefined) {
+                      if (!Array.isArray(a.CitasInfo)) {
 
-                      this.listaCitas.push(a.CitasInfo);
+                        this.listaCitas.push(a.CitasInfo);
 
-                    } else {
+                      } else {
 
-                      this.listaCitas = a.CitasInfo;
+                        for (const cert of a.CitasInfo) {
 
-                    }
+                          this.listaCitas.push(cert);
+
+                        }
+
+                        aux = a.CitasInfo;
+                      }
+
                     this.citasService.setCitaPendiente(this.listaCitas);
                     console.log('ListaHistorial ' + this.listaCitas);
+
+                    if ( event ) {
+
+                      event.target.complete();
+
+                      if ( Array.isArray(aux) ) {
+                        if (aux.length === 0) {
+                          console.log('No hay mas documentos');
+
+                          event.target.disabled = true;
+
+                        }
+
+                      } else {
+                        console.log('No hay mas documentos');
+                        event.target.disabled = true;
+                      }
+
+                    }
                     this.usuarioService.dismiss();
+                  }
                 } else {
                   this.usuarioService.dismiss();
                   console.log('200 ' + xmlhttp.response);
-                  this.usuarioService.presentAlert("Error","Cliente "+ this.usuarioService.empresaConsultor.NombreCliente + " no encontrado","Póngase en contacto con atención al cliente atencionalcliente@grupompe.es");
+                  // tslint:disable-next-line: max-line-length
+                  this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
                 }
             } else {
               this.usuarioService.dismiss();
@@ -133,6 +167,10 @@ export class CitasPendientesPage implements OnInit {
     } catch (error) {
       this.usuarioService.dismiss();
     }
+
+    this.pagina = this.pagina + 1;
+
+
 
   }
 
@@ -213,11 +251,11 @@ export class CitasPendientesPage implements OnInit {
     this.listaCitas = this.citasService.getCertificados();
   }
 
-  seleccionarEmpresa(){
+  seleccionarEmpresa() {
     this.vistaSeleccionarEmpresa();
   }
 
-  async vistaSeleccionarEmpresa(){
+  async vistaSeleccionarEmpresa() {
     const modal = await this.modalCtrl.create({
       component: SeleccionarClientePage
     });

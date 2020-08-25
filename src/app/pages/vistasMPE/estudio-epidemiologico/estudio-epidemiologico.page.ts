@@ -1,15 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Certificado, RespuestaAPIGetDocumentos,RespuestaHistorial, ObtenerHistoriaDocumentos, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse, CertificadoPDF, RespuestaObtenerCertPDF } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { CertificadoPDF, RespuestaObtenerCertPDF } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
-import * as moment from 'moment';
-import { trigger,style,animate,transition,query,stagger } from '@angular/animations';
-import { NotificationsComponent } from 'src/app/components/notifications/notifications.component';
+import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { HitorialNotificacionesService } from 'src/app/services/hitorial-notificaciones.service';
-import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
 
 @Component({
   selector: 'app-estudio-epidemiologico',
@@ -35,7 +32,6 @@ export class EstudioEpidemiologicoPage implements OnInit {
     public modalCtrl: ModalController,
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
-    private documentosService: DocumentosTrabajadoresService,
     private historialService: HitorialNotificacionesService
     ) {  }
 
@@ -85,11 +81,11 @@ export class EstudioEpidemiologicoPage implements OnInit {
                     if (a.HistoricoNotificacionInfo !== undefined && !Array.isArray(a.HistoricoNotificacionInfo)) {
 
                       this.listaDocumentos.push(a.HistoricoNotificacionInfo);
-  
+
                     } else {
-  
+
                       this.listaDocumentos = a.HistoricoNotificacionInfo;
-  
+
                     }
                     this.historialService.setDocumento(this.listaDocumentos);
                     console.log('ListaHistorial ' + this.listaDocumentos);
@@ -97,7 +93,7 @@ export class EstudioEpidemiologicoPage implements OnInit {
             }
         };
       xmlhttp.send(sr);
-  
+
       this.usuarioService.dismiss();
     }catch(error){
       this.usuarioService.dismiss();
@@ -105,7 +101,7 @@ export class EstudioEpidemiologicoPage implements OnInit {
  */
   }
 
- 
+
   downloadDocumento(id) {
     this.usuarioService.present('Descargando...');
     console.log(id);
@@ -163,7 +159,7 @@ export class EstudioEpidemiologicoPage implements OnInit {
   onCancel(event) {
     this.findAll();
   }
-  
+
 
   async searchFilter () {
    /*  const modal = await this.modalCtrl.create({

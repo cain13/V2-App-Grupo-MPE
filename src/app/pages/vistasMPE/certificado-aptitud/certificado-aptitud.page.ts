@@ -50,6 +50,7 @@ export class CertificadoAptitudPage {
   hayConsultor = false;
   cantidad$: Observable<number>;
   pagina = 0;
+  arrayIdSelec: string[] = [];
 
   constructor(
     private router: Router,
@@ -176,7 +177,24 @@ export class CertificadoAptitudPage {
                   console.log('Cert: ', a.CertificadoAptitudInfo);
                   this.certificadosService.setCertificado(this.listaCertificados);
                   console.log('Certificados APTITUD:' , this.listaCertificados);
-                  
+                  if ( event ) {
+
+                    event.target.complete();
+
+                    if ( Array.isArray(aux) ) {
+                      if (aux.length === 0) {
+                        console.log('No hay mas documentos');
+
+                        event.target.disabled = true;
+
+                      }
+
+                    } else {
+                      console.log('No hay mas documentos');
+                      event.target.disabled = true;
+                    }
+
+                  }
                   this.usuarioService.dismiss();
 
                 }
@@ -202,24 +220,7 @@ export class CertificadoAptitudPage {
 
     this.pagina = this.pagina + 1;
 
-    if ( event ) {
 
-      event.target.complete();
-
-      if ( Array.isArray(aux) ) {
-        if (aux.length === 0) {
-          console.log('No hay mas documentos');
-
-          event.target.disabled = true;
-
-        }
-
-      } else {
-        console.log('No hay mas documentos');
-        event.target.disabled = true;
-      }
-
-    }
 
 
   }
@@ -263,6 +264,7 @@ export class CertificadoAptitudPage {
                   pdf = a;
                   console.log('NombreFichero ' + a.NombreFichero);
                   this.usuarioService.saveAndOpenPdf(pdf.Datos, pdf.NombreFichero);
+                  this.usuarioService.dismiss();
               }
           }
       };
@@ -282,6 +284,36 @@ export class CertificadoAptitudPage {
     });
     return await popover.present();
 
+
+  }
+
+  seleccionarCert(id: string) {
+
+    const indice = this.arrayIdSelec.indexOf(id);
+    if (indice !== -1) {
+
+      this.arrayIdSelec.splice(indice, 1);
+
+    } else {
+
+      this.arrayIdSelec.push(id);
+
+    }
+
+    console.log('Elementos sele: ', this.arrayIdSelec);
+
+  }
+
+  seleccionarTodos() {
+
+    for (const doc of this.listaCertificados) {
+
+      this.seleccionarCert(doc.Id);
+
+
+    }
+
+    console.log('Elementos sele: ', this.arrayIdSelec);
 
   }
 
