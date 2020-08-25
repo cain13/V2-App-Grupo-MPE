@@ -71,18 +71,18 @@ export class DatabaseService {
     });
   }
 
-  addUsuario(usuario: UsuarioLogin) {
+  async addUsuario(usuario: UsuarioLogin) {
 
     // La siguiente sentencia SQL borra todo el contenido de la tabla:
     this.estadoBD().then(async () => {
       console.log('DB: Borramos todo el contenido de la tabla de BD...');
-        this.storage.executeSql('DELETE FROM usuariosTable').then(() => {
+        await this.storage.executeSql('DELETE FROM usuariosTable').then(() => {
           console.log('DB: Tabla USUARIOS vacia'); }).catch(error => { console.log('DB: ERROR AL BORRAR TABLAS USUARIO'); });
 
         // tslint:disable-next-line: max-line-length
         const data = [usuario.Usuario, usuario.Password, usuario.FingerID, usuario.Tipo, usuario.Nombre, usuario.Recordarme];
         // tslint:disable-next-line: max-line-length
-        const respuesta = this.storage.executeSql('INSERT INTO usuariosTable (Usuario, Password_, FingerID, Tipo, Nombre, Recordarme) VALUES (?, ?, ?, ?, ?, ?)', data).then(() => {
+        const respuesta = await this.storage.executeSql('INSERT INTO usuariosTable (Usuario, Password_, FingerID, Tipo, Nombre, Recordarme) VALUES (?, ?, ?, ?, ?, ?)', data).then(() => {
           console.log('DB: Usuario añadido a la BD');
 
         });

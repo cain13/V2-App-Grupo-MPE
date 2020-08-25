@@ -23,6 +23,7 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
+
   <ion-list class="ion-no-padding" [@staggerIn]="listaDocumentos">
     <ion-item class="bg-white"  *ngFor="let certificado of listaDocumentos"  tappable (click)="downloadDocumento(certificado.Id)"> <!--(click)="goCheckout(invoice.id)">-->
       <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
@@ -37,4 +38,10 @@
      <ion-icon slot="end" name="download-outline"></ion-icon>
     </ion-item>
   </ion-list>
-</ion-content>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="getDocumentos($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando mas documentos..">
+      
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+ </ion-content>

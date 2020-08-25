@@ -45,9 +45,9 @@ export class UsuarioService {
     private http: HttpClient) { }
 
 
-  login(usuario: UsuarioLogin) {
+  async login(usuario: UsuarioLogin) {
 
-    this.dataBaseService.addUsuario(usuario);
+    await this.dataBaseService.addUsuario(usuario);
 
   }
 

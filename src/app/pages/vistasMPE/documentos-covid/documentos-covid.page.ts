@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
 
 import { PropertyService } from '../../../providers';
@@ -6,14 +6,13 @@ import { PropertyService } from '../../../providers';
 
 import { NotificationsComponent } from '../../../components/notifications/notifications.component';
 import { FiltroDocumentosPage } from '../../modal/filtro-documentos/filtro-documentos.page';
-import { RespuestaAPIGetDocumentos, ObtenerDocumentosTrabajadores, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse } from '../../../interfaces/interfaces-grupo-mpe';
+// tslint:disable-next-line: max-line-length
+import { RespuestaAPIGetDocumentos, ObtenerDocumentosTrabajadores, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, RecuentoNotificacionesResponse, Documento } from '../../../interfaces/interfaces-grupo-mpe';
 import { UsuarioService } from '../../../services/usuario.service';
 
 import { NgxXml2jsonService } from 'ngx-xml2json';
 
 // Para generar pdfs
-import { File } from '@ionic-native/file/ngx';
-import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { DocumentosTrabajadoresService } from '../../../services/documentos-trabajadores.service';
 
 import {
@@ -25,7 +24,7 @@ import {
   stagger
 } from '@angular/animations';
 import { PopoverController,
-         ModalController, Platform } from '@ionic/angular';
+         ModalController } from '@ionic/angular';
 
 @Component({
   selector: 'app-documentos-covid',
@@ -45,6 +44,8 @@ export class DocumentosCOVIDPage {
   listaDocumentos = [];
   Cantidad = 0;
   searchKey = '';
+  pagina = 0;
+
 
 
 
@@ -68,7 +69,8 @@ export class DocumentosCOVIDPage {
     }
 
 
-  getDocumentos() {
+  getDocumentos( event ?) {
+    let aux: Documento[] = [];
     try {
       this.usuarioService.present('Cargando...');
       const xmlhttp = new XMLHttpRequest();
@@ -78,19 +80,19 @@ export class DocumentosCOVIDPage {
       xmlhttp.responseType = 'document';
         // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
       const sr =
-
       '<?xml version="1.0" encoding="utf-8"?>' +
-      // tslint:disable-next-line: max-line-length
       '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
         '<soap:Header>' +
           '<AuthHeader xmlns="http://tempuri.org/">' +
-          '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
-          '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
+            '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
+            '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
           '</AuthHeader>' +
         '</soap:Header>' +
         '<soap:Body>' +
-          '<ObtenerTrabajadorRelacionDocumentos  xmlns="http://tempuri.org/">' +
+          '<ObtenerTrabajadorRelacionDocumentos xmlns="http://tempuri.org/">' +
             '<TestCovid>true</TestCovid>' +
+            '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
+            '<NumeroRegistro>15</NumeroRegistro>' +
           '</ObtenerTrabajadorRelacionDocumentos>' +
         '</soap:Body>' +
       '</soap:Envelope>';
@@ -103,18 +105,27 @@ export class DocumentosCOVIDPage {
                     // tslint:disable-next-line: max-line-length
                     const a: ObtenerDocumentosTrabajadores = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerTrabajadorRelacionDocumentosResponse']['ObtenerTrabajadorRelacionDocumentosResult']));
                     console.log(a);
-                    if (a.DocumentoInfo !== undefined && !Array.isArray(a.DocumentoInfo)) {
+                    if (a.DocumentoInfo !== undefined) {
 
-                      this.listaDocumentos.push(a.DocumentoInfo);
+                      if (!Array.isArray(a.DocumentoInfo)) {
 
-                    } else {
+                        this.listaDocumentos.push(a.DocumentoInfo);
+                        aux = a.DocumentoInfo;
 
-                      this.listaDocumentos = a.DocumentoInfo;
+                      } else {
+                        const docs: Documento[] = a.DocumentoInfo;
+                        for (const doc of docs) {
 
+                          this.listaDocumentos.push(doc);
+
+                        }
+                        aux = a.DocumentoInfo;
+
+                      }
+                      this.documentosService.setDocumento(this.listaDocumentos);
+                      console.log('ListaDocumentos ' + this.listaDocumentos);
+                      this.usuarioService.dismiss();
                     }
-                    this.documentosService.setDocumento(this.listaDocumentos);
-                    console.log('ListaDocumentos ' + this.listaDocumentos);
-                    this.usuarioService.dismiss();
                 } else {
                   this.usuarioService.dismiss();
                 }
@@ -126,6 +137,30 @@ export class DocumentosCOVIDPage {
 
     } catch (error) {
       this.usuarioService.dismiss();
+    }
+
+    this.pagina = this.pagina + 1;
+
+
+    if ( event ) {
+
+      event.target.complete();
+
+      if ( Array.isArray(aux) ) {
+        if (aux.length === 0) {
+          console.log('No hay mas documentos');
+
+          event.target.disabled = true;
+
+        }
+
+      } else {
+        console.log('No hay mas documentos');
+
+        event.target.disabled = true;
+
+      }
+
     }
   }
 
