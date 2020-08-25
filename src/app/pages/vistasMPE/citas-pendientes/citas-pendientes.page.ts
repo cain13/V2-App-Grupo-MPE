@@ -46,7 +46,8 @@ export class CitasPendientesPage implements OnInit {
     ) {
       this.usuario = this.usuarioService.getUsuario();
       this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
-      if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
+      console.log('this.empresaCoonsultor ',this.empresaCoonsultor);
+      if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
         if (this.usuario.Tipo === 'CONSULTOR') {
           this.hayConsultor = true;
         }
@@ -96,7 +97,7 @@ export class CitasPendientesPage implements OnInit {
               '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
             '</FiltroAsist>' +
             '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
-            '<NumeroRegistro>15</NumeroRegistro>' +
+            '<NumeroRegistro>20</NumeroRegistro>' +
           '</ObtenerCitasPendientesRelacion>' +
         '</soap:Body>' +
       '</soap:Envelope>';
@@ -116,38 +117,27 @@ export class CitasPendientesPage implements OnInit {
                       if (!Array.isArray(a.CitasInfo)) {
 
                         this.listaCitas.push(a.CitasInfo);
-
                       } else {
-
                         for (const cert of a.CitasInfo) {
-
                           this.listaCitas.push(cert);
-
                         }
-
                         aux = a.CitasInfo;
                       }
 
                     this.citasService.setCitaPendiente(this.listaCitas);
                     console.log('ListaHistorial ' + this.listaCitas);
-
-                    if ( event ) {
-
+                    console.log('event ' ,event);
+                    if ( event !== undefined) {
                       event.target.complete();
-
                       if ( Array.isArray(aux) ) {
-                        if (aux.length === 0) {
+                        if (aux.length < 20) {
                           console.log('No hay mas documentos');
-
                           event.target.disabled = true;
-
                         }
-
                       } else {
                         console.log('No hay mas documentos');
                         event.target.disabled = true;
                       }
-
                     }
                     this.usuarioService.dismiss();
                   }

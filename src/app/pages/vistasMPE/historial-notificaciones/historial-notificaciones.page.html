@@ -41,10 +41,13 @@
           <p class="text-12x">
             <ion-text color="secondary">{{certificado.FechaNotificacion | date: 'dd/MM/yyyy'}}</ion-text>
           </p>
-          <!--<ion-badge *ngIf="!invoice.paid" color="warning">Pending</ion-badge>
-          <ion-badge *ngIf="invoice.paid" color="success">Paid</ion-badge>-->
         </ion-label>
         <ion-icon slot="end" name="download-outline"></ion-icon>
       </ion-item>
     </ion-list>
+    <ion-infinite-scroll threshold="100px" (ionInfinite)="getHistorialDocumentos($event)">
+      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando documentos..">
+        
+      </ion-infinite-scroll-content>
+    </ion-infinite-scroll>
   </ion-content>

@@ -82,6 +82,7 @@ export class CertificadoAptitudPage {
 
 
   ionViewWillEnter() {
+    this.pagina = 0;
     this.notificacionesService.aumentarNotificaciones();
     this.cantidad$ = this.notificacionesService.getNotifiaciones$();
     this.cantidad$.subscribe(num => this.Cantidad = num);
@@ -109,7 +110,7 @@ export class CertificadoAptitudPage {
       this.usuarioService.present('Cargando certificados...');
       let nifConsultor = '';
       if (this.usuario.Tipo === 'CONSULTOR') {
-        if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
+        if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
           nifConsultor = this.empresaCoonsultor.Nif;
         }
       }
@@ -140,7 +141,7 @@ export class CertificadoAptitudPage {
                 '<IdCentroTrabajoEspecificado>' + 0 + '</IdCentroTrabajoEspecificado>' +
               '</FiltroCerApt>' +
               '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
-              '<NumeroRegistro>15</NumeroRegistro>' +
+              '<NumeroRegistro>20</NumeroRegistro>' +
             '</ObtenerCertificadosAptitudRelacionDocumentos>' +
           '</soap:Body>' +
         '</soap:Envelope>';
@@ -161,47 +162,35 @@ export class CertificadoAptitudPage {
 
                 if (a.CertificadoAptitudInfo !== undefined) {
                   if (!Array.isArray(a.CertificadoAptitudInfo)) {
-
                     this.listaCertificados.push(a.CertificadoAptitudInfo);
-
                   } else {
-
                     for (const cert of a.CertificadoAptitudInfo) {
-
                       this.listaCertificados.push(cert);
-
                     }
-
                     aux = a.CertificadoAptitudInfo;
                   }
                   console.log('Cert: ', a.CertificadoAptitudInfo);
                   this.certificadosService.setCertificado(this.listaCertificados);
                   console.log('Certificados APTITUD:' , this.listaCertificados);
-                  if ( event ) {
-
+                  console.log('event ' ,event);
+                  if ( event !== undefined ) {
+                    console.log('aux ',aux.length);
+                    console.log('aux ',this.listaCertificados.length);
                     event.target.complete();
-
                     if ( Array.isArray(aux) ) {
-                      if (aux.length === 0) {
-                        console.log('No hay mas documentos');
-
+                      if (aux.length < 20) {
+                        console.log('No hay más documentos');
                         event.target.disabled = true;
-
                       }
-
                     } else {
-                      console.log('No hay mas documentos');
-                      event.target.disabled = true;
+                      console.log('No hay más documentos');
+                      event.target.disabled = false;
                     }
-
                   }
                   this.usuarioService.dismiss();
-
                 }
-
             } else {
               this.usuarioService.dismiss();
-
               console.log('200 ' + xmlhttp.response);
               if (this.usuario.Tipo === 'CONSULTOR') {
                 this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');

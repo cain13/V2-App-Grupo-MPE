@@ -92,7 +92,7 @@ export class DocumentosCOVIDPage {
           '<ObtenerTrabajadorRelacionDocumentos xmlns="http://tempuri.org/">' +
             '<TestCovid>true</TestCovid>' +
             '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
-            '<NumeroRegistro>15</NumeroRegistro>' +
+            '<NumeroRegistro>20</NumeroRegistro>' +
           '</ObtenerTrabajadorRelacionDocumentos>' +
         '</soap:Body>' +
       '</soap:Envelope>';
@@ -125,12 +125,12 @@ export class DocumentosCOVIDPage {
                       this.documentosService.setDocumento(this.listaDocumentos);
                       console.log('ListaDocumentos ' + this.listaDocumentos);
 
-                      if ( event ) {
+                      if ( event !== undefined) {
 
                         event.target.complete();
 
                         if ( Array.isArray(aux) ) {
-                          if (aux.length === 0) {
+                          if (aux.length < 20) {
                             console.log('No hay mas documentos');
 
                             event.target.disabled = true;

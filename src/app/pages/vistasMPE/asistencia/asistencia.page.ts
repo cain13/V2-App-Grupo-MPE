@@ -63,7 +63,7 @@ export class AsistenciaPage implements OnInit {
       this.usuarioService.present('Cargando...');
       let nifConsultor = '';
       if (this.usuario.Tipo === 'CONSULTOR') {
-        if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
+        if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
           nifConsultor = this.empresaCoonsultor.Nif;
         }
       }
@@ -95,7 +95,7 @@ export class AsistenciaPage implements OnInit {
               '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
             '</FiltroAsist>' +
             '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
-            '<NumeroRegistro>15</NumeroRegistro>' +
+            '<NumeroRegistro>20</NumeroRegistro>' +
           '</ObtenerAsistenciasRelacion>' +
         '</soap:Body>' +
       '</soap:Envelope>';
@@ -129,24 +129,18 @@ export class AsistenciaPage implements OnInit {
                     this.asistenciaService.setAsistencia(this.listaAsistencias);
                     console.log('ListaAsistencia ' + this.listaAsistencias);
 
-                    if ( event ) {
-
+                    if ( event !== undefined ) {
                       event.target.complete();
                       console.log('AUXXXX: ', aux);
-
                       if ( Array.isArray(aux) ) {
-                        if (aux.length === 0) {
+                        if (aux.length < 20) {
                           console.log('No hay mas documentos');
-
                           event.target.disabled = true;
-
                         }
-
                       } else {
                         console.log('No hay mas documentos');
                         event.target.disabled = true;
                       }
-
                     }
                     this.usuarioService.dismiss();
                     }

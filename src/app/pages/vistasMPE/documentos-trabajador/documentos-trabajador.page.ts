@@ -102,7 +102,7 @@ export class DocumentosTrabajadorPage {
             '<ObtenerTrabajadorRelacionDocumentos xmlns="http://tempuri.org/">' +
               '<TestCovid>false</TestCovid>' +
               '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
-              '<NumeroRegistro>15</NumeroRegistro>' +
+              '<NumeroRegistro>20</NumeroRegistro>' +
             '</ObtenerTrabajadorRelacionDocumentos>' +
           '</soap:Body>' +
         '</soap:Envelope>';
@@ -134,25 +134,17 @@ export class DocumentosTrabajadorPage {
                       this.documentosService.setDocumento(this.listaDocumentos);
                       console.log('ListaDocumentos ' + this.listaDocumentos);
 
-                      if ( event ) {
-
+                      if ( event !== undefined ) {
                         event.target.complete();
-
                         if ( Array.isArray(aux) ) {
-                          if (aux.length === 0) {
+                          if (aux.length < 20) {
                             console.log('No hay mas documentos');
-
                             event.target.disabled = true;
-
                           }
-
                         } else {
                           console.log('No hay mas documentos');
-
                           event.target.disabled = true;
-
                         }
-
                       }
                       this.usuarioService.dismiss();
                     }

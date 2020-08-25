@@ -9,7 +9,7 @@ import * as moment from 'moment';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { HitorialNotificacionesService } from 'src/app/services/hitorial-notificaciones.service';
 import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
-import { EmpresaConsultor, UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
+import { EmpresaConsultor, UsuarioLogin, Notificacion } from 'src/app/interfaces/usuario-interfaces';
 import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
 
 @Component({
@@ -33,6 +33,7 @@ export class HistorialNotificacionesPage implements OnInit {
   usuario: UsuarioLogin;
   empresaCoonsultor: EmpresaConsultor;
   hayConsultor = false;
+  pagina = 0;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -44,6 +45,7 @@ export class HistorialNotificacionesPage implements OnInit {
     ) {
       this.usuario = this.usuarioService.getUsuario();
       this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
+      this.pagina = 0;
       if (this.usuario.Tipo === 'CONSULTOR') {
         if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
           this.hayConsultor = true;
@@ -56,9 +58,9 @@ export class HistorialNotificacionesPage implements OnInit {
 
   }
 
-  getHistorialDocumentos() {
+  getHistorialDocumentos(event?) {
     try {
-
+      let aux: any[] = [];
       let nifConsultor = '';
       if (this.usuario.Tipo === 'CONSULTOR') {
         if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
@@ -90,6 +92,8 @@ export class HistorialNotificacionesPage implements OnInit {
               '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
               '<NifClienteConsultor>'  + nifConsultor + '</NifClienteConsultor>' +
             '</FiltroNot>' +
+            '<NumeroPagina>' + this.pagina+ '</NumeroPagina>'+
+            '<NumeroRegistro>20</NumeroRegistro>'+
           '</ObtenerHistoricoNotificacionesRelacionDocumentos>' +
         '</soap:Body>' +
       '</soap:Envelope>';
@@ -109,10 +113,24 @@ console.log('sr ' + sr);
                     } else {
 
                       this.listaDocumentos = a.HistoricoNotificacionInfo;
+                      aux = a.HistoricoNotificacionInfo;
 
                     }
                     this.historialService.setDocumento(this.listaDocumentos);
                     console.log('ListaHistorial ' + this.listaDocumentos);
+                   
+                    if ( event !== undefined ) {
+                      event.target.complete();
+                      if ( Array.isArray(aux) ) {
+                        if (aux.length < 20) {
+                          console.log('No hay mas documentos');
+                          event.target.disabled = true;
+                        }
+                      } else {
+                        console.log('No hay mas documentos');
+                        event.target.disabled = true;
+                      }
+                    }
                     this.usuarioService.dismiss();
                 } else {
                   this.usuarioService.dismiss();
@@ -132,7 +150,7 @@ console.log('sr ' + sr);
       this.usuarioService.dismiss();
 
     }
-
+    this.pagina = this.pagina + 1;
   }
 
 
