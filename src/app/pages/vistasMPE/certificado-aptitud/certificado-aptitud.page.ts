@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 
 import { PropertyService } from '../../../providers';
@@ -9,7 +9,7 @@ import { File } from '@ionic-native/file/ngx';
 import * as moment from 'moment';
 import { trigger, style, animate, transition, query, stagger } from '@angular/animations';
 import { NavController, MenuController, PopoverController,
-         AlertController, ModalController, ToastController, LoadingController, Platform } from '@ionic/angular';
+         AlertController, ModalController, ToastController, LoadingController, Platform, IonInfiniteScroll, ViewDidLeave, ViewWillEnter } from '@ionic/angular';
 import { RespuestaGetAPICertificadosAptitud, ObtenerCertificados, RespuestaObtenerCertPDF, CertificadoPDF} from 'src/app/interfaces/interfaces-grupo-mpe';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { UsuarioService } from '../../../services/usuario.service';
@@ -39,7 +39,7 @@ import { NotificacionesPage } from '../notificaciones/notificaciones.page';
   ]
 })
 
-export class CertificadoAptitudPage {
+export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter{
   listaCertificados = [];
   searchKey = '';
   properties: Array<any>;
@@ -51,6 +51,9 @@ export class CertificadoAptitudPage {
   cantidad$: Observable<number>;
   pagina = 0;
   arrayIdSelec: string[] = [];
+
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+
 
   constructor(
     private router: Router,
@@ -82,6 +85,8 @@ export class CertificadoAptitudPage {
 
 
   ionViewWillEnter() {
+    console.log("this.infiniteScroll.disabled 0 ", this.infiniteScroll.disabled);
+
     this.pagina = 0;
     this.notificacionesService.aumentarNotificaciones();
     this.cantidad$ = this.notificacionesService.getNotifiaciones$();
@@ -102,12 +107,25 @@ export class CertificadoAptitudPage {
 
   }
 
+  ionViewDidLeave(){
+    this.pagina = 0;
+    console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+    if (this.infiniteScroll.disabled === true ) {
+      this.infiniteScroll.disabled = false;
+      console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+    }
+  }
+
 
   getCertificados(event?) {
-
+   
     let aux: Certificado[];
     try {
-      this.usuarioService.present('Cargando certificados...');
+      if(event === undefined || event === null && this.pagina === 0){
+        this.pagina=0;
+        console.log("Numero pagina ", this.pagina);
+        this.usuarioService.present('Cargando certificados...');
+      }
       let nifConsultor = '';
       if (this.usuario.Tipo === 'CONSULTOR') {
         if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
@@ -179,11 +197,11 @@ export class CertificadoAptitudPage {
                     event.target.complete();
                     if ( Array.isArray(aux) ) {
                       if (aux.length < 20) {
-                        console.log('No hay más documentos');
+                        console.log('No hay más documentos1');
                         event.target.disabled = true;
                       }
                     } else {
-                      console.log('No hay más documentos');
+                      console.log('No hay más documentos2');
                       event.target.disabled = false;
                     }
                   }

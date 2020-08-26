@@ -462,6 +462,46 @@ export interface Citas {
     citapendiente: string;
 }
 
+export interface RespuestaCitasEmpleado{
+  "soap:Envelope": {
+    "$": {
+      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
+      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/"
+    },
+    "soap:Body": [
+      {
+        "ObtenerTrabajadorCitasPendientesRelacionResponse": [
+          {
+            "$": {
+              "xmlns": "http://tempuri.org/"
+            },
+            "ObtenerTrabajadorCitasPendientesRelacionResult": [
+              {
+                "AsistenciaInfo":  Asistencia[]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+export interface RespuestaCitasEmpleadoaInfo {
+
+  AsistenciaInfo: Asistencia[];
+
+}
+export interface Asistencia{
+  Trabajador:string;
+  NifTrabajador:string;
+  FechaDocumento: string;
+  NombreCentroMedico:string;
+  SituacionReconocimientoMedico:string;
+}
+
+
 export interface RespuestaClientes {
   'soap:Envelope': {
     '$': {

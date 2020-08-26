@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 
 import { PropertyService } from '../../../providers';
@@ -24,7 +24,10 @@ import {
   stagger
 } from '@angular/animations';
 import { PopoverController,
-         ModalController } from '@ionic/angular';
+         ModalController, 
+         IonInfiniteScroll,
+         ViewDidLeave,
+         ViewWillEnter} from '@ionic/angular';
 
 @Component({
   selector: 'app-documentos-covid',
@@ -39,7 +42,7 @@ import { PopoverController,
     ])
   ]
 })
-export class DocumentosCOVIDPage {
+export class DocumentosCOVIDPage implements ViewDidLeave, ViewWillEnter{
 
   listaDocumentos = [];
   Cantidad = 0;
@@ -48,7 +51,7 @@ export class DocumentosCOVIDPage {
 
 
 
-
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -61,18 +64,30 @@ export class DocumentosCOVIDPage {
 
 
     ionViewWillEnter() {
-      // this.usuarioService.desactivarSegundoPlano = false;
+      this.pagina = 0;
       this.RecuentoNotificaciones();
       this.getDocumentos();
 
 
     }
 
-
+    ionViewDidLeave(){
+      this.pagina = 0;
+      console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+      if (this.infiniteScroll.disabled === true ) {
+        this.infiniteScroll.disabled = false;
+        console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+      }
+    }
+  
   getDocumentos( event ?) {
     let aux: Documento[] = [];
     try {
-      this.usuarioService.present('Cargando...');
+      if(event === undefined || event === null && this.pagina === 0){
+        this.pagina=0;
+        console.log("Numero pagina ", this.pagina);
+        this.usuarioService.present('Cargando...');
+      }
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');

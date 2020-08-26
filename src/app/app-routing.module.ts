@@ -122,9 +122,14 @@ const routes: Routes = [
   {
     path: 'documentos-covid',
     loadChildren: () => import('./pages/vistasMPE/documentos-covid/documentos-covid.module').then( m => m.DocumentosCOVIDPageModule)
-  },  {
+  },
+  {
     path: 'notificaciones',
     loadChildren: () => import('./pages/vistasMPE/notificaciones/notificaciones.module').then( m => m.NotificacionesPageModule)
+  },
+  {
+    path: 'citas-pendientes-trabajador',
+    loadChildren: () => import('./pages/vistasMPE/citas-pendientes-trabajador/citas-pendientes-trabajador.module').then( m => m.CitasPendientesTrabajadorPageModule)
   },
 
 

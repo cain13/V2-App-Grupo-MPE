@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 
 import { PropertyService } from '../../../providers';
@@ -27,7 +27,7 @@ import {
   stagger
 } from '@angular/animations';
 import { PopoverController,
-         ModalController, Platform } from '@ionic/angular';
+         ModalController, Platform, IonInfiniteScroll } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { NotificacionesPage } from '../notificaciones/notificaciones.page';
@@ -53,6 +53,8 @@ export class DocumentosTrabajadorPage {
   searchKey = '';
   listaMensajes: Array<Notificacion> = [];
   pagina = 0;
+  
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -71,18 +73,30 @@ export class DocumentosTrabajadorPage {
       this.cantidad$ = this.notificacionesService.getNotifiaciones$();
       this.cantidad$.subscribe(num => this.Cantidad = num);
       console.log('cnatidad$: ', this.Cantidad);
-
+      this.pagina = 0;
 
       this.getDocumentos();
 
 
     }
-
+    ionViewDidLeave(){
+      this.pagina = 0;
+      console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+      if (this.infiniteScroll.disabled === true ) {
+        this.infiniteScroll.disabled = false;
+        console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+      }
+    }
+  
 
   getDocumentos(event?) {
     let aux: Documento[] = [];
     try {
-      this.usuarioService.present('Cargando...');
+      if(event === undefined || event === null && this.pagina === 0){
+        this.pagina=0;
+        console.log("Numero pagina ", this.pagina);
+        this.usuarioService.present('Cargando...');
+      }
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');

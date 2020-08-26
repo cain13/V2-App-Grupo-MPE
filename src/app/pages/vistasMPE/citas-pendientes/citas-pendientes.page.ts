@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RespuestaCitasPendientes, RespuestaCitasiaInfo } from 'src/app/interfaces/interfaces-grupo-mpe';
-import { PopoverController, ModalController } from '@ionic/angular';
+import { PopoverController, ModalController, IonInfiniteScroll, ViewDidLeave } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxXml2jsonService } from 'ngx-xml2json';
@@ -27,7 +27,7 @@ import { Citas } from '../../../interfaces/interfaces-grupo-mpe';
     ])
   ]
 })
-export class CitasPendientesPage implements OnInit {
+export class CitasPendientesPage implements OnInit, ViewDidLeave {
 
   searchKey = '';
   listaCitas = [];
@@ -35,6 +35,8 @@ export class CitasPendientesPage implements OnInit {
   empresaCoonsultor: EmpresaConsultor;
   hayConsultor = false;
   pagina = 0;
+
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -58,17 +60,29 @@ export class CitasPendientesPage implements OnInit {
     this.getCitasPendientes();
   }
 
+  ionViewDidLeave(){
+    this.pagina = 0;
+    console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+    if (this.infiniteScroll.disabled === true ) {
+      this.infiniteScroll.disabled = false;
+      console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+    }
+  }
+
   getCitasPendientes(event?) {
 
     let aux: Citas[];
 
     try {
-
+      if(event === undefined || event === null && this.pagina === 0){
+        this.pagina=0;
+        console.log("Numero pagina ", this.pagina);
+        this.usuarioService.present('Cargando Citas...');
+      }
       let nifConsultor = '';
       if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
         nifConsultor = this.empresaCoonsultor.Nif;
       }
-      this.usuarioService.present('Cargando Citas...');
       const fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
       const fecha_hasta = moment().add(1, 'year').format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();
