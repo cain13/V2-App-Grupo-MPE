@@ -101,11 +101,16 @@ export class NotificacionesPage implements OnInit {
     // const rutaAux = ruta.concat(':')
     await this.db.marcarNotificacionLeida(idNotificacion).then(() => {
       console.log('Ruta ' + ruta);
-      const rutaMensaje = ruta + idNotificacion.toString();
+      let rutaMensaje = "";
+      if(tipoDocumento.toUpperCase() === "MENSAJE"){
+        rutaMensaje = ruta + idNotificacion.toString();
+      }else{
+        rutaMensaje = ruta;
+      }
        console.log('rutaMensaje ' + rutaMensaje);
       this.navController.navigateForward(rutaMensaje);
       this.modalCtrl.dismiss();
-
+      this.notificacionesService.marcarNotificacionesLeidas();
     }).catch( error => {
 
       this.modalCtrl.dismiss();

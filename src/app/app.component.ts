@@ -202,6 +202,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
+
       setTimeout(() => {
 
         this.fcm.getInitialPushPayload().then(data => {
@@ -209,7 +210,7 @@ export class AppComponent {
             if (data === undefined || data === null) {
               return;
             }
-            console.log('Received Inicio in background: ', data);
+            console.log('Received app closed: ', data);
             console.log('TipoUsuario ' + data['TipoUsuario']);
             const titulo = data['Titulo'];
             const tipoDocumento = data['TipoDocumento'];
@@ -230,19 +231,47 @@ export class AppComponent {
             notificacion.Mensaje = data['Mensaje'];
             notificacion.Fecha = data['FechaNotificacion'];
             notificacion.TipoDocumento = data['TipoDocumento'];
-            if (tipoDocumento.toUpperCase() === 'DOCUMENTO') {
-              notificacion.Icono = 'document-text-outline';
-              if (data['TipoUsuario'] !== 'TRABAJADOR') {
-                notificacion.Ruta = '/historial-notificaciones';
-              } else {
-                notificacion.Ruta = '/documentos-trabajador';
+
+            if (data['TipoUsuario'] !== 'TRABAJADOR') {
+              console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
+              switch(tipoDocumento.toUpperCase()){
+                case 'DOCUMENTO':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/certificado-aptitud';
+                  break;
+                case 'HISTORICO':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/historial-notificaciones';
+                  break;
+                case 'MENSAJE':
+                  notificacion.Icono = 'mail-outline';
+                  notificacion.Ruta = '/message/';
+                  break;
+                default:
+                  notificacion.Icono = 'alert-circle-outline';
+                  notificacion.Ruta = '/certificado-aptitud';
+                  break;
               }
-            } else if (tipoDocumento.toUpperCase() === 'MENSAJE') {
-              notificacion.Icono = 'mail-outline';
-              notificacion.Ruta = '/message/';
-            } else {
-              notificacion.Icono = 'alert-circle-outline';
-              notificacion.Ruta = '/';
+            }else{
+              console.log('tipoDocumento.toUpperCase( TRABAJADOR ) ', tipoDocumento.toUpperCase());
+              switch(tipoDocumento.toUpperCase()){
+                case 'DOCUMENTO':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/documentos-trabajador';
+                  break;
+                case 'DOCUMENTO-COVID':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/documentos-covid';
+                  break;
+                case 'MENSAJE':
+                  notificacion.Icono = 'mail-outline';
+                  notificacion.Ruta = '/message/';
+                  break;
+                default:
+                  notificacion.Icono = 'alert-circle-outline';
+                  notificacion.Ruta = '/documentos-trabajador';
+                  break;
+              }
             }
 
             this.db.addNotificacion(notificacion);
@@ -252,7 +281,9 @@ export class AppComponent {
 
 
         this.fcm.onNotification().subscribe(data => {
-
+          if (data === undefined || data === null) {
+            return;
+          }
           if (data.wasTapped) {
             console.log('Received Segundo in background: ', data);
             console.log('Tipo Documento ' + data['TipoDocumento']);
@@ -275,26 +306,53 @@ export class AppComponent {
             notificacion.Mensaje = data['Mensaje'];
             notificacion.Fecha = data['FechaNotificacion'];
             notificacion.TipoDocumento = data['TipoDocumento'];
-            if (tipoDocumento.toUpperCase() === 'DOCUMENTO') {
-              notificacion.Icono = 'document-text-outline';
-              if (this.usuarioService.getUsuario().Tipo !== 'TRABAJADOR') {
-                notificacion.Ruta = '/historial-notificaciones';
-              } else {
-                notificacion.Ruta = '/documentos-trabajador';
+            if (data['TipoUsuario'] !== 'TRABAJADOR') {
+              console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
+              switch(tipoDocumento.toUpperCase()){
+                case 'DOCUMENTO':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/certificado-aptitud';
+                  break;
+                case 'HISTORICO':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/historial-notificaciones';
+                  break;
+                case 'MENSAJE':
+                  notificacion.Icono = 'mail-outline';
+                  notificacion.Ruta = '/message/';
+                  break;
+                default:
+                  notificacion.Icono = 'alert-circle-outline';
+                  notificacion.Ruta = '/certificado-aptitud';
+                  break;
               }
-            } else if (tipoDocumento.toUpperCase() === 'MENSAJE') {
-              notificacion.Icono = 'mail-outline';
-              notificacion.Ruta = '/message/';
-            } else {
-              notificacion.Icono = 'alert-circle-outline';
-              notificacion.Ruta = '/';
+            }else{
+              console.log('tipoDocumento.toUpperCase( TRABAJADOR ) ', tipoDocumento.toUpperCase());
+              switch(tipoDocumento.toUpperCase()){
+                case 'DOCUMENTO':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/documentos-trabajador';
+                  break;
+                case 'DOCUMENTO-COVID':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/documentos-covid';
+                  break;
+                case 'MENSAJE':
+                  notificacion.Icono = 'mail-outline';
+                  notificacion.Ruta = '/message/';
+                  break;
+                default:
+                  notificacion.Icono = 'alert-circle-outline';
+                  notificacion.Ruta = '/documentos-trabajador';
+                  break;
+              }
             }
             this.db.addNotificacion(notificacion);
             this.notificacionesService.SumaUnaNotificaciones();
 
           } else {
-            console.log('Received in foreground: ', data);
-            console.log('Tipo Documento ' + data['TipoDocumento']);
+            console.log('Received primer plano: ', data);
+          
             const titulo = data['title'];
             const tipoDocumento = data['TipoDocumento'];
             console.log('TITULO: ', titulo);
@@ -314,19 +372,46 @@ export class AppComponent {
             notificacion.Mensaje = data['body'];
             notificacion.Fecha = data['FechaNotificacion'];
             notificacion.TipoDocumento = data['TipoDocumento'];
-            if (tipoDocumento.toUpperCase() === 'DOCUMENTO') {
-              notificacion.Icono = 'document-text-outline';
-              if (this.usuarioService.getUsuario().Tipo !== 'TRABAJADOR') {
-                notificacion.Ruta = '/historial-notificaciones';
-              } else {
-                notificacion.Ruta = '/documentos-trabajador';
+            if (data['TipoUsuario'] !== 'TRABAJADOR') {
+              console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
+              switch(tipoDocumento.toUpperCase()){
+                case 'DOCUMENTO':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/certificado-aptitud';
+                  break;
+                case 'HISTORICO':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/historial-notificaciones';
+                  break;
+                case 'MENSAJE':
+                  notificacion.Icono = 'mail-outline';
+                  notificacion.Ruta = '/message/';
+                  break;
+                default:
+                  notificacion.Icono = 'alert-circle-outline';
+                  notificacion.Ruta = '/certificado-aptitud';
+                  break;
               }
-            } else if (tipoDocumento.toUpperCase() === 'MENSAJE') {
-              notificacion.Icono = 'mail-outline';
-              notificacion.Ruta = '/message/';
-            } else {
-              notificacion.Icono = 'alert-circle-outline';
-              notificacion.Ruta = '/';
+            }else{
+              console.log('tipoDocumento.toUpperCase( TRABAJADOR ) ', tipoDocumento.toUpperCase());
+              switch(tipoDocumento.toUpperCase()){
+                case 'DOCUMENTO':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/documentos-trabajador';
+                  break;
+                case 'DOCUMENTO-COVID':
+                  notificacion.Icono = 'document-text-outline';
+                  notificacion.Ruta = '/documentos-covid';
+                  break;
+                case 'MENSAJE':
+                  notificacion.Icono = 'mail-outline';
+                  notificacion.Ruta = '/message/';
+                  break;
+                default:
+                  notificacion.Icono = 'alert-circle-outline';
+                  notificacion.Ruta = '/documentos-trabajador';
+                  break;
+              }
             }
             this.db.addNotificacion(notificacion);
             this.notificacionesService.SumaUnaNotificaciones();

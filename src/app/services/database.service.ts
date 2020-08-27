@@ -97,6 +97,8 @@ export class DatabaseService {
       console.log('DB: Borramos todo el contenido de la tabla de BD...');
         this.storage.executeSql('DELETE FROM usuariosTable').then(() => {
           console.log('DB: Tabla USUARIOS vacia'); }).catch(error => { console.log('DB: ERROR AL BORRAR TABLAS USUARIO'); });
+          this.storage.executeSql('DELETE FROM notificacion').then(() => {
+            console.log('DB: Tabla NOTIFICACION vacia'); }).catch(error => { console.log('DB: ERROR AL BORRAR TABLAS NOTFICACION'); });
     });
   }
 

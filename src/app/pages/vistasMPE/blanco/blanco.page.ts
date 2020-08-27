@@ -47,7 +47,7 @@ export class BlancoPage implements OnInit {
 
          console.log('BLANCO: Si hay usuario en BD: ', this.usuario);
 
-         this.navCtrl.navigateForward('/login');
+         this.navCtrl.navigateRoot('/login');
         }
       });
 
