@@ -11,6 +11,7 @@ import { HitorialNotificacionesService } from 'src/app/services/hitorial-notific
 import { FiltroHistorialPage } from '../../modal/filtro-historial/filtro-historial.page';
 import { EmpresaConsultor, UsuarioLogin, Notificacion } from 'src/app/interfaces/usuario-interfaces';
 import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
+import { DatosFiltros } from '../../../interfaces/usuario-interfaces';
 
 @Component({
   selector: 'app-historial-notificaciones',
@@ -26,7 +27,7 @@ import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccio
   ]
 })
 
-export class HistorialNotificacionesPage implements OnInit, ViewDidLeave{
+export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
 
   searchKey = '';
   listaDocumentos = [];
@@ -34,16 +35,17 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave{
   empresaCoonsultor: EmpresaConsultor;
   hayConsultor = false;
   pagina = 0;
+  filtros: DatosFiltros;
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
-  
+
   constructor(
     public popoverCtrl: PopoverController,
     public service: PropertyService,
     public modalCtrl: ModalController,
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
-    private historialService: HitorialNotificacionesService
+    private historialService: HitorialNotificacionesService,
     ) {
       this.usuario = this.usuarioService.getUsuario();
       this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
@@ -60,109 +62,215 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave{
     this.getHistorialDocumentos();
 
   }
-  ionViewDidLeave(){
+  ionViewDidLeave() {
     this.pagina = 0;
-    console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+    console.log('this.infiniteScroll.disabled 1 ', this.infiniteScroll.disabled);
     if (this.infiniteScroll.disabled === true ) {
       this.infiniteScroll.disabled = false;
-      console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+      console.log('this.infiniteScroll.disabled ', this.infiniteScroll.disabled);
     }
   }
 
   getHistorialDocumentos(event?) {
-    try {
-      if(event === undefined || event === null && this.pagina === 0){
-        this.pagina=0;
-        console.log("Numero pagina ", this.pagina);
-        this.usuarioService.present('Cargando...');
-      }
-      let aux: any[] = [];
-      let nifConsultor = '';
-      if (this.usuario.Tipo === 'CONSULTOR') {
-        if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
-          nifConsultor = this.empresaCoonsultor.Nif;
+    if (this.filtros !== undefined && this.filtros !== null) {
+      try {
+        if (event === undefined || event === null && this.pagina === 0) {
+          this.pagina = 0;
+          this.listaDocumentos = [];
+          console.log('Numero pagina ', this.pagina);
+          this.usuarioService.present('Cargando...');
         }
-      }
-      const fecha_desde = '1900-01-01T00:00:00';
-      const fecha_hasta = moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
-      const xmlhttp = new XMLHttpRequest();
-      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-      xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-      xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-      xmlhttp.responseType = 'document';
-        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
-      const sr =
-      '<?xml version="1.0" encoding="utf-8"?>' +
-      '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
-        '<soap:Header>' +
-          '<AuthHeader xmlns="http://tempuri.org/">' +
-          '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
-          '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
-          '</AuthHeader>' +
-        '</soap:Header>' +
-        '<soap:Body>' +
-          '<ObtenerHistoricoNotificacionesRelacionDocumentos xmlns="http://tempuri.org/">' +
-            '<FiltroNot>' +
-              '<FechaDesde>' + fecha_desde + '</FechaDesde>' +
-              '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
-              '<NifClienteConsultor>'  + nifConsultor + '</NifClienteConsultor>' +
-            '</FiltroNot>' +
-            '<NumeroPagina>' + this.pagina+ '</NumeroPagina>'+
-            '<NumeroRegistro>20</NumeroRegistro>'+
-          '</ObtenerHistoricoNotificacionesRelacionDocumentos>' +
-        '</soap:Body>' +
-      '</soap:Envelope>';
-console.log('sr ' + sr);
-      xmlhttp.onreadystatechange =  () => {
-            if (xmlhttp.readyState === 4) {
-                if (xmlhttp.status === 200) {
-                    const xml = xmlhttp.responseXML;
-                    const obj: RespuestaHistorial = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                    // tslint:disable-next-line: max-line-length
-                    const a: ObtenerHistoriaDocumentos = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerHistoricoNotificacionesRelacionDocumentosResponse']['ObtenerHistoricoNotificacionesRelacionDocumentosResult']));
-                    console.log(a);
-                    if (a.HistoricoNotificacionInfo !== undefined && !Array.isArray(a.HistoricoNotificacionInfo)) {
+        let aux: any[] = [];
+        let nifConsultor = '';
+        if (this.usuario.Tipo === 'CONSULTOR') {
+          if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
+            nifConsultor = this.empresaCoonsultor.Nif;
+          }
+        }
+        const fecha_desde = '1900-01-01T00:00:00';
+        const fecha_hasta = moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
+        const xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+        xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+        xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+        xmlhttp.responseType = 'document';
+          // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+        const sr =
+        '<?xml version="1.0" encoding="utf-8"?>' +
+        '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+          '<soap:Header>' +
+            '<AuthHeader xmlns="http://tempuri.org/">' +
+            '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
+            '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
+            '</AuthHeader>' +
+          '</soap:Header>' +
+          '<soap:Body>' +
+            '<ObtenerHistoricoNotificacionesRelacionDocumentos xmlns="http://tempuri.org/">' +
+              '<FiltroNot>' +
+                '<FechaDesde>' + this.filtros.fecha_desde + '</FechaDesde>' +
+                '<FechaHasta>' + this.filtros.fecha_hasta + '</FechaHasta>' +
+                '<NifClienteConsultor>'  + nifConsultor + '</NifClienteConsultor>' +
+              '</FiltroNot>' +
+              '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
+              '<NumeroRegistro>20</NumeroRegistro>' +
+            '</ObtenerHistoricoNotificacionesRelacionDocumentos>' +
+          '</soap:Body>' +
+        '</soap:Envelope>';
+        console.log('sr ' + sr);
+        xmlhttp.onreadystatechange =  () => {
+              if (xmlhttp.readyState === 4) {
+                  if (xmlhttp.status === 200) {
+                      const xml = xmlhttp.responseXML;
+                      const obj: RespuestaHistorial = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                      // tslint:disable-next-line: max-line-length
+                      const a: ObtenerHistoriaDocumentos = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerHistoricoNotificacionesRelacionDocumentosResponse']['ObtenerHistoricoNotificacionesRelacionDocumentosResult']));
+                      console.log(a);
+                      if (a.HistoricoNotificacionInfo !== undefined && !Array.isArray(a.HistoricoNotificacionInfo)) {
 
-                      this.listaDocumentos.push(a.HistoricoNotificacionInfo);
+                        this.listaDocumentos.push(a.HistoricoNotificacionInfo);
+                        aux = a.HistoricoNotificacionInfo;
 
-                    } else {
-
-                      this.listaDocumentos = a.HistoricoNotificacionInfo;
-                      aux = a.HistoricoNotificacionInfo;
-
-                    }
-                    this.historialService.setDocumento(this.listaDocumentos);
-                    console.log('ListaHistorial ' + this.listaDocumentos);
-                   
-                    if ( event !== undefined ) {
-                      event.target.complete();
-                      if ( Array.isArray(aux) ) {
-                        if (aux.length < 20) {
-                          console.log('No hay mas documentos');
-                          event.target.disabled = true;
-                        }
                       } else {
+
+                        this.listaDocumentos = a.HistoricoNotificacionInfo;
+                        aux = a.HistoricoNotificacionInfo;
+
+                      }
+                      this.historialService.setDocumento(this.listaDocumentos);
+                      console.log('ListaHistorial ' + this.listaDocumentos);
+
+                  } else {
+
+                    if (this.usuario.Tipo === 'CONSULTOR') {
+                      // tslint:disable-next-line: max-line-length
+                      this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
+                    }
+                  }
+
+                  if ( event !== undefined ) {
+                    event.target.complete();
+                    if ( Array.isArray(aux) ) {
+                      if (aux.length < 20) {
                         console.log('No hay mas documentos');
                         event.target.disabled = true;
                       }
+                    } else {
+                      console.log('No hay mas documentos');
+                      event.target.disabled = true;
                     }
-                    this.usuarioService.dismiss();
-                } else {
-                  this.usuarioService.dismiss();
-                  if (this.usuario.Tipo === 'CONSULTOR') {
-                    // tslint:disable-next-line: max-line-length
-                    this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
                   }
-                }
-            } else {
-              this.usuarioService.dismiss();
-            }
-        };
+                  this.usuarioService.dismiss();
 
-      xmlhttp.send(sr);
+              } else {
+                this.usuarioService.dismiss();
+              }
+          };
 
-    } catch (error) {
-      this.usuarioService.dismiss();
+        xmlhttp.send(sr);
+
+      } catch (error) {
+        this.usuarioService.dismiss();
+
+      }
+
+    } else {
+
+      try {
+        if (event === undefined || event === null && this.pagina === 0) {
+          this.pagina = 0;
+          console.log('Numero pagina ', this.pagina);
+          this.usuarioService.present('Cargando...');
+        }
+        let aux: any[] = [];
+        let nifConsultor = '';
+        if (this.usuario.Tipo === 'CONSULTOR') {
+          if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
+            nifConsultor = this.empresaCoonsultor.Nif;
+          }
+        }
+        const fecha_desde = '1900-01-01T00:00:00';
+        const fecha_hasta = moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
+        const xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+        xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+        xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+        xmlhttp.responseType = 'document';
+          // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+        const sr =
+        '<?xml version="1.0" encoding="utf-8"?>' +
+        '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+          '<soap:Header>' +
+            '<AuthHeader xmlns="http://tempuri.org/">' +
+            '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
+            '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
+            '</AuthHeader>' +
+          '</soap:Header>' +
+          '<soap:Body>' +
+            '<ObtenerHistoricoNotificacionesRelacionDocumentos xmlns="http://tempuri.org/">' +
+              '<FiltroNot>' +
+                '<FechaDesde>' + fecha_desde + '</FechaDesde>' +
+                '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
+                '<NifClienteConsultor>'  + nifConsultor + '</NifClienteConsultor>' +
+              '</FiltroNot>' +
+              '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
+              '<NumeroRegistro>20</NumeroRegistro>' +
+            '</ObtenerHistoricoNotificacionesRelacionDocumentos>' +
+          '</soap:Body>' +
+        '</soap:Envelope>';
+        console.log('sr ' + sr);
+        xmlhttp.onreadystatechange =  () => {
+              if (xmlhttp.readyState === 4) {
+                  if (xmlhttp.status === 200) {
+                      const xml = xmlhttp.responseXML;
+                      const obj: RespuestaHistorial = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                      // tslint:disable-next-line: max-line-length
+                      const a: ObtenerHistoriaDocumentos = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerHistoricoNotificacionesRelacionDocumentosResponse']['ObtenerHistoricoNotificacionesRelacionDocumentosResult']));
+                      console.log(a);
+                      if (a.HistoricoNotificacionInfo !== undefined && !Array.isArray(a.HistoricoNotificacionInfo)) {
+
+                        this.listaDocumentos.push(a.HistoricoNotificacionInfo);
+                        aux = a.HistoricoNotificacionInfo;
+
+                      } else {
+
+                        this.listaDocumentos = a.HistoricoNotificacionInfo;
+                        aux = a.HistoricoNotificacionInfo;
+
+                      }
+                      this.historialService.setDocumento(this.listaDocumentos);
+                      console.log('ListaHistorial ' + this.listaDocumentos);
+
+                  } else {
+                    if (this.usuario.Tipo === 'CONSULTOR') {
+                      // tslint:disable-next-line: max-line-length
+                      this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
+                    }
+                  }
+
+                  if ( event !== undefined ) {
+                    event.target.complete();
+                    if ( Array.isArray(aux) ) {
+                      if (aux.length < 20) {
+                        console.log('No hay mas documentos');
+                        event.target.disabled = true;
+                      }
+                    } else {
+                      console.log('No hay mas documentos');
+                      event.target.disabled = true;
+                    }
+                  }
+                  this.usuarioService.dismiss();
+              } else {
+                this.usuarioService.dismiss();
+              }
+          };
+
+        xmlhttp.send(sr);
+
+      } catch (error) {
+        this.usuarioService.dismiss();
+
+      }
 
     }
     this.pagina = this.pagina + 1;
@@ -243,9 +351,13 @@ console.log('sr ' + sr);
     });
     modal.onDidDismiss().then(() => {
 
-      if (this.usuarioService.haFiltradoHistorial) {
+     /*  if (this.usuarioService.haFiltradoHistorial) {
         this.listaDocumentos = this.usuarioService.getHistorial();
-      }
+      } */
+      this.pagina = 0;
+      this.filtros = this.historialService.getFiltros();
+      this.getHistorialDocumentos();
+
     });
     return await modal.present();
   }

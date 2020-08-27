@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { RespuestaAPIGetDocumentos, ObtenerDocumentosTrabajadores, RecuentoNotificacionesResponse } from '../interfaces/interfaces-grupo-mpe';
 import { Platform } from '@ionic/angular';
 import { UsuarioService } from 'src/app/services/usuario.service';
+import { DatosFiltros } from '../interfaces/usuario-interfaces';
 
 
 
@@ -10,10 +11,11 @@ import { UsuarioService } from 'src/app/services/usuario.service';
 })
 export class DocumentosTrabajadoresService {
   listaDocumentosTodos = [];
-  Cantidad:number;
+  Cantidad: number;
+  filtros: DatosFiltros;
   constructor( private usuarioService: UsuarioService ) { }
 
-    setDocumento(listadocumentos){
+    setDocumento(listadocumentos) {
       this.listaDocumentosTodos = listadocumentos;
     }
 
@@ -31,7 +33,7 @@ export class DocumentosTrabajadoresService {
 
     getItem(id) {
       for (let i = 0; i < this.listaDocumentosTodos.length; i++) {
-        if (this.listaDocumentosTodos[i].id === parseInt(id)) {
+        if (this.listaDocumentosTodos[i].id === parseInt(id, 10)) {
           return this.listaDocumentosTodos[i];
         }
       }
@@ -45,13 +47,23 @@ export class DocumentosTrabajadoresService {
           (documento.Descripcion +  ' ' + documento.FechaDocumento).toUpperCase().indexOf(key) > -1));
     }
 
-    getDocumentosSinLeer(){
+    getDocumentosSinLeer() {
       return this.Cantidad;
     }
-  
-    
-    setCantidadDocumentosSinLeer(documentos){
-      this.Cantidad = documentos
+
+    setCantidadDocumentosSinLeer(documentos) {
+      this.Cantidad = documentos;
     }
-  
+
+    guardarFiltros(filtros: DatosFiltros) {
+
+      this.filtros = filtros;
+
+    }
+
+    getFiltros(): DatosFiltros {
+
+      return this.filtros;
+
+    }
 }

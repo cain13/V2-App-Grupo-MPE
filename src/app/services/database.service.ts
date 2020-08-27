@@ -99,7 +99,7 @@ export class DatabaseService {
           console.log('DB: Tabla USUARIOS vacia'); }).catch(error => { console.log('DB: ERROR AL BORRAR TABLAS USUARIO'); });
     });
   }
-  
+
   async obtenerUltimoUsuario(): Promise<UsuarioLogin> {
     const res =  await this.storage.executeSql('SELECT * FROM usuariosTable LIMIT 1', []);
     if (res.rows.length !== 0) {
@@ -118,27 +118,27 @@ export class DatabaseService {
   addNotificacion(notificacion: Notificacion) {
 
     this.estadoBD().then(async () => {
-        const data = [notificacion.Titulo, notificacion.Mensaje, notificacion.Leido, notificacion.TipoDocumento, notificacion.Fecha,notificacion.Ruta,notificacion.Icono];
+        const data = [notificacion.Titulo, notificacion.Mensaje, notificacion.Leido, notificacion.TipoDocumento, notificacion.Fecha, notificacion.Ruta, notificacion.Icono];
         const respuesta = await this.storage.executeSql('INSERT INTO notificacion (Titulo, Mensaje, Leido, TipoDocumento, Fecha,Ruta,Icono) VALUES (?, ?, ?, ?, ?, ?, ?)', data).then(() => {
           console.log('DB: Notificacion añadida');
 
-          
+
         });
-        console.log('DB: Respuesta Notificacion',respuesta);
+        console.log('DB: Respuesta Notificacion', respuesta);
     });
   }
 
 
-  
+
   BorrarNotificacion(id) {
     // La siguiente sentencia SQL borra todo el contenido de la tabla:
     this.estadoBD().then(async () => {
       console.log('DB: Borramos notificacion BD...');
-        this.storage.executeSql('DELETE FROM notificacion WHERE IdNotificacion='+id).then(() => {
+        this.storage.executeSql('DELETE FROM notificacion WHERE IdNotificacion=' + id).then(() => {
           console.log('DB: Notificacion Borrada'); }).catch(error => { console.log('DB: ERROR AL BORRAR NOTIFICACION'); });
     });
   }
-  
+
 
   async obtenerTodasNotificacion() {
 
@@ -170,7 +170,7 @@ export class DatabaseService {
         notificaciones.push(response.rows.item(index));
         console.log('obtener notificacion Leido2 ' + response.rows.item(index));
       }
-      
+
       return Promise.resolve<Notificacion[]>(notificaciones);
     } catch (error) {
       Promise.reject(error);
@@ -178,7 +178,7 @@ export class DatabaseService {
 
   }
   async marcarTodasNotificacionLeidas(): Promise<Notificacion> {
-    const data = [1,0];
+    const data = [1, 0];
     // tslint:disable-next-line: max-line-length
     const res = await this.storage.executeSql('UPDATE notificacion SET Leido=? WHERE Leido = ?', data);
     return null;
@@ -191,7 +191,7 @@ export class DatabaseService {
   }
 
   async obtenerNotificacion(id): Promise<Notificacion> {
-    const res =  await this.storage.executeSql('SELECT * FROM notificacion WHERE IdNotificacion='+id, []);
+    const res =  await this.storage.executeSql('SELECT * FROM notificacion WHERE IdNotificacion=' + id, []);
     if (res.rows.length !== 0) {
       return {
         IdNotificacion: res.rows.item(0).IdNotificacion,
@@ -210,7 +210,7 @@ export class DatabaseService {
   async ModificarRutaNotificacion() {
     const res =  await this.storage.executeSql('SELECT * FROM notificacion ORDER BY IdNotificacion DESC LIMIT 1', []);
     if (res.rows.length !== 0) {
-      const Notificacion = {
+      const notificacion = {
         IdNotificacion: res.rows.item(0).IdNotificacion,
         Titulo: res.rows.item(0).Titulo,
         Mensaje: res.rows.item(0).Mensaje,
@@ -220,9 +220,9 @@ export class DatabaseService {
         Ruta: res.rows.item(0).Ruta,
         Icono: res.rows.item(0).Icono,
       };
-      console.log("Notificacion.IdNotificacion " + Notificacion.IdNotificacion);
-      const NuevaRuta = '/message/'+Notificacion.IdNotificacion;
-      const data = [NuevaRuta, Notificacion.IdNotificacion];
+      console.log('Notificacion.IdNotificacion ' + notificacion.IdNotificacion);
+      const NuevaRuta = '/message/' + notificacion.IdNotificacion;
+      const data = [NuevaRuta, notificacion.IdNotificacion];
     // tslint:disable-next-line: max-line-length
      const resultado = await this.storage.executeSql('UPDATE notificacion SET Ruta=? WHERE IdNotificacion = ?', data);
     } else { return null; }

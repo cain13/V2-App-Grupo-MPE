@@ -49,28 +49,28 @@ export class CitasPendientesTrabajadorPage implements OnInit {
     ngOnInit() {
       this.getCitasPendientes();
     }
-  
-    ionViewDidLeave(){
+
+    ionViewDidLeave() {
       this.pagina = 0;
-      console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+      console.log('this.infiniteScroll.disabled 1 ', this.infiniteScroll.disabled);
       if (this.infiniteScroll.disabled === true ) {
         this.infiniteScroll.disabled = false;
-        console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+        console.log('this.infiniteScroll.disabled ', this.infiniteScroll.disabled);
       }
     }
-  
+
     getCitasPendientes(event?) {
-  
+
       let aux: Asistencia[];
-  
+
       try {
-        if(event === undefined || event === null && this.pagina === 0){
-          this.pagina=0;
-          console.log("Numero pagina ", this.pagina);
+        if (event === undefined || event === null && this.pagina === 0) {
+          this.pagina = 0;
+          console.log('Numero pagina ', this.pagina);
           this.usuarioService.present('Cargando Citas...');
         }
         let nifConsultor = '';
-      
+
         const fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
         const fecha_hasta = moment().add(1, 'year').format('YYYY-MM-DDT00:00:00');
         const xmlhttp = new XMLHttpRequest();
@@ -95,7 +95,7 @@ export class CitasPendientesTrabajadorPage implements OnInit {
             '</ObtenerTrabajadorCitasPendientesRelacion >' +
           '</soap:Body>' +
         '</soap:Envelope>';
-  
+
         xmlhttp.onreadystatechange =  () => {
               if (xmlhttp.readyState === 4) {
                   if (xmlhttp.status === 200) {
@@ -103,13 +103,14 @@ export class CitasPendientesTrabajadorPage implements OnInit {
                       const obj: RespuestaCitasEmpleado = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                       // tslint:disable-next-line: max-line-length
                       console.log('Respuesta: ', obj);
-  
+
+                      // tslint:disable-next-line: max-line-length
                       const a: RespuestaCitasEmpleadoaInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerTrabajadorCitasPendientesRelacionResponse']['ObtenerTrabajadorCitasPendientesRelacionResult']));
                       console.log(a);
-  
+
                       if (a.AsistenciaInfo !== undefined) {
                         if (!Array.isArray(a.AsistenciaInfo)) {
-  
+
                           this.listaCitas.push(a.AsistenciaInfo);
                         } else {
                           for (const cert of a.AsistenciaInfo) {
@@ -117,10 +118,10 @@ export class CitasPendientesTrabajadorPage implements OnInit {
                           }
                           aux = a.AsistenciaInfo;
                         }
-  
+
                       this.citasService.setCitaPendiente(this.listaCitas);
                       console.log('ListaHistorial ' + this.listaCitas);
-                      console.log('event ' ,event);
+                      console.log('event ' , event);
                       if ( event !== undefined) {
                         event.target.complete();
                         if ( Array.isArray(aux) ) {
@@ -146,18 +147,18 @@ export class CitasPendientesTrabajadorPage implements OnInit {
               }
           };
         xmlhttp.send(sr);
-  
-  
+
+
       } catch (error) {
         this.usuarioService.dismiss();
       }
-  
+
       this.pagina = this.pagina + 1;
-  
-  
-  
+
+
+
     }
-  
+
     onInput(event) {
       console.log(event.target.value);
       this.citasService.findByName(event.target.value)
@@ -166,33 +167,33 @@ export class CitasPendientesTrabajadorPage implements OnInit {
           })
           .catch(error => alert(JSON.stringify(error)));
     }
-  
+
     onCancel(event) {
       this.findAll();
     }
-  
-  
+
+
     async searchFilter () {
       const modal = await this.modalCtrl.create({
         component: FiltroCitasPage
       });
       modal.onDidDismiss().then(() => {
-  
+
         if (this.usuarioService.haFiltradoHistorial) {
           this.listaCitas = this.usuarioService.getCertificados();
         }
       });
       return await modal.present();
     }
-  
+
     findAll() {
       this.listaCitas = this.citasService.getCertificados();
     }
-  
+
     seleccionarEmpresa() {
       this.vistaSeleccionarEmpresa();
     }
-  
+
     async vistaSeleccionarEmpresa() {
       const modal = await this.modalCtrl.create({
         component: SeleccionarClientePage
@@ -205,4 +206,3 @@ export class CitasPendientesTrabajadorPage implements OnInit {
       return await modal.present();
     }
 }
-  

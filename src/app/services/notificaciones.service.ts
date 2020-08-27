@@ -18,7 +18,7 @@ export class NotificacionesService {
 
   constructor(private db: DatabaseService) { }
 
-  aumentarNotificaciones(){
+  aumentarNotificaciones() {
     this.db.obtenerTodasSinLeerNotificacion().then( resp => {
       this.numNot = resp.length;
       this.numNotificaciones$.next(this.numNot);
@@ -29,25 +29,25 @@ export class NotificacionesService {
 
   }
 
-  marcarNotificacionesLeidas(){
+  marcarNotificacionesLeidas() {
     this.numNot = 0;
     this.numNotificaciones$.next(this.numNot);
   }
 
-  SumaUnaNotificaciones(){
-      this.numNot = this.numNot + 1;;
+  SumaUnaNotificaciones() {
+      this.numNot = this.numNot + 1;
       this.numNotificaciones$.next(this.numNot);
       console.log('aumentarNot: ', this.numNot);
   }
 
-  getNotifiaciones$(): Observable<number>{
+  getNotifiaciones$(): Observable<number> {
 
     return this.numNotificaciones$.asObservable();
 
   }
 
   async getNotificacion(id): Promise<Notificacion> {
-    let notificacion:Notificacion;
+    let notificacion: Notificacion;
     await this.db.obtenerNotificacion(id).then((noti) => {
       notificacion = noti;
     });

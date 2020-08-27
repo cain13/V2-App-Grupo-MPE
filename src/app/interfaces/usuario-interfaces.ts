@@ -18,7 +18,7 @@ export interface Notificacion {
     Fecha: string;
     Ruta: string;
     Icono: string;
-    
+
 }
 
 export interface EmpresaConsultor {
@@ -53,9 +53,10 @@ export interface DatosFiltros {
 
     fecha_desde: string;
     fecha_hasta: string;
-    nombre: string;
-    dni: string;
-    noPresentado: boolean;    
-
+    nombre?: string;
+    dni?: string;
+    noPresentado?: boolean;
+    idCentro?: number;
+    idCentroEspecificado?: number;
 
 }

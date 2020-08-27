@@ -3,8 +3,9 @@ import { ModalController, NavController } from '@ionic/angular';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Centro, RespuestaGetAPICertificadosAptitud, ObtenerCertificados } from '../../../interfaces/interfaces-grupo-mpe';
 import * as moment from 'moment';
-import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
+import { UsuarioLogin, DatosFiltros } from '../../../interfaces/usuario-interfaces';
 import { NgxXml2jsonService } from 'ngx-xml2json';
+import { DocumentosTrabajadoresService } from '../../../services/documentos-trabajadores.service';
 
 
 @Component({
@@ -43,7 +44,7 @@ export class FiltroDocumentosPage implements OnInit {
   };
 
   constructor(private modalCtrl: ModalController, private usuarioService: UsuarioService,
-              private ngxXml2jsonService: NgxXml2jsonService, private navCtrl: NavController ) { }
+              private documentosTrabajadoresService: DocumentosTrabajadoresService, private navCtrl: NavController ) { }
 
 
   ngOnInit() {
@@ -100,12 +101,24 @@ export class FiltroDocumentosPage implements OnInit {
     console.log('IDCENTRO', idCentroAUX);
     console.log('IDCENTROESPECIFICADO', this.filtro_idCentroEspecificado);
 
-    this.getCertificados(fecha_desde_aux, fecha_hasta_aux, this.filtro_nombre, this.filtro_dni, idCentroAUX, this.filtro_idCentroEspecificado);
+/*     this.getCertificados(fecha_desde_aux, fecha_hasta_aux, this.filtro_nombre, this.filtro_dni, idCentroAUX, this.filtro_idCentroEspecificado);
+ */
+    const datosFil: DatosFiltros = {
+      fecha_desde: fecha_desde_aux,
+      fecha_hasta: fecha_hasta_aux,
+      nombre: this.filtro_nombre,
+      dni: this.filtro_dni,
+      idCentro: idCentroAUX,
+      idCentroEspecificado: this.filtro_idCentroEspecificado
+    };
+
+    this.documentosTrabajadoresService.guardarFiltros(datosFil);
+    this.closeModal();
 
   }
 
 
-  getCertificados(fechaDesde: string, fechaHasta: string, nombre: string, dni: string, idCentro: number, idCentroEspecificado: number) {
+  /* getCertificados(fechaDesde: string, fechaHasta: string, nombre: string, dni: string, idCentro: number, idCentroEspecificado: number) {
     try {
 
       let nifConsultor = '';
@@ -179,7 +192,7 @@ export class FiltroDocumentosPage implements OnInit {
       this.usuarioService.dismiss();
       this.closeModal();
     }
-  }
+  } */
 
   ultimoMesF() {
 

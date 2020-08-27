@@ -14,7 +14,7 @@ import { RespuestaGetAPICertificadosAptitud, ObtenerCertificados, RespuestaObten
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { UsuarioService } from '../../../services/usuario.service';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
-import { UsuarioLogin, EmpresaConsultor } from '../../../interfaces/usuario-interfaces';
+import { UsuarioLogin, EmpresaConsultor, DatosFiltros } from '../../../interfaces/usuario-interfaces';
 import { Certificado } from '../../../interfaces/interfaces-grupo-mpe';
 import { CertificadosService } from '../../../services/certificados.service';
 import { ModalMasInfoPage } from '../modal-mas-info/modal-mas-info.page';
@@ -39,7 +39,7 @@ import { NotificacionesPage } from '../notificaciones/notificaciones.page';
   ]
 })
 
-export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter{
+export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
   listaCertificados = [];
   searchKey = '';
   properties: Array<any>;
@@ -51,6 +51,7 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter{
   cantidad$: Observable<number>;
   pagina = 0;
   arrayIdSelec: string[] = [];
+  filtros: DatosFiltros;
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
@@ -68,7 +69,8 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter{
     private ngxXml2jsonService: NgxXml2jsonService,
     private usuarioService: UsuarioService,
     private certificadosService: CertificadosService,
-    private notificacionesService: NotificacionesService
+    private notificacionesService: NotificacionesService,
+    private documentosService: DocumentosTrabajadoresService
   ) {
 
     this.usuario = this.usuarioService.getUsuario();
@@ -85,7 +87,7 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter{
 
 
   ionViewWillEnter() {
-    console.log("this.infiniteScroll.disabled 0 ", this.infiniteScroll.disabled);
+    console.log('this.infiniteScroll.disabled 0 ', this.infiniteScroll.disabled);
 
     this.pagina = 0;
     this.notificacionesService.aumentarNotificaciones();
@@ -107,124 +109,236 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter{
 
   }
 
-  ionViewDidLeave(){
+  ionViewDidLeave() {
     this.pagina = 0;
-    console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+    console.log('this.infiniteScroll.disabled 1 ', this.infiniteScroll.disabled);
     if (this.infiniteScroll.disabled === true ) {
       this.infiniteScroll.disabled = false;
-      console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+      console.log('this.infiniteScroll.disabled ', this.infiniteScroll.disabled);
     }
   }
 
 
   getCertificados(event?) {
-   
+
     let aux: Certificado[];
-    try {
-      if(event === undefined || event === null && this.pagina === 0){
-        this.pagina=0;
-        console.log("Numero pagina ", this.pagina);
-        this.usuarioService.present('Cargando certificados...');
-      }
-      let nifConsultor = '';
-      if (this.usuario.Tipo === 'CONSULTOR') {
-        if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
-          nifConsultor = this.empresaCoonsultor.Nif;
+    if (this.filtros !== undefined && this.filtros !== null) {
+
+      try {
+        if (event === undefined || event === null && this.pagina === 0) {
+          this.pagina = 0;
+          this.listaCertificados = [];
+          console.log('Numero pagina ', this.pagina);
+          this.usuarioService.present('Cargando certificados...');
         }
-      }
-      const xmlhttp = new XMLHttpRequest();
-      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-      xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-      xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-      xmlhttp.responseType = 'document';
-        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
-      const sr =
-        '<?xml version="1.0" encoding="utf-8"?>' +
-        '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
-          '<soap:Header>' +
-            '<AuthHeader xmlns="http://tempuri.org/">' +
-              '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
-              '<Password>' + this.usuario.Password + '</Password>' +
-            '</AuthHeader>' +
-          '</soap:Header>' +
-          '<soap:Body>' +
-            '<ObtenerCertificadosAptitudRelacionDocumentos xmlns="http://tempuri.org/">' +
-              '<FiltroCerApt>' +
-                '<FechaDesde>1900-01-01T00:00:00</FechaDesde>' +
-                '<FechaHasta>' + moment().format('YYYY-MM-DDT00:00:00') + '</FechaHasta>' +
-                '<NombreTrabajador></NombreTrabajador>' +
-                '<Dni></Dni>' +
-                '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
-                '<IdCentroTrabajo>' + 0 + '</IdCentroTrabajo>' +
-                '<IdCentroTrabajoEspecificado>' + 0 + '</IdCentroTrabajoEspecificado>' +
-              '</FiltroCerApt>' +
-              '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
-              '<NumeroRegistro>20</NumeroRegistro>' +
-            '</ObtenerCertificadosAptitudRelacionDocumentos>' +
-          '</soap:Body>' +
-        '</soap:Envelope>';
+        let nifConsultor = '';
+        if (this.usuario.Tipo === 'CONSULTOR') {
+          if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
+            nifConsultor = this.empresaCoonsultor.Nif;
+          }
+        }
+        const xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
 
-        console.log('SR: ', sr);
+        xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+        xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+        xmlhttp.responseType = 'document';
+          // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+        const sr =
+          '<?xml version="1.0" encoding="utf-8"?>' +
+          '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+            '<soap:Header>' +
+              '<AuthHeader xmlns="http://tempuri.org/">' +
+                '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
+                '<Password>' + this.usuario.Password + '</Password>' +
+              '</AuthHeader>' +
+            '</soap:Header>' +
+            '<soap:Body>' +
+              '<ObtenerCertificadosAptitudRelacionDocumentos xmlns="http://tempuri.org/">' +
+                '<FiltroCerApt>' +
+                  '<FechaDesde>1900-01-01T00:00:00</FechaDesde>' +
+                  '<FechaHasta>' + moment().format('YYYY-MM-DDT00:00:00') + '</FechaHasta>' +
+                  '<NombreTrabajador>' + this.filtros.nombre + '</NombreTrabajador>' +
+                  '<Dni>' + this.filtros.dni + '</Dni>' +
+                  '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
+                  '<IdCentroTrabajo>' + this.filtros.idCentro + '</IdCentroTrabajo>' +
+                  '<IdCentroTrabajoEspecificado>' + this.filtros.idCentroEspecificado + '</IdCentroTrabajoEspecificado>' +
+                '</FiltroCerApt>' +
+                '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
+                '<NumeroRegistro>20</NumeroRegistro>' +
+              '</ObtenerCertificadosAptitudRelacionDocumentos>' +
+            '</soap:Body>' +
+          '</soap:Envelope>';
+
+          console.log('SR: ', sr);
 
 
-      xmlhttp.onreadystatechange =  () => {
-        if (xmlhttp.readyState === 4) {
-            if (xmlhttp.status === 500) {
-              console.log('500 - nifConsultor: ', nifConsultor);
-              this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
-            } else if (xmlhttp.status === 200) {
-                const xml = xmlhttp.responseXML;
-                const obj: RespuestaGetAPICertificadosAptitud = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                // tslint:disable-next-line: max-line-length
-                const a: ObtenerCertificados = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadosAptitudRelacionDocumentosResponse']['ObtenerCertificadosAptitudRelacionDocumentosResult']));
+        xmlhttp.onreadystatechange =  () => {
+          if (xmlhttp.readyState === 4) {
+              if (xmlhttp.status === 500) {
+                console.log('500 - nifConsultor: ', nifConsultor);
+                this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
+              } else if (xmlhttp.status === 200) {
+                  const xml = xmlhttp.responseXML;
+                  const obj: RespuestaGetAPICertificadosAptitud = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                  // tslint:disable-next-line: max-line-length
+                  const a: ObtenerCertificados = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadosAptitudRelacionDocumentosResponse']['ObtenerCertificadosAptitudRelacionDocumentosResult']));
 
-                if (a.CertificadoAptitudInfo !== undefined) {
-                  if (!Array.isArray(a.CertificadoAptitudInfo)) {
-                    this.listaCertificados.push(a.CertificadoAptitudInfo);
-                  } else {
-                    for (const cert of a.CertificadoAptitudInfo) {
-                      this.listaCertificados.push(cert);
-                    }
-                    aux = a.CertificadoAptitudInfo;
-                  }
-                  console.log('Cert: ', a.CertificadoAptitudInfo);
-                  this.certificadosService.setCertificado(this.listaCertificados);
-                  console.log('Certificados APTITUD:' , this.listaCertificados);
-                  console.log('event ' ,event);
-                  if ( event !== undefined ) {
-                    console.log('aux ',aux.length);
-                    console.log('aux ',this.listaCertificados.length);
-                    event.target.complete();
-                    if ( Array.isArray(aux) ) {
-                      if (aux.length < 20) {
-                        console.log('No hay más documentos1');
-                        event.target.disabled = true;
-                      }
+                  if (a.CertificadoAptitudInfo !== undefined) {
+                    if (!Array.isArray(a.CertificadoAptitudInfo)) {
+                      this.listaCertificados.push(a.CertificadoAptitudInfo);
+                      aux = a.CertificadoAptitudInfo;
                     } else {
-                      console.log('No hay más documentos2');
-                      event.target.disabled = false;
+                      for (const cert of a.CertificadoAptitudInfo) {
+                        this.listaCertificados.push(cert);
+                      }
+                      aux = a.CertificadoAptitudInfo;
                     }
+                    console.log('Cert: ', a.CertificadoAptitudInfo);
+                    this.certificadosService.setCertificado(this.listaCertificados);
                   }
-                  this.usuarioService.dismiss();
+              } else {
+                console.log('200 ' + xmlhttp.response);
+                if (this.usuario.Tipo === 'CONSULTOR') {
+                  // tslint:disable-next-line: max-line-length
+                  this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
                 }
+              }
+
+              if ( event !== undefined && event !== null) {
+                event.target.complete();
+                if ( Array.isArray(aux) ) {
+                  if (aux.length < 20) {
+                    console.log('No hay más documentos1');
+                    event.target.disabled = true;
+                  }
+                } else {
+                  console.log('No hay más documentos2');
+                  event.target.disabled = false;
+                }
+              }
+              this.usuarioService.dismiss();
+
             } else {
               this.usuarioService.dismiss();
-              console.log('200 ' + xmlhttp.response);
-              if (this.usuario.Tipo === 'CONSULTOR') {
-                this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
-              }
+              console.log('4 ' + xmlhttp.status);
             }
-          } else {
-            this.usuarioService.dismiss();
-            console.log('4 ' + xmlhttp.status);
-          }
-      };
-      xmlhttp.send(sr);
-    } catch (error) {
-      this.usuarioService.dismiss();
-      console.log('error ', error);
-    }
+        };
+        xmlhttp.send(sr);
+      } catch (error) {
+        this.usuarioService.dismiss();
+        console.log('error ', error);
+      }
+    } else {
 
+      try {
+        if (event === undefined || event === null && this.pagina === 0) {
+          this.pagina = 0;
+          this.listaCertificados = [];
+          console.log('Numero pagina ', this.pagina);
+          this.usuarioService.present('Cargando certificados...');
+        }
+        let nifConsultor = '';
+        if (this.usuario.Tipo === 'CONSULTOR') {
+          if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
+            nifConsultor = this.empresaCoonsultor.Nif;
+          }
+        }
+        const xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+
+        xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+        xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+        xmlhttp.responseType = 'document';
+          // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+        const sr =
+          '<?xml version="1.0" encoding="utf-8"?>' +
+          '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+            '<soap:Header>' +
+              '<AuthHeader xmlns="http://tempuri.org/">' +
+                '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
+                '<Password>' + this.usuario.Password + '</Password>' +
+              '</AuthHeader>' +
+            '</soap:Header>' +
+            '<soap:Body>' +
+              '<ObtenerCertificadosAptitudRelacionDocumentos xmlns="http://tempuri.org/">' +
+                '<FiltroCerApt>' +
+                  '<FechaDesde>1900-01-01T00:00:00</FechaDesde>' +
+                  '<FechaHasta>' + moment().format('YYYY-MM-DDT00:00:00') + '</FechaHasta>' +
+                  '<NombreTrabajador></NombreTrabajador>' +
+                  '<Dni></Dni>' +
+                  '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
+                  '<IdCentroTrabajo>' + 0 + '</IdCentroTrabajo>' +
+                  '<IdCentroTrabajoEspecificado>' + 0 + '</IdCentroTrabajoEspecificado>' +
+                '</FiltroCerApt>' +
+                '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
+                '<NumeroRegistro>20</NumeroRegistro>' +
+              '</ObtenerCertificadosAptitudRelacionDocumentos>' +
+            '</soap:Body>' +
+          '</soap:Envelope>';
+
+          console.log('SR: ', sr);
+
+
+        xmlhttp.onreadystatechange =  () => {
+          if (xmlhttp.readyState === 4) {
+              if (xmlhttp.status === 500) {
+                console.log('500 - nifConsultor: ', nifConsultor);
+                this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
+              } else if (xmlhttp.status === 200) {
+                  const xml = xmlhttp.responseXML;
+                  const obj: RespuestaGetAPICertificadosAptitud = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                  // tslint:disable-next-line: max-line-length
+                  const a: ObtenerCertificados = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCertificadosAptitudRelacionDocumentosResponse']['ObtenerCertificadosAptitudRelacionDocumentosResult']));
+
+                  if (a.CertificadoAptitudInfo !== undefined) {
+                    if (!Array.isArray(a.CertificadoAptitudInfo)) {
+                      this.listaCertificados.push(a.CertificadoAptitudInfo);
+                      aux = a.CertificadoAptitudInfo;
+                    } else {
+                      for (const cert of a.CertificadoAptitudInfo) {
+                        this.listaCertificados.push(cert);
+                      }
+                      aux = a.CertificadoAptitudInfo;
+                    }
+                    console.log('Cert: ', a.CertificadoAptitudInfo);
+                    this.certificadosService.setCertificado(this.listaCertificados);
+                  }
+              } else {
+                console.log('200 ' + xmlhttp.response);
+                if (this.usuario.Tipo === 'CONSULTOR') {
+                  // tslint:disable-next-line: max-line-length
+                  this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
+                }
+              }
+
+              if ( event !== undefined && event !== null) {
+                event.target.complete();
+                if ( Array.isArray(aux) ) {
+                  if (aux.length < 20) {
+                    console.log('No hay más documentos1');
+                    event.target.disabled = true;
+                  }
+                } else {
+                  console.log('No hay más documentos2');
+                  event.target.disabled = false;
+                }
+              }
+              this.usuarioService.dismiss();
+
+            } else {
+              this.usuarioService.dismiss();
+              console.log('4 ' + xmlhttp.status);
+            }
+        };
+        xmlhttp.send(sr);
+      } catch (error) {
+        this.usuarioService.dismiss();
+        console.log('error ', error);
+      }
+
+
+    }
     this.pagina = this.pagina + 1;
 
 
@@ -362,9 +476,12 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter{
     });
     modal.onDidDismiss().then(() => {
 
-      if (this.usuarioService.haFiltrado) {
+      /* if (this.usuarioService.haFiltrado) {
         this.listaCertificados = this.usuarioService.getCertificados();
-      }
+      } */
+      this.pagina = 0;
+      this.filtros = this.documentosService.getFiltros();
+      this.getCertificados();
     });
     return await modal.present();
   }

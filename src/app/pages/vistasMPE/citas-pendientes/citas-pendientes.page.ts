@@ -38,7 +38,7 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
   hayConsultor = false;
   pagina = 0;
   filtros: DatosFiltros;
-  
+
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   constructor(
@@ -63,43 +63,38 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
     this.getAsistencias();
   }
 
-  ionViewDidLeave(){
+  ionViewDidLeave() {
     this.pagina = 0;
-    console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+    console.log('this.infiniteScroll.disabled 1 ', this.infiniteScroll.disabled);
     if (this.infiniteScroll.disabled === true ) {
       this.infiniteScroll.disabled = false;
-      console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+      console.log('this.infiniteScroll.disabled ', this.infiniteScroll.disabled);
     }
   }
 
   getAsistencias(event?) {
 
     let aux: Asistencia[];
-    console.log('event ',event);
-    console.log('getAsistencias filtros ',this.filtros);
-    if(this.filtros !== undefined && this.filtros !== null){
+    console.log('event ', event);
+    console.log('getAsistencias filtros ', this.filtros);
+    if (this.filtros !== undefined && this.filtros !== null) {
       console.log('PRIMER IF');
       try {
-        if(event === undefined || event === null && this.pagina === 0){
-          this.pagina=0;
+        if (event === undefined || event === null && this.pagina === 0) {
+          this.pagina = 0;
           this.listaAsistencias = [];
-          console.log("Numero pagina1 ", this.pagina);
+          console.log('Numero pagina1 ', this.pagina);
           this.usuarioService.present('Cargando...');
         }
-        
+
         let nifConsultor = '';
-        console.log("CONSULTOR1 ", this.pagina);
         if (this.usuario.Tipo === 'CONSULTOR') {
           if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
             nifConsultor = this.empresaCoonsultor.Nif;
-            console.log("CONSULTOR2 ", this.pagina);
-
           }
-          console.log("CONSULTOR3 ", this.pagina);
-
         }
         const fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
-        const fecha_hasta = moment().add(1,'month').format('YYYY-MM-DDT00:00:00');
+        const fecha_hasta = moment().add(1, 'month').format('YYYY-MM-DDT00:00:00');
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
 
@@ -107,7 +102,6 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
         xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
         xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
-          console.log("CONSULTOR4 ", this.filtros);
 
         const sr =
         '<?xml version="1.0" encoding="utf-8"?>' +
@@ -135,7 +129,7 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
         '</soap:Envelope>';
 
         console.log('sr:', sr);
-  
+
         xmlhttp.onreadystatechange =  () => {
               if (xmlhttp.readyState === 4) {
                   if (xmlhttp.status === 200) {
@@ -146,26 +140,26 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
                       console.log(a);
                       if (a.AsistenciaInfo !== undefined) {
                         if (!Array.isArray(a.AsistenciaInfo)) {
-  
+
                           this.listaAsistencias.push(a.AsistenciaInfo);
                           aux = a.AsistenciaInfo;
-  
+
                         } else {
-  
+
                           for (const cert of a.AsistenciaInfo) {
-  
+
                             this.listaAsistencias.push(cert);
-  
+
                           }
-  
+
                           aux = a.AsistenciaInfo;
                         }
-  
-  
+
+
                         this.asistenciaService.setAsistencia(this.listaAsistencias);
                         console.log('ListaAsistencia1 ' + this.listaAsistencias);
                         console.log('EVENT 1: ', event);
-                       
+
                   } else {
                     this.usuarioService.dismiss();
                     if (this.usuario.Tipo === 'CONSULTOR') {
@@ -193,7 +187,7 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
               }
           };
         xmlhttp.send(sr);
-  
+
       } catch (error) {
         this.usuarioService.dismiss();
       }
@@ -202,14 +196,14 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
     } else {
       try {
         console.log('ELSEEE', event);
-        if(event === undefined || event === null && this.pagina === 0){
+        if (event === undefined || event === null && this.pagina === 0) {
           console.log('ELSEEE');
 
-          this.pagina=0;
-          console.log("Numero pagina ", this.pagina);
+          this.pagina = 0;
+          console.log('Numero pagina ', this.pagina);
           this.usuarioService.present('Cargando...');
         }
-        
+
         let nifConsultor = '';
         if (this.usuario.Tipo === 'CONSULTOR') {
           if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
@@ -217,7 +211,7 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
           }
         }
         const fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
-        const fecha_hasta = moment().add(1,'month').format('YYYY-MM-DDT00:00:00');
+        const fecha_hasta = moment().add(1, 'month').format('YYYY-MM-DDT00:00:00');
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -248,12 +242,12 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
             '</ObtenerCitasPendientesRelacion>' +
           '</soap:Body>' +
         '</soap:Envelope>';
-  
+
         xmlhttp.onreadystatechange =  () => {
               if (xmlhttp.readyState === 4) {
                   if (xmlhttp.status === 200) {
                       const xml = xmlhttp.responseXML;
-                      console.log('XML sr',sr);
+                      console.log('XML sr', sr);
                       const obj: RespuestaAsistencia = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                       // tslint:disable-next-line: max-line-length
                       const a: RespuestaAsistenciaInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCitasPendientesRelacionResponse']['ObtenerCitasPendientesRelacionResult']));
@@ -299,11 +293,11 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
               }
           };
         xmlhttp.send(sr);
-  
+
       } catch (error) {
         this.usuarioService.dismiss();
       }
-    }   
+    }
     this.pagina = this.pagina + 1;
   }
 
@@ -334,7 +328,7 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
       console.log('this.citasService.getFiltrosCitas: ', this.citasService.getFiltrosCitas());
       this.filtros = this.citasService.getFiltrosCitas();
       this.getAsistencias(null);
-      
+
 
     });
     return await modal.present();
