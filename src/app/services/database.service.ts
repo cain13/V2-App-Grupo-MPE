@@ -99,7 +99,7 @@ export class DatabaseService {
           console.log('DB: Tabla USUARIOS vacia'); }).catch(error => { console.log('DB: ERROR AL BORRAR TABLAS USUARIO'); });
     });
   }
-  
+
   async obtenerUltimoUsuario(): Promise<UsuarioLogin> {
     const res =  await this.storage.executeSql('SELECT * FROM usuariosTable LIMIT 1', []);
     if (res.rows.length !== 0) {
@@ -122,14 +122,14 @@ export class DatabaseService {
         const respuesta = await this.storage.executeSql('INSERT INTO notificacion (Titulo, Mensaje, Leido, TipoDocumento, Fecha,Ruta,Icono) VALUES (?, ?, ?, ?, ?, ?, ?)', data).then(() => {
           console.log('DB: Notificacion añadida');
 
-          
+
         });
         console.log('DB: Respuesta Notificacion',respuesta);
     });
   }
 
 
-  
+
   BorrarNotificacion(id) {
     // La siguiente sentencia SQL borra todo el contenido de la tabla:
     this.estadoBD().then(async () => {
@@ -138,7 +138,7 @@ export class DatabaseService {
           console.log('DB: Notificacion Borrada'); }).catch(error => { console.log('DB: ERROR AL BORRAR NOTIFICACION'); });
     });
   }
-  
+
 
   async obtenerTodasNotificacion() {
 
@@ -170,7 +170,7 @@ export class DatabaseService {
         notificaciones.push(response.rows.item(index));
         console.log('obtener notificacion Leido2 ' + response.rows.item(index));
       }
-      
+
       return Promise.resolve<Notificacion[]>(notificaciones);
     } catch (error) {
       Promise.reject(error);

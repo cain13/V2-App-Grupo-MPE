@@ -16,7 +16,7 @@ import { NotificacionesService } from '../../../services/notificaciones.service'
   styleUrls: ['./notificaciones.page.scss'],
 })
 export class NotificacionesPage implements OnInit {
-  
+
   messages: Array<any> = [];
 
   listaNotificaciones: Array<Notificaciones> = [];
@@ -32,19 +32,19 @@ export class NotificacionesPage implements OnInit {
     private notificacionesService: NotificacionesService
   ) {}
 
-  
+
   async ngOnInit() {
     this.usuario = this.usuarioService.getUsuario();
     await this.getNotificaciones();
   }
-    async getNotificaciones(){
-    this.usuarioService.present("Cargando notificaciones...");
+    async getNotificaciones() {
+    this.usuarioService.present('Cargando notificaciones...');
 
     await this.db.obtenerTodasNotificacion().then( async res => {
-      
+
       console.log('FICHAR: respuestaBD motivos: ', res);
       this.listaMensajes = res;
-      if(res.length == 0){
+      if (res.length === 0) {
         this.getSinNotificaciones();
       }
       this.usuarioService.dismiss();
@@ -58,52 +58,51 @@ export class NotificacionesPage implements OnInit {
   }
 
   getSinNotificaciones() {
-  
-      const Notificacion = 
-      {
+
+      const notificacion = {
         IdNotificacion: 1,
-        Titulo: "No tienes notificaciones",
-        Icono: "notifications-off-outline",
-        Ruta: "/",
-        Mensaje: "No hay notificaciones nuevas",
+        Titulo: 'No tienes notificaciones',
+        Icono: 'notifications-off-outline',
+        Ruta: '/',
+        Mensaje: 'No hay notificaciones nuevas',
         Fecha:  moment().format('YYYY-MM-DDT00:00:00'),
         Leido: 1,
-        TipoDocumento: "Docuemento"
+        TipoDocumento: 'Docuemento'
       };
-      this.listaMensajes.push(Notificacion);
+      this.listaMensajes.push(notificacion);
       return this.listaMensajes;
   }
 
-  delete(notificacion: Notificacion){
+  delete(notificacion: Notificacion) {
     this.db.BorrarNotificacion(notificacion.IdNotificacion);
-    this.usuarioService.presentToast("Notificación eliminada correctamente!!");
+    this.usuarioService.presentToast('Notificación eliminada correctamente!!');
     this.modalCtrl.dismiss();
   }
 
-  
+
   getMessages() {
     this.messages = this.messageService.getMessages();
   }
-   MarcarComoLeidas(){
+   MarcarComoLeidas() {
     this.db.marcarTodasNotificacionLeidas();
-    this.usuarioService.presentToast("Todas las notificaciones han sido marcadas como leídas");
+    this.usuarioService.presentToast('Todas las notificaciones han sido marcadas como leídas');
     this.modalCtrl.dismiss();
-    console.log("Usuario Notificaciones ",this.usuario);
-    if(this.usuario.Tipo !== "TRABAJADOR"){
-      this.navController.navigateRoot("/certificado-aptitud");
+    console.log('Usuario Notificaciones ', this.usuario);
+    if (this.usuario.Tipo !== 'TRABAJADOR') {
+      this.navController.navigateRoot('/certificado-aptitud');
 
-    }else{
-      this.navController.navigateRoot("/documentos-trabajador");
+    } else {
+      this.navController.navigateRoot('/documentos-trabajador');
     }
     this.notificacionesService.marcarNotificacionesLeidas();
   }
 
-  async abrirNotificacion(idNotificacion: number, ruta: string, tipoDocumento:string) {
-    //const rutaAux = ruta.concat(':')
+  async abrirNotificacion(idNotificacion: number, ruta: string, tipoDocumento: string) {
+    // const rutaAux = ruta.concat(':')
     await this.db.marcarNotificacionLeida(idNotificacion).then(() => {
-      console.log("Ruta "+ ruta);
+      console.log('Ruta ' + ruta);
       const rutaMensaje = ruta + idNotificacion.toString();
-       console.log("rutaMensaje "+ rutaMensaje);
+       console.log('rutaMensaje ' + rutaMensaje);
       this.navController.navigateForward(rutaMensaje);
       this.modalCtrl.dismiss();
 
@@ -121,5 +120,5 @@ export class NotificacionesPage implements OnInit {
 
   }
 
-  
+
 }
