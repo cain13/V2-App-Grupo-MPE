@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { RespuestaCitasPendientes, RespuestaCitasiaInfo, RespuestaCitasEmpleado, RespuestaCitasEmpleadoaInfo, Asistencia } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { RespuestaCitasPendientes, RespuestaCitasInfo, RespuestaCitasEmpleado, RespuestaCitasEmpleadoaInfo, Asistencia } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { PopoverController, ModalController, IonInfiniteScroll, ViewDidLeave } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -11,7 +11,6 @@ import { FiltroCitasPage } from '../../modal/filtro-citas/filtro-citas.page';
 import { CitasPendientesService } from '../../../services/citas-pendientes.service';
 import { UsuarioLogin, EmpresaConsultor } from 'src/app/interfaces/usuario-interfaces';
 import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccionar-cliente.page';
-import { Citas } from '../../../interfaces/interfaces-grupo-mpe';
 
 @Component({
   selector: 'app-citas-pendientes-trabajador',

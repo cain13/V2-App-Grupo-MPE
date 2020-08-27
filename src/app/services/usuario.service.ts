@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { LoadingController, Platform, ToastController, AlertController } from '@ionic/angular';
 import { UsuarioLogin, CambiarPassword, EmpresaConsultor } from '../interfaces/usuario-interfaces';
 import { DatabaseService } from './database.service';
-import { Centro, Certificado, RecuentoNotificacionesResponse, Notificacion, Asistencia, Citas, Cliente, MandarTokenAPI, RespuestaAPItoken } from '../interfaces/interfaces-grupo-mpe';
+import { Centro, Certificado, RecuentoNotificacionesResponse, Notificacion, Asistencia, Cliente, MandarTokenAPI, RespuestaAPItoken } from '../interfaces/interfaces-grupo-mpe';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
@@ -21,7 +21,7 @@ export class UsuarioService {
   clientes: Cliente[];
   notificacion: Notificacion[];
   asistencia: Asistencia[];
-  citas: Citas[];
+  citas: Asistencia[];
   haFiltrado: boolean;
   haFiltradoHistorial: boolean;
   haFiltradoAsistencia: boolean;
@@ -172,7 +172,7 @@ export class UsuarioService {
 
   }
 
-  guardarCitas(array: Citas[]) {
+  guardarCitas(array: Asistencia[]) {
     this.asistencia = [];
     this.haFiltradoCitas = true;
     /* console.log('2.', this.getCertificados().length); */
@@ -180,7 +180,7 @@ export class UsuarioService {
     this.citas = array;
 
   }
-  getCitas(): Citas[] {
+  getCitas(): Asistencia[] {
 
     return this.citas;
 

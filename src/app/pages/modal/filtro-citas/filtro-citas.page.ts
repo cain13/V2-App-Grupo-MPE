@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController } from '@ionic/angular';
 import { UsuarioService } from '../../../services/usuario.service';
-import { Centro, RespuestaGetAPICertificadosAptitud, ObtenerCertificados, RespuestaCitasPendientes, RespuestaCitasiaInfo } from '../../../interfaces/interfaces-grupo-mpe';
+import { Centro, RespuestaGetAPICertificadosAptitud, ObtenerCertificados, RespuestaCitasPendientes, RespuestaCitasInfo } from '../../../interfaces/interfaces-grupo-mpe';
 import * as moment from 'moment';
-import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
+import { UsuarioLogin, DatosFiltros } from '../../../interfaces/usuario-interfaces';
 import { NgxXml2jsonService } from 'ngx-xml2json';
+import { CitasPendientesService } from '../../../services/citas-pendientes.service';
 
 @Component({
   selector: 'app-filtro-citas',
@@ -23,7 +24,7 @@ export class FiltroCitasPage implements OnInit {
   ultimoTrimestre = false;
   anioActual = false;
   anioAnterior = false;
-
+  pagina = 0;
 
   filtro_dni = '';
 /*   filtro_desde = moment('01/01/1900').format('DD/MM/YYYY').toString();
@@ -36,7 +37,7 @@ export class FiltroCitasPage implements OnInit {
   filtro_noPresentado: boolean;
 
   constructor(private modalCtrl: ModalController, private usuarioService: UsuarioService,
-              private ngxXml2jsonService: NgxXml2jsonService, private navCtrl: NavController ) { }
+              private ngxXml2jsonService: NgxXml2jsonService, private navCtrl: NavController, private citasService: CitasPendientesService ) { }
 
 
   ngOnInit() {
@@ -60,7 +61,7 @@ export class FiltroCitasPage implements OnInit {
 
     if (this.filtro_desde === null) {
 
-     fecha_desde_aux = '1900-01-01T00:00:00';
+     fecha_desde_aux = moment().format('YYYY-MM-DDT00:00:00');
     } else {
 
       fecha_desde_aux = moment(this.filtro_desde.toString()).format('YYYY-MM-DDT00:00:00');
@@ -72,7 +73,7 @@ export class FiltroCitasPage implements OnInit {
       fecha_hasta_aux = moment().format('YYYY-MM-DDT00:00:00');
     } else {
 
-      fecha_hasta_aux = moment(this.filtro_hasta.toString()).add(1, 'days').format('YYYY-MM-DDT00:00:00');
+      fecha_hasta_aux = moment(this.filtro_hasta.toString()).add(8, 'days').format('YYYY-MM-DDT00:00:00');
 
     }
     if (this.filtro_noPresentado === undefined) {
@@ -88,12 +89,24 @@ export class FiltroCitasPage implements OnInit {
     console.log('DNI', this.filtro_dni);
     console.log('filtro_noPresentado ', this.filtro_noPresentado);
 
-    this.getCitas(fecha_desde_aux, fecha_hasta_aux, this.filtro_nombre, this.filtro_dni, this.filtro_noPresentado);
+    const filtros: DatosFiltros = {
+      fecha_desde: fecha_desde_aux,
+      fecha_hasta: fecha_hasta_aux,
+      nombre: this.filtro_nombre,
+      dni: this.filtro_dni,
+      noPresentado: this.filtro_noPresentado,
+    }
+    console.log('FILTROS: ', filtros);
+    this.citasService.guardarFiltrosCitas(filtros);
+    this.closeModal();
 
+/*    
+ this.getCitas(fecha_desde_aux, fecha_hasta_aux, this.filtro_nombre, this.filtro_dni, this.filtro_noPresentado);
+ */
   }
 
 
-  getCitas(fechaDesde: string, fechaHasta: string, nombre: string, dni: string, noPresentado: boolean) {
+  /* getCitas(fechaDesde: string, fechaHasta: string, nombre: string, dni: string, noPresentado: boolean) {
 
     try {
       let nifConsultor = '';
@@ -126,6 +139,8 @@ export class FiltroCitasPage implements OnInit {
                 '<NoPresentado>' + noPresentado + '</NoPresentado>' +
                 '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
               '</FiltroAsist>' +
+              '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
+            '<NumeroRegistro>20</NumeroRegistro>' +
             '</ObtenerCertificadosAptitudRelacionDocumentos>' +
           '</soap:Body>' +
         '</soap:Envelope>';
@@ -138,7 +153,7 @@ export class FiltroCitasPage implements OnInit {
                     const obj: RespuestaCitasPendientes = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                     // tslint:disable-next-line: max-line-length
                     const a: RespuestaCitasiaInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCitasPendientesRelacionResponse']['ObtenerCitasPendientesRelacionResult']));
-                    if (a.CitasInfo !== undefined && !Array.isArray(a.CitasInfo)) {
+                    if (a.RespuestaCitasiaInfo !== undefined && !Array.isArray(a.RespuestaCitasiaInfo)) {
 
                       this.listaCitas.push(a.CitasInfo);
 
@@ -167,7 +182,7 @@ export class FiltroCitasPage implements OnInit {
       this.closeModal();
     }
 
-  }
+  } */
 
   add7dias() {
     const desdeAux = moment().format('YYYY-MM-DDT00:00:00');
@@ -187,8 +202,8 @@ export class FiltroCitasPage implements OnInit {
 
   todasLasCitas() {
     const anio = moment().year() - 1 ;
-    const desdeAux = '1900-01-01T00:00:00';
-    const hastaAux =  moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
+    const desdeAux = moment().format('YYYY-MM-DDT00:00:00');
+    const hastaAux =  moment().add(12, 'month').format('YYYY-MM-DDT00:00:00');
     this.filtro_desde = new Date(desdeAux);
     this.filtro_hasta = new Date(hastaAux);
     this.filtrar();

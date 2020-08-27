@@ -48,3 +48,14 @@ export interface NotificacionesMensajes {
     Fecha: string;
     Id: number;
 }
+
+export interface DatosFiltros {
+
+    fecha_desde: string;
+    fecha_hasta: string;
+    nombre: string;
+    dni: string;
+    noPresentado: boolean;    
+
+
+}

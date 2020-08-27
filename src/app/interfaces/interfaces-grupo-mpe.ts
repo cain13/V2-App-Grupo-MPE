@@ -444,7 +444,7 @@ export interface RespuestaCitasPendientes {
             '$': {
               'xmlns': 'http://tempuri.org/'
             },
-            'ObtenerCitasPendientesRelacionResult':  Citas[]
+            'ObtenerCitasPendientesRelacionResult':  Asistencia[]
           }
         ]
       }
@@ -452,15 +452,12 @@ export interface RespuestaCitasPendientes {
   };
 }
 
-export interface RespuestaCitasiaInfo {
+export interface RespuestaCitasInfo {
 
-  CitasInfo: Citas[];
+  AsistenciaInfo: Asistencia[];
 
 }
 
-export interface Citas {
-    citapendiente: string;
-}
 
 export interface RespuestaCitasEmpleado{
   "soap:Envelope": {
