@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { RespuestaAsistenciaInfo, RespuestaAsistencia } from 'src/app/interfaces/interfaces-grupo-mpe';
-import { PopoverController, ModalController } from '@ionic/angular';
+import { PopoverController, ModalController, ViewDidLeave, ViewWillEnter, IonInfiniteScroll } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxXml2jsonService } from 'ngx-xml2json';
@@ -26,13 +26,15 @@ import { Asistencia } from '../../../interfaces/interfaces-grupo-mpe';
     ])
   ]
 })
-export class AsistenciaPage implements OnInit {
+export class AsistenciaPage implements OnInit, ViewDidLeave {
   searchKey = '';
   listaAsistencias = [];
   usuario: UsuarioLogin;
   empresaCoonsultor: EmpresaConsultor;
   hayConsultor = false;
   pagina = 0;
+  
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -55,12 +57,26 @@ export class AsistenciaPage implements OnInit {
     this.getAsistencias();
   }
 
+  ionViewDidLeave(){
+    this.pagina = 0;
+    console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+    if (this.infiniteScroll.disabled === true ) {
+      this.infiniteScroll.disabled = false;
+      console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+    }
+  }
+
   getAsistencias(event?) {
 
     let aux: Asistencia[];
 
     try {
-      this.usuarioService.present('Cargando...');
+      if(event === undefined || event === null && this.pagina === 0){
+        this.pagina=0;
+        console.log("Numero pagina ", this.pagina);
+        this.usuarioService.present('Cargando...');
+      }
+      
       let nifConsultor = '';
       if (this.usuario.Tipo === 'CONSULTOR') {
         if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {

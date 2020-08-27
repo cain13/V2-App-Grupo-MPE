@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { CertificadoPDF, RespuestaObtenerCertPDF, RespuestaHistorial, ObtenerHistoriaDocumentos } from 'src/app/interfaces/interfaces-grupo-mpe';
-import { PopoverController, ModalController } from '@ionic/angular';
+import { PopoverController, ModalController, IonInfiniteScroll, ViewDidLeave } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxXml2jsonService } from 'ngx-xml2json';
@@ -26,7 +26,7 @@ import { SeleccionarClientePage } from '../../modal/seleccionar-cliente/seleccio
   ]
 })
 
-export class HistorialNotificacionesPage implements OnInit {
+export class HistorialNotificacionesPage implements OnInit, ViewDidLeave{
 
   searchKey = '';
   listaDocumentos = [];
@@ -35,6 +35,8 @@ export class HistorialNotificacionesPage implements OnInit {
   hayConsultor = false;
   pagina = 0;
 
+  @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
+  
   constructor(
     public popoverCtrl: PopoverController,
     public service: PropertyService,
@@ -54,12 +56,26 @@ export class HistorialNotificacionesPage implements OnInit {
     }
 
   ngOnInit() {
+    this.pagina = 0;
     this.getHistorialDocumentos();
 
+  }
+  ionViewDidLeave(){
+    this.pagina = 0;
+    console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+    if (this.infiniteScroll.disabled === true ) {
+      this.infiniteScroll.disabled = false;
+      console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+    }
   }
 
   getHistorialDocumentos(event?) {
     try {
+      if(event === undefined || event === null && this.pagina === 0){
+        this.pagina=0;
+        console.log("Numero pagina ", this.pagina);
+        this.usuarioService.present('Cargando...');
+      }
       let aux: any[] = [];
       let nifConsultor = '';
       if (this.usuario.Tipo === 'CONSULTOR') {
@@ -67,7 +83,6 @@ export class HistorialNotificacionesPage implements OnInit {
           nifConsultor = this.empresaCoonsultor.Nif;
         }
       }
-      this.usuarioService.present('Cargando...');
       const fecha_desde = '1900-01-01T00:00:00';
       const fecha_hasta = moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
       const xmlhttp = new XMLHttpRequest();

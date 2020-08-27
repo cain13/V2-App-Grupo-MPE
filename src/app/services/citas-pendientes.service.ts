@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Certificado, Citas } from '../interfaces/interfaces-grupo-mpe';
+import { Certificado, Asistencia } from '../interfaces/interfaces-grupo-mpe';
+import { DatosFiltros } from '../interfaces/usuario-interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,8 @@ import { Certificado, Citas } from '../interfaces/interfaces-grupo-mpe';
 export class CitasPendientesService {
 
   listaCitas = [];
-  citasInfo: Citas;
+  citasInfo: Asistencia;
+  filtrosCitas: DatosFiltros;
 
   constructor() {  }
 
@@ -43,16 +45,26 @@ export class CitasPendientesService {
         (certificado.Descripcion +  ' ' + certificado.FechaCita).toUpperCase().indexOf(key) > -1));
   }
 
-  guardarCitaPendiente(cert: Citas){
+  guardarCitaPendiente(cert: Asistencia){
 
     this.citasInfo = cert;
 
   }
 
-  getCertificadoInfo(): Citas {
+  getCertificadoInfo(): Asistencia {
 
     return this.citasInfo
 
   }
 
+  guardarFiltrosCitas( filtros: DatosFiltros) {
+
+    this.filtrosCitas = filtros;
+    console.log('Filtros Service: ' , this.filtrosCitas);
+  }
+
+  getFiltrosCitas(): DatosFiltros {
+
+    return this.filtrosCitas
+  }
 }
