@@ -3,8 +3,9 @@ import { ModalController, NavController } from '@ionic/angular';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Centro, RespuestaGetAPICertificadosAptitud, ObtenerCertificados, RespuestaHistorial, ObtenerHistoriaDocumentos } from '../../../interfaces/interfaces-grupo-mpe';
 import * as moment from 'moment';
-import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
+import { UsuarioLogin, DatosFiltros } from '../../../interfaces/usuario-interfaces';
 import { NgxXml2jsonService } from 'ngx-xml2json';
+import { HitorialNotificacionesService } from '../../../services/hitorial-notificaciones.service';
 
 @Component({
   selector: 'app-filtro-historial',
@@ -24,7 +25,7 @@ export class FiltroHistorialPage implements OnInit {
 
 
   constructor(private modalCtrl: ModalController, private usuarioService: UsuarioService,
-              private ngxXml2jsonService: NgxXml2jsonService, private navCtrl: NavController ) { }
+              private ngxXml2jsonService: NgxXml2jsonService, private navCtrl: NavController, private historialNotService: HitorialNotificacionesService ) { }
 
 
   ngOnInit() {
@@ -67,12 +68,19 @@ export class FiltroHistorialPage implements OnInit {
     console.log('DESDE', fecha_desde_aux);
     console.log('HASTA', fecha_hasta_aux);
 
-    this.getNotificaciones(fecha_desde_aux, fecha_hasta_aux);
+    const datos: DatosFiltros = {
+      fecha_desde: fecha_desde_aux,
+      fecha_hasta: fecha_hasta_aux
+    };
 
+    this.historialNotService.guardarFiltros(datos);
+    this.closeModal();
+/*     this.getNotificaciones(fecha_desde_aux, fecha_hasta_aux);
+ */
   }
 
 
-  getNotificaciones(fechaDesde: string, fechaHasta: string) {
+  /* getNotificaciones(fechaDesde: string, fechaHasta: string) {
     try {
 
       let nifConsultor = '';
@@ -138,7 +146,7 @@ export class FiltroHistorialPage implements OnInit {
       this.usuarioService.dismiss();
     }
 
-  }
+  } */
 
   Todos() {
 

@@ -94,95 +94,13 @@ export class FiltroCitasPage implements OnInit {
       fecha_hasta: fecha_hasta_aux,
       nombre: this.filtro_nombre,
       dni: this.filtro_dni,
-      noPresentado: this.filtro_noPresentado,
-    }
+      noPresentado: this.filtro_noPresentado
+    };
     console.log('FILTROS: ', filtros);
     this.citasService.guardarFiltrosCitas(filtros);
     this.closeModal();
-
-/*    
- this.getCitas(fecha_desde_aux, fecha_hasta_aux, this.filtro_nombre, this.filtro_dni, this.filtro_noPresentado);
- */
   }
 
-
-  /* getCitas(fechaDesde: string, fechaHasta: string, nombre: string, dni: string, noPresentado: boolean) {
-
-    try {
-      let nifConsultor = '';
-      if (this.usuario.Tipo === 'CONSULTOR') {
-        nifConsultor = this.usuarioService.empresaConsultor.Nif;
-      }
-      this.usuarioService.present('Cargando datos...');
-      const xmlhttp = new XMLHttpRequest();
-      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-      xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-      xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-      xmlhttp.responseType = 'document';
-        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
-      const sr =
-        '<?xml version="1.0" encoding="utf-8"?>' +
-        '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
-          '<soap:Header>' +
-            '<AuthHeader xmlns="http://tempuri.org/">' +
-              '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
-              '<Password>' + this.usuario.Password + '</Password>' +
-            '</AuthHeader>' +
-          '</soap:Header>' +
-          '<soap:Body>' +
-            '<ObtenerCertificadosAptitudRelacionDocumentos xmlns="http://tempuri.org/">' +
-              '<FiltroAsist>' +
-                '<FechaDesde>' + fechaDesde + '</FechaDesde>' +
-                '<FechaHasta>' + fechaHasta + '</FechaHasta>' +
-                '<NombreTrabajador>' + nombre + '</NombreTrabajador>' +
-                '<Dni>' + dni + '</Dni>' +
-                '<NoPresentado>' + noPresentado + '</NoPresentado>' +
-                '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
-              '</FiltroAsist>' +
-              '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
-            '<NumeroRegistro>20</NumeroRegistro>' +
-            '</ObtenerCertificadosAptitudRelacionDocumentos>' +
-          '</soap:Body>' +
-        '</soap:Envelope>';
-
-
-      xmlhttp.onreadystatechange =  () => {
-            if (xmlhttp.readyState === 4) {
-                if (xmlhttp.status === 200) {
-                    const xml = xmlhttp.responseXML;
-                    const obj: RespuestaCitasPendientes = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                    // tslint:disable-next-line: max-line-length
-                    const a: RespuestaCitasiaInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerCitasPendientesRelacionResponse']['ObtenerCitasPendientesRelacionResult']));
-                    if (a.RespuestaCitasiaInfo !== undefined && !Array.isArray(a.RespuestaCitasiaInfo)) {
-
-                      this.listaCitas.push(a.CitasInfo);
-
-                    } else {
-
-                      this.listaCitas = a.CitasInfo;
-
-                    }
-                    console.log('Citas: ', a.CitasInfo);
-                    console.log('1.', this.listaCitas);
-                    this.usuarioService.dismiss();
-                    this.usuarioService.guardarCitas(this.listaCitas);
-                    this.closeModal();
-                } else {
-                  this.usuarioService.dismiss();
-                  this.closeModal();
-                }
-            } else {
-              this.usuarioService.dismiss();
-              this.closeModal();
-            }
-        };
-      xmlhttp.send(sr);
-    } catch (error) {
-      this.usuarioService.dismiss();
-      this.closeModal();
-    }
-
-  } */
 
   add7dias() {
     const desdeAux = moment().format('YYYY-MM-DDT00:00:00');

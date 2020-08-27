@@ -35,19 +35,19 @@ export class NotificacionesService {
   }
 
   SumaUnaNotificaciones() {
-      this.numNot = this.numNot + 1;;
+      this.numNot = this.numNot + 1;
       this.numNotificaciones$.next(this.numNot);
       console.log('aumentarNot: ', this.numNot);
   }
 
-  getNotifiaciones$(): Observable<number>{
+  getNotifiaciones$(): Observable<number> {
 
     return this.numNotificaciones$.asObservable();
 
   }
 
   async getNotificacion(id): Promise<Notificacion> {
-    let notificacion:Notificacion;
+    let notificacion: Notificacion;
     await this.db.obtenerNotificacion(id).then((noti) => {
       notificacion = noti;
     });

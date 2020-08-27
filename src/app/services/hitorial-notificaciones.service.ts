@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UsuarioService } from './usuario.service';
 import documentos from '../providers/documentos/mock-documentos';
+import { DatosFiltros } from '../interfaces/usuario-interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,8 @@ export class HitorialNotificacionesService {
 
   listaDocumentosTodos = [];
   listaDocumentos = [];
-  Cantidad:number;
+  Cantidad: number;
+  datosFiltros: DatosFiltros;
   constructor( private usuarioService: UsuarioService ) { }
 
     setDocumento(listadocumentos){
@@ -45,17 +47,27 @@ export class HitorialNotificacionesService {
     findByName(searchKey: string) {
       console.log(searchKey);
       const key: string = searchKey.toUpperCase();
-      return Promise.resolve(this.listaDocumentosTodos.filter((documento: any) => 
+      return Promise.resolve(this.listaDocumentosTodos.filter((documento: any) =>
           (documento.Referencia +  ' ' + documento.FechaNotificacion + ' ' + documento.TipoDocumento).toUpperCase().indexOf(key) > -1));
     }
 
-    
+    guardarFiltros(filtros: DatosFiltros) {
+
+      this.datosFiltros = filtros;
+
+    }
+
+    getFiltros(): DatosFiltros {
+
+      return this.datosFiltros;
+
+    }
 
     getDocumentosSinLeer(){
       return this.Cantidad;
     }
-  
-    
+
+
     setCantidadDocumentosSinLeer(documentos){
       this.Cantidad = documentos
     }
