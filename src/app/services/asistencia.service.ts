@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { UsuarioService } from './usuario.service';
+import { DatosFiltros } from '../interfaces/usuario-interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AsistenciaService {
   listaAsistenciasTodos = [];
+  filtrosAsistencias: DatosFiltros;
   constructor() { }
 
     setAsistencia(listadocumentos){
@@ -33,6 +35,17 @@ export class AsistenciaService {
       return null;
     }
 
+    guardarFiltrosAsistencias(filtros: DatosFiltros) {
+
+      this.filtrosAsistencias = filtros;
+      console.log('Filtros Service: ' , this.filtrosAsistencias);
+    }
+  
+
+    getFiltrosAsistencias(): DatosFiltros {
+
+      return this.filtrosAsistencias
+    }
     findByName(searchKey: string) {
       console.log(searchKey);
       const key: string = searchKey.toUpperCase();
