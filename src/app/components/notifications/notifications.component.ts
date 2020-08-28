@@ -27,20 +27,20 @@ export class NotificationsComponent implements OnInit {
     private navController: NavController,
     private db: DatabaseService
   ) {
-    
+
   }
 
   async ngOnInit() {
     await this.getNotificaciones();
   }
-    async getNotificaciones(){
-    this.usuarioService.present("Cargando notificaciones...");
+    async getNotificaciones() {
+    this.usuarioService.present('Cargando notificaciones...');
 
     await this.db.obtenerTodasNotificacion().then( async res => {
-      
+
       console.log('FICHAR: respuestaBD motivos: ', res);
       this.listaMensajes = res;
-      if(res.length == 0){
+      if(res.length == 0) {
         this.getSinNotificaciones();
       }
       this.usuarioService.dismiss();
@@ -53,17 +53,16 @@ export class NotificationsComponent implements OnInit {
     // SI LA LISTA ES VACIA CREO NOTIFICACION DE NO HAY NOTIFICACIONES
   }
   getSinNotificaciones() {
-  
-      const Notificacion = 
-      {
+
+      const Notificacion = {
         IdNotificacion: 1,
-        Titulo: "No tienes notificaciones",
-        Icono: "notifications-off-outline",
-        Ruta: "/",
-        Mensaje: "No hay notificaciones nuevas",
+        Titulo: 'No tienes notificaciones',
+        Icono: 'notifications-off-outline',
+        Ruta: '/',
+        Mensaje: 'No hay notificaciones nuevas',
         Fecha:  moment().format('YYYY-MM-DDT00:00:00'),
         Leido: 1,
-        TipoDocumento: "Docuemento"
+        TipoDocumento: 'Docuemento'
       };
       this.listaMensajes.push(Notificacion);
       return this.listaMensajes;
@@ -89,5 +88,5 @@ export class NotificationsComponent implements OnInit {
 
   }
 
-  
+
 }

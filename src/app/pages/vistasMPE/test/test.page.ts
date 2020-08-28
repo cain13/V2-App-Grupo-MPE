@@ -437,6 +437,7 @@ export class TestPage implements OnInit {
 
 
   enviarRespuestas() {
+    console.log('Enviar Respuesta')
     this.respuestasTest.FechaRealizacion = moment().locale('es').format('YYYY-MM-DDT00:00:00');
 
     let auxResp = '';
@@ -486,7 +487,8 @@ export class TestPage implements OnInit {
     }
 
     try {
-
+      let Envio = false;
+      console.log('TRY');
       this.usuarioService.present('Enviando Test...');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
@@ -520,14 +522,16 @@ export class TestPage implements OnInit {
         '</soap:Envelope>';
 
       console.log('STR PARA LA API: ', sr);
-      xmlhttp.send(sr);
 
 
-      xmlhttp.onreadystatechange =  async () => {
-        if (xmlhttp.readyState === 4) {
-            if (xmlhttp.status === 500) {
-              this.usuarioService.dismiss();
-            } else if (xmlhttp.status === 200) {
+      xmlhttp.onreadystatechange = () => {
+        console.log('FALLO 00');
+
+        if (xmlhttp.readyState === 4 && !Envio) {
+          Envio = true;
+          if (xmlhttp.status === 200) {
+              const xml = xmlhttp.responseXML;
+              console.log('FALLO 0: ', xml);
               this.mostrarTest = false;
               this.usuarioService.dismiss();
               this.isFinTest = false;
@@ -535,18 +539,22 @@ export class TestPage implements OnInit {
               this.testEnviadoCorrectamente = true;
               this.usuarioService.presentAlert('Enhorabuena!!', 'Su test ha sido enviado con éxito !!', '');
               this.navCtrl.navigateRoot('/documentos-trabajador');
-              //this.seleccionarTest();
             } else {
               this.usuarioService.dismiss();
+              console.log('FALLO 1');
               this.usuarioService.presentAlert('Fallo!!', 'Su test no ha podido ser enviado !!', 'Intentelo de nuevo más tarde');
               console.log('200 ' + xmlhttp.response);
             }
-          } else {
-            this.usuarioService.dismiss();
-            this.usuarioService.presentAlert('Fallo!!', 'Su test no ha podido ser enviado !!', 'Intentelo de nuevo más tarde');
+        } else {
+          if (!Envio) {
+            console.log('FALLO 2');
             console.log('4 ' + xmlhttp.status);
           }
+        }
       };
+
+      xmlhttp.send(sr);
+
     } catch (error) {
       console.log('error ', error);
       this.usuarioService.dismiss();
@@ -555,7 +563,7 @@ export class TestPage implements OnInit {
 
   }
 
-  
+
 
 
 }

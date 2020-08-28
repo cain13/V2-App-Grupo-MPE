@@ -37,6 +37,8 @@ export interface ObtenerDatosConsultorResult {
 
   Nombre: string;
   Tipo: string;
+  EsBuzo: boolean;
+  EsGuardiaCivil: boolean;
 
 }
 
@@ -459,30 +461,30 @@ export interface RespuestaCitasInfo {
 }
 
 
-export interface RespuestaCitasEmpleado{
-  "soap:Envelope": {
-    "$": {
-      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema",
-      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/"
+export interface RespuestaCitasEmpleado {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema',
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/'
     },
-    "soap:Body": [
+    'soap:Body': [
       {
-        "ObtenerTrabajadorCitasPendientesRelacionResponse": [
+        'ObtenerTrabajadorCitasPendientesRelacionResponse': [
           {
-            "$": {
-              "xmlns": "http://tempuri.org/"
+            '$': {
+              'xmlns': 'http://tempuri.org/'
             },
-            "ObtenerTrabajadorCitasPendientesRelacionResult": [
+            'ObtenerTrabajadorCitasPendientesRelacionResult': [
               {
-                "AsistenciaInfo":  Asistencia[]
+                'AsistenciaInfo':  Asistencia[]
               }
             ]
           }
         ]
       }
     ]
-  }
+  };
 }
 
 export interface RespuestaCitasEmpleadoaInfo {
@@ -490,12 +492,12 @@ export interface RespuestaCitasEmpleadoaInfo {
   AsistenciaInfo: Asistencia[];
 
 }
-export interface Asistencia{
-  Trabajador:string;
-  NifTrabajador:string;
+export interface Asistencia {
+  Trabajador: string;
+  NifTrabajador: string;
   FechaDocumento: string;
-  NombreCentroMedico:string;
-  SituacionReconocimientoMedico:string;
+  NombreCentroMedico: string;
+  SituacionReconocimientoMedico: string;
 }
 
 

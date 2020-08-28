@@ -80,9 +80,9 @@ export class DatabaseService {
           console.log('DB: Tabla USUARIOS vacia'); }).catch(error => { console.log('DB: ERROR AL BORRAR TABLAS USUARIO'); });
 
         // tslint:disable-next-line: max-line-length
-        const data = [usuario.Usuario, usuario.Password, usuario.FingerID, usuario.Tipo, usuario.Nombre, usuario.Recordarme];
+        const data = [usuario.Usuario, usuario.Password, usuario.FingerID, usuario.Tipo, usuario.Nombre, usuario.Recordarme, usuario.EsBuzo, usuario.EsGuardiaCivil];
         // tslint:disable-next-line: max-line-length
-        const respuesta = await this.storage.executeSql('INSERT INTO usuariosTable (Usuario, Password_, FingerID, Tipo, Nombre, Recordarme) VALUES (?, ?, ?, ?, ?, ?)', data).then(() => {
+        const respuesta = await this.storage.executeSql('INSERT INTO usuariosTable (Usuario, Password_, FingerID, Tipo, Nombre, Recordarme, EsBuzo, EsGuardiaCivil) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', data).then(() => {
           console.log('DB: Usuario añadido a la BD');
 
         });
@@ -109,7 +109,9 @@ export class DatabaseService {
         Tipo: res.rows.item(0).Tipo,
         Nombre: res.rows.item(0).Nombre,
         FingerID: res.rows.item(0).FingerID,
-        Recordarme: res.rows.item(0).Recordarme
+        Recordarme: res.rows.item(0).Recordarme,
+        EsBuzo: res.rows.item(0).EsBuzo,
+        EsGuardiaCivil: res.rows.item(0).EsGuardiaCivil
       };
     } else { return null; }
 

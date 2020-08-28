@@ -31,6 +31,8 @@ export class AppComponent {
   public appPages: Array<Pages>;
   public appPagesVSAll: Array<Pages>;
   public appPagesTrabajador: Array<Pages>;
+  public appPagesGuardiaCivil: Array<Pages>;
+
   public Version = 'Versión 1.0.1';
   constructor(
     private platform: Platform,
@@ -60,10 +62,38 @@ export class AppComponent {
         icon: 'clipboard-outline'
       },
       {
+        title: 'Citas Penditenes',
+        url: '/citas-pendientes-trabajador',
+        direct: 'forward',
+        icon: 'timer-outline'
+      }
+
+    ];
+
+    this.appPagesGuardiaCivil = [
+      {
+        title: 'Documentos',
+        url: '/documentos-trabajador',
+        direct: 'root',
+        icon: 'document-outline'
+      },
+      {
+        title: 'Documentos COVID',
+        url: '/documentos-covid',
+        direct: 'forward',
+        icon: 'clipboard-outline'
+      },
+      {
         title: 'Test',
         url: '/test',
         direct: 'forward',
         icon: 'school-outline'
+      },
+      {
+        title: 'Citas Penditenes',
+        url: '/citas-pendientes-trabajador',
+        direct: 'forward',
+        icon: 'timer-outline'
       }
 
     ];

@@ -134,7 +134,7 @@ export class FiltroHistorialPage implements OnInit {
                       this.listaDocumentos = a.HistoricoNotificacionInfo;
 
                     }
-                    
+
                     this.usuarioService.guardarNotificaciones(this.listaDocumentos);
                 }
             }

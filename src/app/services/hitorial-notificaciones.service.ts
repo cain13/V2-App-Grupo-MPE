@@ -14,7 +14,7 @@ export class HitorialNotificacionesService {
   datosFiltros: DatosFiltros;
   constructor( private usuarioService: UsuarioService ) { }
 
-    setDocumento(listadocumentos){
+    setDocumento(listadocumentos: any[]) {
       this.listaDocumentosTodos = listadocumentos;
       this.listaDocumentos = listadocumentos;
     }
@@ -23,7 +23,7 @@ export class HitorialNotificacionesService {
       return Promise.resolve(this.listaDocumentosTodos);
     }
 
-    getDocumentosFiltro(){
+    getDocumentosFiltro() {
       return this.listaDocumentos;
     }
 
@@ -31,13 +31,13 @@ export class HitorialNotificacionesService {
       return this.listaDocumentosTodos;
     }
 
-    findById(id) {
+    findById(id: number) {
       return Promise.resolve(this.listaDocumentosTodos[id - 1]);
     }
 
-    getItem(id) {
+    getItem(id: string) {
       for (let i = 0; i < this.listaDocumentosTodos.length; i++) {
-        if (this.listaDocumentosTodos[i].id === parseInt(id)) {
+        if (this.listaDocumentosTodos[i].id === parseInt(id, 10)) {
           return this.listaDocumentosTodos[i];
         }
       }
@@ -63,12 +63,13 @@ export class HitorialNotificacionesService {
 
     }
 
-    getDocumentosSinLeer(){
+    getDocumentosSinLeer() {
       return this.Cantidad;
     }
 
 
-    setCantidadDocumentosSinLeer(documentos){
-      this.Cantidad = documentos
+    // tslint:disable-next-line: no-shadowed-variable
+    setCantidadDocumentosSinLeer(documentos: number) {
+      this.Cantidad = documentos;
     }
 }

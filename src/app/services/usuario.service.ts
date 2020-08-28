@@ -221,6 +221,7 @@ export class UsuarioService {
   }
 
   async presentAlert(titulo: string, subtitulo: string, mensaje: string) {
+    console.log('presentAlert');
     const alert = await this.alertCtrl.create({
       header: titulo,
       subHeader: subtitulo,

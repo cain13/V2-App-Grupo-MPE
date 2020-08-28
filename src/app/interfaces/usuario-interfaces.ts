@@ -6,6 +6,8 @@ export interface UsuarioLogin {
     Tipo: string;
     Nombre: string;
     Recordarme: boolean;
+    EsBuzo: boolean;
+    EsGuardiaCivil: boolean;
 
 }
 

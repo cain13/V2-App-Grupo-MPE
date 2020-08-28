@@ -24,7 +24,7 @@ import {
   stagger
 } from '@angular/animations';
 import { PopoverController,
-         ModalController, 
+         ModalController,
          IonInfiniteScroll,
          ViewDidLeave,
          ViewWillEnter} from '@ionic/angular';
@@ -42,7 +42,7 @@ import { PopoverController,
     ])
   ]
 })
-export class DocumentosCOVIDPage implements ViewDidLeave, ViewWillEnter{
+export class DocumentosCOVIDPage implements ViewDidLeave, ViewWillEnter {
 
   listaDocumentos = [];
   Cantidad = 0;
@@ -71,21 +71,21 @@ export class DocumentosCOVIDPage implements ViewDidLeave, ViewWillEnter{
 
     }
 
-    ionViewDidLeave(){
+    ionViewDidLeave() {
       this.pagina = 0;
-      console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+      console.log('this.infiniteScroll.disabled 1 ', this.infiniteScroll.disabled);
       if (this.infiniteScroll.disabled === true ) {
         this.infiniteScroll.disabled = false;
-        console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+        console.log('this.infiniteScroll.disabled ', this.infiniteScroll.disabled);
       }
     }
-  
+
   getDocumentos( event ?) {
     let aux: Documento[] = [];
     try {
-      if(event === undefined || event === null && this.pagina === 0){
-        this.pagina=0;
-        console.log("Numero pagina ", this.pagina);
+      if (event === undefined || event === null && this.pagina === 0) {
+        this.pagina = 0;
+        console.log('Numero pagina ', this.pagina);
         this.usuarioService.present('Cargando...');
       }
       const xmlhttp = new XMLHttpRequest();
@@ -95,22 +95,22 @@ export class DocumentosCOVIDPage implements ViewDidLeave, ViewWillEnter{
       xmlhttp.responseType = 'document';
         // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
       const sr =
-      '<?xml version="1.0" encoding="utf-8"?>' +
-      '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
-        '<soap:Header>' +
-          '<AuthHeader xmlns="http://tempuri.org/">' +
-            '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
-            '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
-          '</AuthHeader>' +
-        '</soap:Header>' +
-        '<soap:Body>' +
-          '<ObtenerTrabajadorRelacionDocumentos xmlns="http://tempuri.org/">' +
-            '<TestCovid>true</TestCovid>' +
-            '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
-            '<NumeroRegistro>20</NumeroRegistro>' +
-          '</ObtenerTrabajadorRelacionDocumentos>' +
-        '</soap:Body>' +
-      '</soap:Envelope>';
+        '<?xml version="1.0" encoding="utf-8"?>' +
+        '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+          '<soap:Header>' +
+            '<AuthHeader xmlns="http://tempuri.org/">' +
+              '<Usuario>' + this.usuarioService.usuario.Usuario + '</Usuario>' +
+              '<Password>' + this.usuarioService.usuario.Password + '</Password>' +
+            '</AuthHeader>' +
+          '</soap:Header>' +
+          '<soap:Body>' +
+            '<ObtenerTrabajadorRelacionDocumentos xmlns="http://tempuri.org/">' +
+              '<TestCovid>true</TestCovid>' +
+              '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
+              '<NumeroRegistro>20</NumeroRegistro>' +
+            '</ObtenerTrabajadorRelacionDocumentos>' +
+          '</soap:Body>' +
+        '</soap:Envelope>';
 
       xmlhttp.onreadystatechange =  () => {
             if (xmlhttp.readyState === 4) {
@@ -168,7 +168,7 @@ export class DocumentosCOVIDPage implements ViewDidLeave, ViewWillEnter{
             } else {
               this.usuarioService.dismiss();
             }
-        };
+      };
       xmlhttp.send(sr);
 
     } catch (error) {

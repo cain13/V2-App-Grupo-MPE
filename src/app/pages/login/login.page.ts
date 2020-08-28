@@ -119,7 +119,7 @@ export class LoginPage implements OnInit {
   async ionViewWillEnter() {
 /*     this.usuarioService.desactivarSegundoPlano = true;
  */    this.menuCtrl.enable(false);
-
+    console.log('USUARIO: ', this.usuario);
     if (this.usuario !== undefined && this.usuario.FingerID.toString() === 'true') {
       await this.usuarioService.present('Accediendo...');
 
@@ -138,21 +138,31 @@ export class LoginPage implements OnInit {
               this.menuCtrl.enable(false, 'menuTrabajadores');
               this.menuCtrl.enable(true, 'menuCompleto');
               this.getCentros();
-              this.usuarioService.dismiss();
               this.navCtrl.navigateRoot('certificado-aptitud');
 
             } else if ( this.usuario.Tipo === 'CONSULTOR') {
-              console.log('ACCEDEMOS COMO CLIENTE');
+              console.log('ACCEDEMOS COMO CONSULTOR');
               this.menuCtrl.enable(false, 'menuTrabajadores');
               this.menuCtrl.enable(true, 'menuCompleto');
               this.searchFilter();
             } else {
-              console.log('ACCEDEMOS COMO TRABAJADOR');
-              this.menuCtrl.enable(true, 'menuTrabajadores');
-              this.menuCtrl.enable(false, 'menuCompleto');
-              this.usuarioService.dismiss();
-              this.navCtrl.navigateRoot('documentos-trabajador');
+              if (this.usuario.EsGuardiaCivil) {
 
+                console.log('ACCEDEMOS COMO GUARDIA CIVIL');
+                this.menuCtrl.enable(false, 'menuTrabajadores');
+                this.menuCtrl.enable(true, 'menuGuardiaCivil');
+                this.menuCtrl.enable(false, 'menuCompleto');
+                this.navCtrl.navigateRoot('documentos-trabajador');
+
+              } else {
+
+                console.log('ACCEDEMOS COMO TRABAJADOR');
+                this.menuCtrl.enable(true, 'menuTrabajadores');
+                this.menuCtrl.enable(false, 'menuGuardiaCivil');
+                this.menuCtrl.enable(false, 'menuCompleto');
+                this.navCtrl.navigateRoot('documentos-trabajador');
+
+              }
             }
           }).catch((error: any) => {
             this.usuarioService.dismiss();
@@ -275,7 +285,9 @@ export class LoginPage implements OnInit {
                       FingerID: this.checkFinger,
                       Nombre: a.Nombre,
                       Tipo: a.Tipo,
-                      Recordarme:  this.checkRemember
+                      Recordarme:  this.checkRemember,
+                      EsBuzo: a.EsBuzo,
+                      EsGuardiaCivil: a.EsGuardiaCivil
                     };
 
                     this.usuarioService.login(usuario);
@@ -295,10 +307,23 @@ export class LoginPage implements OnInit {
                       this.menuCtrl.enable(true, 'menuCompleto');
                       this.searchFilter();
                     } else {
-                      console.log('ACCEDEMOS COMO TRABAJADOR');
-                      this.menuCtrl.enable(true, 'menuTrabajadores');
-                      this.menuCtrl.enable(false, 'menuCompleto');
-                      this.navCtrl.navigateRoot('documentos-trabajador');
+                      if (usuario.EsGuardiaCivil.toString() === 'true') {
+
+                        console.log('ACCEDEMOS COMO GUARDIA CIVIL');
+                        this.menuCtrl.enable(false, 'menuTrabajadores');
+                        this.menuCtrl.enable(true, 'menuGuardiaCivil');
+                        this.menuCtrl.enable(false, 'menuCompleto');
+                        this.navCtrl.navigateRoot('documentos-trabajador');
+
+                      } else {
+
+                        console.log('ACCEDEMOS COMO TRABAJADOR');
+                        this.menuCtrl.enable(true, 'menuTrabajadores');
+                        this.menuCtrl.enable(false, 'menuGuardiaCivil');
+                        this.menuCtrl.enable(false, 'menuCompleto');
+                        this.navCtrl.navigateRoot('documentos-trabajador');
+
+                      }
                     }
                 } else if (xmlhttp.status === 500 ) {
                   this.presentAlert('Usuario o contraseña incorrectos', '');

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { PopoverController, ModalController } from '@ionic/angular';
 import { TestService } from '../../services/test.service';
 import { TestInfo } from '../../interfaces/interfaces-grupo-mpe';
+import { UsuarioLogin } from '../../interfaces/usuario-interfaces';
+import { UsuarioService } from '../../services/usuario.service';
 
 @Component({
   selector: 'app-elegir-test',
@@ -10,7 +12,8 @@ import { TestInfo } from '../../interfaces/interfaces-grupo-mpe';
 })
 export class ElegirTestPage implements OnInit {
 
-  arrayTest: TestInfo[];
+  arrayTest: TestInfo[] = [];
+  usuario: UsuarioLogin;
 
 /*   public radiusmiles = 1;
   public minmaxprice = {
@@ -18,14 +21,31 @@ export class ElegirTestPage implements OnInit {
     lower: 100000
   }; */
 
-  constructor(  private modalCtrl: ModalController,
+  constructor(  private usuarioService: UsuarioService,
                 private testService: TestService,
                 private popoverCtrl: PopoverController
     ) { }
 
   ngOnInit() {
+    this.usuario = this.usuarioService.getUsuario();
+    const aux = this.testService.getArrayTest();
+    if ( this.usuario.EsBuzo.toString() === 'true' ) {
 
-    this.arrayTest = this.testService.getArrayTest();
+      this.arrayTest = aux;
+
+    } else {
+
+      for (const test of aux) {
+
+        if (test.Permiso !== 'BUCEO') {
+
+          this.arrayTest.push(test);
+
+        }
+
+      }
+
+    }
     console.log(this.arrayTest);
   }
 

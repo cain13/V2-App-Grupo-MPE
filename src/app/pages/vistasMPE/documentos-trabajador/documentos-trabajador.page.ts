@@ -47,7 +47,7 @@ import { NotificacionesPage } from '../notificaciones/notificaciones.page';
 })
 export class DocumentosTrabajadorPage {
 
-  listaDocumentos = [];
+  listaDocumentos: Documento[] = [];
   cantidad$: Observable<number>;
   Cantidad: number;
   searchKey = '';
@@ -131,7 +131,7 @@ export class DocumentosTrabajadorPage {
                     console.log(a);
                     if (a.DocumentoInfo !== undefined) {
 
-                      if (Array.isArray(a.DocumentoInfo)) {
+                      if (!Array.isArray(a.DocumentoInfo)) {
 
                         this.listaDocumentos.push(a.DocumentoInfo);
 
@@ -146,7 +146,6 @@ export class DocumentosTrabajadorPage {
 
                       }
                       this.documentosService.setDocumento(this.listaDocumentos);
-                      console.log('ListaDocumentos ' + this.listaDocumentos);
 
                       if ( event !== undefined ) {
                         event.target.complete();
