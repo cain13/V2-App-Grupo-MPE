@@ -42,7 +42,7 @@ export class ModalMasInfoPage implements OnInit {
     console.log('CENTRO: ', this.centroTrabajo);
     console.log('DOMICILIO: ', this.domicilio);
     console.log('TIPO CENTRO: ', this.tipoCentro);
-    
+
 
   }
 

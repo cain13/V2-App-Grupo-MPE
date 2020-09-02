@@ -27,27 +27,106 @@
 </ion-header>
 
 <ion-content>
-  <ion-content>
-    <ion-list class="ion-no-padding" [@staggerIn]="listaDocumentos">
-      <ion-item class="bg-white"  *ngFor="let certificado of listaDocumentos"  tappable (click)="downloadDocumento(certificado.IdDocumento)">
-        <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
-        <ion-label>
-          <h2> 
-            <ion-text color="dark"><strong>{{certificado.TipoDocumento}}</strong></ion-text>
-          </h2>
-          <p class="text-12x">
-            <ion-text color="secondary">{{certificado.Referencia}}</ion-text>
-          </p>
-          <p class="text-12x">
-            <ion-text color="secondary">{{certificado.FechaNotificacion | date: 'dd/MM/yyyy'}}</ion-text>
-          </p>
-        </ion-label>
-        <ion-icon slot="end" name="download-outline"></ion-icon>
-      </ion-item>
-    </ion-list>
-    <ion-infinite-scroll threshold="100px" (ionInfinite)="getHistorialDocumentos($event)">
-      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando documentos..">
-        
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
-  </ion-content>
+  <!-- <ion-list class="ion-no-padding" [@staggerIn]="listaDocumentos">
+    <ion-item class="bg-white"  *ngFor="let certificado of listaDocumentos"  tappable (click)="downloadDocumento(certificado.IdDocumento)">
+      <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
+      <ion-label>
+        <h2> 
+          <ion-text color="dark"><strong>{{certificado.TipoDocumento}}</strong></ion-text>
+        </h2>
+        <p class="text-12x">
+          <ion-text color="secondary">{{certificado.Referencia}}</ion-text>
+        </p>
+        <p class="text-12x">
+          <ion-text color="secondary">{{certificado.FechaNotificacion | date: 'dd/MM/yyyy'}}</ion-text>
+        </p>
+      </ion-label>
+      <ion-icon slot="end" name="download-outline"></ion-icon>
+    </ion-item>
+  </ion-list> -->
+
+  <ion-list *ngIf="listaCertAptitud.length !== 0" class="ion-no-padding" [@staggerIn]="listaDocumentos">
+    <ion-list-header color="dark">
+      <ion-text color="light" style="font-size: large;"> Certificados Aptitud</ion-text>
+    </ion-list-header>
+    <ion-item class="bg-white"  *ngFor="let certificado of listaCertAptitud"  tappable (click)="downloadDocumento(certificado.IdDocumento)">
+      <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
+      <ion-label>
+        <h2> 
+          <ion-text color="dark"><strong>{{certificado.TipoDocumento}}</strong></ion-text>
+        </h2>
+        <p class="text-12x">
+          <ion-text color="secondary">{{certificado.Referencia}}</ion-text>
+        </p>
+        <p class="text-12x">
+          <ion-text color="secondary">{{certificado.FechaNotificacion | date: 'dd/MM/yyyy'}}</ion-text>
+        </p>
+      </ion-label>
+      <ion-icon slot="end" name="download-outline"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="listaMemoriaAnual.length !== 0" class="ion-no-padding" [@staggerIn]="listaDocumentos">
+    <ion-list-header>Memoria Anual</ion-list-header>
+    <ion-item class="bg-white"  *ngFor="let memAnual of listaMemoriaAnual"  tappable (click)="downloadDocumento(memAnual.IdDocumento)">
+      <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
+      <ion-label>
+        <h2> 
+          <ion-text color="dark"><strong>{{memAnual.TipoDocumento}}</strong></ion-text>
+        </h2>
+        <p class="text-12x">
+          <ion-text color="secondary">{{memAnual.Referencia}}</ion-text>
+        </p>
+        <p class="text-12x">
+          <ion-text color="secondary">{{memAnual.FechaNotificacion | date: 'dd/MM/yyyy'}}</ion-text>
+        </p>
+      </ion-label>
+      <ion-icon slot="end" name="download-outline"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="listaPlanificacion.length !== 0" class="ion-no-padding" [@staggerIn]="listaDocumentos">
+    <ion-list-header>Planificación VS</ion-list-header>
+    <ion-item class="bg-white"  *ngFor="let plan of listaPlanificacion"  tappable (click)="downloadDocumento(plan.IdDocumento)">
+      <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
+      <ion-label>
+        <h2> 
+          <ion-text color="dark"><strong>{{plan.TipoDocumento}}</strong></ion-text>
+        </h2>
+        <p class="text-12x">
+          <ion-text color="secondary">{{plan.Referencia}}</ion-text>
+        </p>
+        <p class="text-12x">
+          <ion-text color="secondary">{{plan.FechaNotificacion | date: 'dd/MM/yyyy'}}</ion-text>
+        </p>
+      </ion-label>
+      <ion-icon slot="end" name="download-outline"></ion-icon>
+    </ion-item>
+  </ion-list>
+
+  <ion-list *ngIf="listaEstudioEpi.length !== 0" class="ion-no-padding" [@staggerIn]="listaDocumentos">
+    <ion-list-header>Estudio Epidemiológico</ion-list-header>
+    <ion-item class="bg-white"  *ngFor="let estudio of listaEstudioEpi"  tappable (click)="downloadDocumento(estudio.IdDocumento)">
+      <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
+      <ion-label>
+        <h2> 
+          <ion-text color="dark"><strong>{{estudio.TipoDocumento}}</strong></ion-text>
+        </h2>
+        <p class="text-12x">
+          <ion-text color="secondary">{{estudio.Referencia}}</ion-text>
+        </p>
+        <p class="text-12x">
+          <ion-text color="secondary">{{estudio.FechaNotificacion | date: 'dd/MM/yyyy'}}</ion-text>
+        </p>
+      </ion-label>
+      <ion-icon slot="end" name="download-outline"></ion-icon>
+    </ion-item>
+  </ion-list>
+  
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="getHistorialDocumentos($event)">
+    
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando documentos..">    
+    </ion-infinite-scroll-content>
+  
+  </ion-infinite-scroll>
+</ion-content>

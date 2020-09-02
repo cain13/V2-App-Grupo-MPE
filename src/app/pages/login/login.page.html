@@ -33,7 +33,10 @@
           <ion-icon name="lock-closed-outline" item-start></ion-icon>
           {{ 'app.label.password' | translate }}
         </ion-label>
-        <ion-input color="secondary" type="password" formControlName="password"></ion-input>
+        <ion-input color="secondary" [type]="mostrarContra? 'text' : 'password'" formControlName="password"></ion-input>
+        <ion-icon slot="end" [name]="passwordIcon2" (click)="mostrarContrase()" color="light"></ion-icon>
+
+
       </ion-item>
       <p ion-text color="warning" class="text08" *ngIf="onLoginForm.get('password').touched && onLoginForm.get('password').hasError('required')">
         <ion-text color="warning">
@@ -55,6 +58,8 @@
           <ion-label style="text-align: center;">¿Login por huella?</ion-label>
           <ion-checkbox slot="end" #botonHuella mode="ios" color="light" checked={{loginFinger}} ></ion-checkbox>
       </ion-item>
+
+      
     </form>
 
     <!-- <p tappable (click)="forgotPass()" class="ion-text-center paz">

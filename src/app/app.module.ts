@@ -51,6 +51,10 @@ import { File } from '@ionic-native/file/ngx';
 
 import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 
+// Compartir APP
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+
+
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -94,7 +98,8 @@ export function HttpLoaderFactory(http: HttpClient) {
     FileOpener,
     File,
     FingerprintAIO,
-    FCM
+    FCM,
+    SocialSharing
   ],
   bootstrap: [AppComponent]
 })
