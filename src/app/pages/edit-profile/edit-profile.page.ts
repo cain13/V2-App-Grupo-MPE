@@ -57,14 +57,14 @@ export class EditProfilePage implements OnInit {
     });
     // end
   }
-  async searchFilter () {
+  async cambiarPassword () {
     const modal = await this.modalCtrl.create({
       component: CambiarPasswordPage
     });
     return await modal.present();
   }
-  CambiarPassword() {
-    this.navCtrl.navigateForward('/CambiarPassword');
+  cambiarUsuario() {
+    this.navCtrl.navigateForward('/login');
   }
 
   editarImagen() {

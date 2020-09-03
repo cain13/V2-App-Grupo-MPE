@@ -36,6 +36,13 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
   hayConsultor = false;
   pagina = 0;
   filtros: DatosFiltros;
+  listaCertAptitud = [];
+  listaMemoriaAnual = [];
+  listaPlanificacion = [];
+  listaEstudioEpi = [];
+  listaOtros = [];
+
+
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
@@ -244,6 +251,7 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
 
                       }
                       this.historialService.setDocumento(this.listaDocumentos);
+                      this.clasificarDocumentos(this.listaDocumentos);
                       console.log('ListaHistorial ' + this.listaDocumentos);
 
                   } else {
@@ -388,6 +396,52 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
       this.listaDocumentos = this.historialService.getDocumentosFiltro();
     });
     return await modal.present();
+  }
+
+
+  clasificarDocumentos(listaDocu: Notificacion[]) {
+    if (listaDocu.length !== 0) {
+      for (const doc of listaDocu) {
+
+        switch (doc.TipoDocumento.toString().toUpperCase()) {
+
+          case 'CERTIFICADO APTITUD': {
+
+            this.listaCertAptitud.push(doc);
+            break;
+          }
+
+          case 'MEMORIA ANUAL': {
+
+            this.listaMemoriaAnual.push(doc);
+            break;
+          }
+
+          case 'PLANIFICACION VS': {
+
+            this.listaPlanificacion.push(doc);
+            break;
+          }
+
+          case 'ESTUDIO EPIDEMIOLOGICO': {
+
+            this.listaEstudioEpi.push(doc);
+            break;
+          }
+
+          default: {
+
+            this.listaOtros.push(doc);
+            break;
+          }
+
+        }
+
+      }
+
+    }
+
+
   }
 
 

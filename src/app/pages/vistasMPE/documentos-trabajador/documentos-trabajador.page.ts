@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 
 
 import { PropertyService } from '../../../providers';
@@ -27,10 +27,12 @@ import {
   stagger
 } from '@angular/animations';
 import { PopoverController,
-         ModalController, Platform, IonInfiniteScroll } from '@ionic/angular';
+         ModalController, Platform, IonInfiniteScroll, ViewDidLeave } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import * as moment from 'moment';
 import { NotificacionesPage } from '../notificaciones/notificaciones.page';
+import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
+import { ViewWillEnter } from '@ionic/angular';
 
 @Component({
   selector: 'app-documentos-trabajador',
@@ -45,7 +47,7 @@ import { NotificacionesPage } from '../notificaciones/notificaciones.page';
     ])
   ]
 })
-export class DocumentosTrabajadorPage {
+export class DocumentosTrabajadorPage implements OnInit, ViewWillEnter, ViewDidLeave{
 
   listaDocumentos: Documento[] = [];
   cantidad$: Observable<number>;
@@ -53,7 +55,8 @@ export class DocumentosTrabajadorPage {
   searchKey = '';
   listaMensajes: Array<Notificacion> = [];
   pagina = 0;
-  
+  usuario: UsuarioLogin;
+
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
   constructor(
@@ -66,6 +69,13 @@ export class DocumentosTrabajadorPage {
     private db: DatabaseService,
     private notificacionesService: NotificacionesService
     ) {  }
+
+
+    ngOnInit() {
+
+      this.usuario = this.usuarioService.getUsuario();
+
+    }
 
 
     ionViewWillEnter() {
@@ -87,7 +97,7 @@ export class DocumentosTrabajadorPage {
         console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
       }
     }
-  
+
 
   getDocumentos(event?) {
     let aux: Documento[] = [];

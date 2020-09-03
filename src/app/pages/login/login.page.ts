@@ -25,12 +25,18 @@ export class LoginPage implements OnInit {
   soportaFingerID: boolean;
   @ViewChild('botonHuella', {static: false}) botonHuella: IonCheckbox;
   @ViewChild('botonRecordarme', {static: false}) botonRecordarme: IonCheckbox;
+  @ViewChild('botonMostarContra', {static: false}) botonMostarContra: IonCheckbox;
+
   checkFinger = false;
   checkRemember = true;
   usuario: UsuarioLogin;
   recordarme = true;
   loginFinger: boolean;
   tokenAPI: string;
+  mostrarContra = false;
+  passwordIcon = 'eye-outline';
+  passwordIcon2 = 'eye-off-outline';
+
 
 
 
@@ -175,6 +181,21 @@ export class LoginPage implements OnInit {
         });
     }
 
+
+  }
+
+  mostrarContrase() {
+    console.log(this.passwordIcon2);
+    this.mostrarContra = !this.mostrarContra;
+    if (this.passwordIcon2 === 'eye-off-outline') {
+
+      this.passwordIcon2 = 'eye-outline';
+    } else {
+
+      this.passwordIcon2 = 'eye-off-outline';
+
+    }
+    console.log('EDDD:', this.passwordIcon2)
 
   }
 

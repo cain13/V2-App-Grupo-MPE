@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { LoadingController, Platform, ToastController, AlertController } from '@ionic/angular';
+import { LoadingController, Platform, ToastController, AlertController, NavController, ModalController } from '@ionic/angular';
 import { UsuarioLogin, CambiarPassword, EmpresaConsultor } from '../interfaces/usuario-interfaces';
 import { DatabaseService } from './database.service';
 import { Centro, Certificado, RecuentoNotificacionesResponse, Notificacion, Asistencia, Cliente, MandarTokenAPI, RespuestaAPItoken } from '../interfaces/interfaces-grupo-mpe';
 import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { NotificacionesPage } from '../pages/vistasMPE/notificaciones/notificaciones.page';
 
 @Injectable({
   providedIn: 'root'
@@ -42,7 +43,9 @@ export class UsuarioService {
     private file: File,
     private toastController: ToastController,
     private alertCtrl: AlertController,
-    private http: HttpClient) { }
+    private http: HttpClient,
+    private modalCtrl: ModalController,
+    ) { }
 
 
   async login(usuario: UsuarioLogin) {
@@ -230,6 +233,37 @@ export class UsuarioService {
     });
 
     await alert.present();
+  }
+
+  async presentAlertNotificaciones(titulo: string, subtitulo: string, mensaje: string) {
+    console.log('presentAlert');
+    const alert = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      buttons: [
+        {
+          text: 'Ver más tarde',
+          handler: (blah) => {
+            console.log('Lanzamos ver mas tarde');
+          }
+        }, {
+          text: 'Ver ahora',
+          handler: async () => {
+            await this.notifications();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  async notifications() {
+    const modal = await this.modalCtrl.create({
+      component: NotificacionesPage
+        });
+    return await modal.present();
   }
 
 

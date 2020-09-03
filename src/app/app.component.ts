@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 // import { Router } from '@angular/router';
 
-import { Platform, MenuController, NavController, IonRouterOutlet } from '@ionic/angular';
+import { Platform, MenuController, NavController, IonRouterOutlet, ActionSheetController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -15,6 +15,8 @@ import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 import { DatabaseService } from './services/database.service';
 import { Notificacion } from './interfaces/usuario-interfaces';
 import { NotificacionesService } from './services/notificaciones.service';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+
 
 
 
@@ -32,6 +34,8 @@ export class AppComponent {
   public appPagesVSAll: Array<Pages>;
   public appPagesTrabajador: Array<Pages>;
   public appPagesGuardiaCivil: Array<Pages>;
+  private textoCompartirAPP = 'Disfrute de la App de GrupoMPE para la gestión laboral, puede descargarla pinchando en el siguiente enlace!!';
+  private urlCompartirAPP = 'http://onelink.to/ept9em';
 
   public Version = 'Versión 1.0.1';
   constructor(
@@ -45,12 +49,14 @@ export class AppComponent {
     private navCtrl: NavController,
     private db: DatabaseService,
     private fcm: FCM,
-    private notificacionesService: NotificacionesService
+    private notificacionesService: NotificacionesService,
+    public actionSheetController: ActionSheetController,
+    private socialSharing: SocialSharing
     // public router: Router
   ) {
     this.appPagesTrabajador = [
       {
-        title: 'Documentos',
+        title: 'Reconocimientos Médicos',
         url: '/documentos-trabajador',
         direct: 'root',
         icon: 'document-outline'
@@ -72,19 +78,19 @@ export class AppComponent {
 
     this.appPagesGuardiaCivil = [
       {
-        title: 'Documentos',
+        title: 'Reconocimientos Médicos',
         url: '/documentos-trabajador',
         direct: 'root',
         icon: 'document-outline'
       },
       {
-        title: 'Documentos COVID',
+        title: 'Pruebas COVID',
         url: '/documentos-covid',
         direct: 'forward',
         icon: 'clipboard-outline'
       },
       {
-        title: 'Test',
+        title: 'Formularios',
         url: '/test',
         direct: 'forward',
         icon: 'school-outline'
@@ -155,7 +161,7 @@ export class AppComponent {
         url: '/blanco',
         direct: 'forward',
         icon: 'power-outline'
-      }
+      },
       /* ,
       {
         title: 'Centros MPE',
@@ -264,7 +270,7 @@ export class AppComponent {
 
             if (data['TipoUsuario'] !== 'TRABAJADOR') {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
-              switch(tipoDocumento.toUpperCase()){
+              switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -282,9 +288,9 @@ export class AppComponent {
                   notificacion.Ruta = '/certificado-aptitud';
                   break;
               }
-            }else{
+            } else {
               console.log('tipoDocumento.toUpperCase( TRABAJADOR ) ', tipoDocumento.toUpperCase());
-              switch(tipoDocumento.toUpperCase()){
+              switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
                   notificacion.Ruta = '/documentos-trabajador';
@@ -338,7 +344,7 @@ export class AppComponent {
             notificacion.TipoDocumento = data['TipoDocumento'];
             if (data['TipoUsuario'] !== 'TRABAJADOR') {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
-              switch(tipoDocumento.toUpperCase()){
+              switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -356,9 +362,9 @@ export class AppComponent {
                   notificacion.Ruta = '/certificado-aptitud';
                   break;
               }
-            }else{
+            } else {
               console.log('tipoDocumento.toUpperCase( TRABAJADOR ) ', tipoDocumento.toUpperCase());
-              switch(tipoDocumento.toUpperCase()){
+              switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
                   notificacion.Ruta = '/documentos-trabajador';
@@ -382,7 +388,7 @@ export class AppComponent {
 
           } else {
             console.log('Received primer plano: ', data);
-          
+
             const titulo = data['title'];
             const tipoDocumento = data['TipoDocumento'];
             console.log('TITULO: ', titulo);
@@ -404,7 +410,7 @@ export class AppComponent {
             notificacion.TipoDocumento = data['TipoDocumento'];
             if (data['TipoUsuario'] !== 'TRABAJADOR') {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
-              switch(tipoDocumento.toUpperCase()){
+              switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -422,9 +428,9 @@ export class AppComponent {
                   notificacion.Ruta = '/certificado-aptitud';
                   break;
               }
-            }else{
+            } else {
               console.log('tipoDocumento.toUpperCase( TRABAJADOR ) ', tipoDocumento.toUpperCase());
-              switch(tipoDocumento.toUpperCase()){
+              switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
                   notificacion.Ruta = '/documentos-trabajador';
@@ -445,7 +451,7 @@ export class AppComponent {
             }
             this.db.addNotificacion(notificacion);
             this.notificacionesService.SumaUnaNotificaciones();
-            this.usuarioService.presentAlert('NUEVA NOTIFICACIÓN!!', 'Tiene una notificación nueva!!', '');
+            this.usuarioService.presentAlertNotificaciones('NUEVA NOTIFICACIÓN!!', 'Tiene una notificación nueva!!', '');
           }
         });
         this.statusBar.styleDefault();
@@ -502,8 +508,84 @@ export class AppComponent {
       this.usuarioService.dismiss();
     });
   }
+
   closeMenu() {
     this.menu.close();
+  }
+
+  async compartirAPP() {
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Compartir APP',
+      cssClass: 'my-custom-class',
+      buttons: [{
+        text: 'Facebook',
+        icon: 'logo-facebook',
+        handler: () => {
+          console.log('Lanzamos Facebook');
+          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, '../../assets/img/ionProperty-ico.png', this.urlCompartirAPP).then( () => {
+
+
+
+          }).catch( error => {
+
+
+
+          });
+        }
+      }, {
+        text: 'Twitter',
+        icon: 'logo-twitter',
+        handler: () => {
+          console.log('Lanzamos Twitter');
+          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, '../../assets/img/ionProperty-ico.png', this.urlCompartirAPP).then( () => {
+
+
+
+          }).catch( error => {
+
+
+
+          });
+        }
+      }, {
+        text: 'Whatsapp',
+        icon: 'logo-whatsapp',
+        handler: () => {
+          console.log('Lanzamos Whatsapp');
+          this.socialSharing.shareViaWhatsApp(this.textoCompartirAPP, '../../assets/img/ionProperty-ico.png', this.urlCompartirAPP).then( () => {
+
+
+
+          }).catch( error => {
+
+
+
+          });
+        }
+      }, {
+        text: 'Email',
+        icon: 'mail-outline',
+        handler: () => {
+          console.log('Lanzamos Email');
+          this.socialSharing.shareViaEmail(this.textoCompartirAPP + ':' + this.urlCompartirAPP, 'my subject', null).then( () => {
+
+
+          }).catch( error => {
+
+
+
+          });
+        }
+      }, {
+        text: 'Cancel',
+        icon: 'close',
+        role: 'cancel',
+        handler: () => {
+          console.log('Cancel clicked');
+        }
+      }]
+    });
+    await actionSheet.present();
   }
 
   // goToEditProgile() {
