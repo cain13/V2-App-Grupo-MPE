@@ -93,8 +93,15 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
             nifConsultor = this.empresaCoonsultor.Nif;
           }
         }
-        const fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
-        const fecha_hasta = moment().add(1, 'month').format('YYYY-MM-DDT00:00:00');
+        let fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
+        let fecha_hasta = moment().add(1, 'month').format('YYYY-MM-DDT00:00:00');
+        if(this.filtros.fecha_desde !== undefined && this.filtros.fecha_desde !== null){
+          fecha_desde = this.filtros.fecha_desde;
+        }
+        if(this.filtros.fecha_hasta !== undefined && this.filtros.fecha_hasta !== null){
+          fecha_hasta = this.filtros.fecha_hasta;
+        }
+
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
 

@@ -85,8 +85,14 @@ export class AsistenciaPage implements OnInit, ViewDidLeave {
             nifConsultor = this.empresaCoonsultor.Nif;
           }
         }
-        const fecha_desde = '1900-01-01T00:00:00';
-        const fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
+        let fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
+        let fecha_hasta = moment().add(1, 'month').format('YYYY-MM-DDT00:00:00');
+        if(this.filtro.fecha_desde !== undefined && this.filtro.fecha_desde !== null){
+          fecha_desde = this.filtro.fecha_desde;
+        }
+        if(this.filtro.fecha_hasta !== undefined && this.filtro.fecha_hasta !== null){
+          fecha_hasta = this.filtro.fecha_hasta;
+        }
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');

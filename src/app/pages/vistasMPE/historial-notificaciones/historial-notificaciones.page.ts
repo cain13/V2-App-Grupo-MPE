@@ -87,8 +87,14 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
             nifConsultor = this.empresaCoonsultor.Nif;
           }
         }
-        const fecha_desde = '1900-01-01T00:00:00';
-        const fecha_hasta = moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
+        let fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
+        let fecha_hasta = moment().add(1, 'month').format('YYYY-MM-DDT00:00:00');
+        if(this.filtros.fecha_desde !== undefined && this.filtros.fecha_desde !== null){
+          fecha_desde = this.filtros.fecha_desde;
+        }
+        if(this.filtros.fecha_hasta !== undefined && this.filtros.fecha_hasta !== null){
+          fecha_hasta = this.filtros.fecha_hasta;
+        }
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -107,8 +113,8 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
           '<soap:Body>' +
             '<ObtenerHistoricoNotificacionesRelacionDocumentos xmlns="http://tempuri.org/">' +
               '<FiltroNot>' +
-                '<FechaDesde>' + this.filtros.fecha_desde + '</FechaDesde>' +
-                '<FechaHasta>' + this.filtros.fecha_hasta + '</FechaHasta>' +
+                '<FechaDesde>' + fecha_desde + '</FechaDesde>' +
+                '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
                 '<NifClienteConsultor>'  + nifConsultor + '</NifClienteConsultor>' +
               '</FiltroNot>' +
               '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
