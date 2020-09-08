@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController, NavController } from '@ionic/angular';
+import { ModalController, NavController, Platform } from '@ionic/angular';
 import { UsuarioService } from '../../../services/usuario.service';
 import * as moment from 'moment';
 import { CambiarPassword } from '../../../interfaces/usuario-interfaces';
@@ -15,15 +15,25 @@ import { CambioPassword } from 'src/app/interfaces/interfaces-grupo-mpe';
 export class CambiarPasswordPage implements OnInit {
   public onPasswordForm: FormGroup;
   cambiarPassword: CambiarPassword;
+  isSmallPhone: boolean;
   controller = document.querySelector('ion-alert-controller');
 
   constructor(private modalCtrl: ModalController, private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService, private navCtrl: NavController,  private formBuilder: FormBuilder,
+    private platform: Platform
     ) { }
 
   ngOnInit() {
     this.cambiarPassword = this.usuarioService.getCambiarPassword();
-
+    this.platform.ready().then(() => {
+      console.log('Width: ' + this.platform.width());
+      console.log('Height: ' + this.platform.height());
+      if (this.platform.height() < 731) {
+        this.isSmallPhone = true;
+      } else {
+        this.isSmallPhone = false;
+      }
+    });
     if (this.cambiarPassword === null || this.cambiarPassword === undefined) {
       this.onPasswordForm = this.formBuilder.group({
         PassOld: [null, Validators.compose([
@@ -80,8 +90,8 @@ export class CambiarPasswordPage implements OnInit {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
     xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xmlhttp.responseType = 'document';
+/*     xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */    xmlhttp.responseType = 'document';
       // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
     const sr =
     '<?xml version="1.0" encoding="utf-8"?>' +
