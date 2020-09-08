@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 
 import { PropertyService } from '../../../providers';
@@ -39,7 +39,7 @@ import { NotificacionesPage } from '../notificaciones/notificaciones.page';
   ]
 })
 
-export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
+export class CertificadoAptitudPage implements OnInit,ViewDidLeave, ViewWillEnter {
   listaCertificados = [];
   searchKey = '';
   properties: Array<any>;
@@ -52,6 +52,7 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
   pagina = 0;
   arrayIdSelec: string[] = [];
   filtros: DatosFiltros;
+  isSmallPhone = false;
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
@@ -70,7 +71,8 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
     private usuarioService: UsuarioService,
     private certificadosService: CertificadosService,
     private notificacionesService: NotificacionesService,
-    private documentosService: DocumentosTrabajadoresService
+    private documentosService: DocumentosTrabajadoresService,
+    private platform: Platform
   ) {
 
     this.usuario = this.usuarioService.getUsuario();
@@ -82,6 +84,20 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
         console.log('this.usuario.Tipo  ' + this.usuario.Tipo);
       }
     }
+
+  }
+
+  async ngOnInit(){
+
+    this.platform.ready().then(() => {
+      console.log('Width: ' + this.platform.width());
+      console.log('Height: ' + this.platform.height());
+      if (this.platform.height() < 731) {
+        this.isSmallPhone = true;
+      } else {
+        this.isSmallPhone = false;
+      }
+    });
 
   }
 
@@ -151,8 +167,8 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
 
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-        xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-        xmlhttp.responseType = 'document';
+/*         xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */        xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
         const sr =
           '<?xml version="1.0" encoding="utf-8"?>' +
@@ -258,8 +274,8 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
 
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-        xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-        xmlhttp.responseType = 'document';
+/*         xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */        xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
         const sr =
           '<?xml version="1.0" encoding="utf-8"?>' +
@@ -365,8 +381,8 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
     xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xmlhttp.responseType = 'document';
+/*     xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */    xmlhttp.responseType = 'document';
       // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
     const sr =
 
