@@ -522,7 +522,7 @@ export class AppComponent {
         icon: 'logo-facebook',
         handler: () => {
           console.log('Lanzamos Facebook');
-          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, '../../assets/img/ionProperty-ico.png', this.urlCompartirAPP).then( () => {
+          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
@@ -537,7 +537,7 @@ export class AppComponent {
         icon: 'logo-twitter',
         handler: () => {
           console.log('Lanzamos Twitter');
-          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, '../../assets/img/ionProperty-ico.png', this.urlCompartirAPP).then( () => {
+          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
@@ -552,13 +552,13 @@ export class AppComponent {
         icon: 'logo-whatsapp',
         handler: () => {
           console.log('Lanzamos Whatsapp');
-          this.socialSharing.shareViaWhatsApp(this.textoCompartirAPP, '../../assets/img/ionProperty-ico.png', this.urlCompartirAPP).then( () => {
+          this.socialSharing.shareViaWhatsApp(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
           }).catch( error => {
 
-
+            console.log('Lanzamos Whatsapp error',error);
 
           });
         }

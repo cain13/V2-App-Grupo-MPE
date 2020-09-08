@@ -268,8 +268,9 @@ export class UsuarioService {
 
 
   saveAndOpenPdf(pdf: string, filename: string) {
-    console.log('path ' + this.file.externalRootDirectory + '/Download/' + filename);
-    const writeDirectory = this.platform.is('ios') ? this.file.dataDirectory : this.file.externalRootDirectory + '/Download/';
+    console.log('pdf ' + pdf);
+    console.log('externalApplicationStorageDirectory ' + this.file.externalApplicationStorageDirectory + 'Download/' + filename);
+    const writeDirectory = this.platform.is('ios') ? this.file.dataDirectory : this.file.externalApplicationStorageDirectory + 'Download/';
     this.file.writeFile(writeDirectory, filename, this.convertBase64ToBlob(pdf, 'data:application/pdf;base64', 512), {replace: true})
       .then(() => {
           this.opener.open(writeDirectory + filename, 'application/pdf')
@@ -277,8 +278,21 @@ export class UsuarioService {
                   console.log('Error opening pdf file');
               });
       })
-      .catch(() => {
-          console.error('Error writing pdf file');
+      .catch((error) => {
+          console.error('Error writing pdf file',error);
+          console.log('patherror ' + this.file.externalDataDirectory + filename);
+          const writeDirectory = this.platform.is('ios') ? this.file.dataDirectory :  this.file.dataDirectory;
+          console.log('writeDirectory ' + writeDirectory + filename);
+          this.file.writeFile(writeDirectory, filename, this.convertBase64ToBlob(pdf, 'data:application/pdf;base64', 512), {replace: true})
+            .then(() => {
+                this.opener.open(writeDirectory + filename, 'application/pdf')
+                    .catch(() => {
+                        console.log('Error opening pdf file');
+                    });
+            })
+            .catch((error) => {
+                console.error('Error writing pdf file',error);
+            });
       });
   }
 
