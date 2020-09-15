@@ -62,3 +62,22 @@ export interface DatosFiltros {
     idCentroEspecificado?: number;
 
 }
+
+export interface UsuarioPost{
+
+    tipoUsuario: string;
+
+}
+
+export interface RespuestaAPIPost {
+
+    Direccion: string;
+    Provincia: string;
+    Fecha: string;
+    Titulo: string;
+    Texto: string;
+    Imagen: string;
+    Latitud: string;
+    Longitud: string;
+
+}

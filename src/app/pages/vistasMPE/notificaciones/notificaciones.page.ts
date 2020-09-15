@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Notificaciones, Notificacion } from 'src/app/interfaces/usuario-interfaces';
 import { MessageService } from 'src/app/providers';
 import { NavController, ModalController, ToastController } from '@ionic/angular';
-import { DocumentosTrabajadoresService } from 'src/app/services/documentos-trabajadores.service';
+
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { DatabaseService } from 'src/app/services/database.service';
 import { async } from 'rxjs/internal/scheduler/async';
@@ -25,7 +25,6 @@ export class NotificacionesPage implements OnInit {
   constructor(
     public messageService: MessageService,
     public modalCtrl: ModalController,
-    private documentosService: DocumentosTrabajadoresService,
     private usuarioService: UsuarioService,
     private navController: NavController,
     private db: DatabaseService,

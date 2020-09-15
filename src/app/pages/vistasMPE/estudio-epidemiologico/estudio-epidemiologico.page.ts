@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CertificadoPDF, RespuestaObtenerCertPDF } from 'src/app/interfaces/interfaces-grupo-mpe';
-import { PopoverController, ModalController } from '@ionic/angular';
+import { PopoverController, ModalController, Platform } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxXml2jsonService } from 'ngx-xml2json';
@@ -25,6 +25,7 @@ export class EstudioEpidemiologicoPage implements OnInit {
 
   searchKey = "";
   listaDocumentos = [];
+  isSmallPhone: boolean;
 
   constructor(
     public popoverCtrl: PopoverController,
@@ -32,10 +33,20 @@ export class EstudioEpidemiologicoPage implements OnInit {
     public modalCtrl: ModalController,
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
-    private historialService: HitorialNotificacionesService
+    private historialService: HitorialNotificacionesService,
+    private platform: Platform
     ) {  }
 
   ngOnInit() {
+    this.platform.ready().then(() => {
+      console.log('Width: ' + this.platform.width());
+      console.log('Height: ' + this.platform.height());
+      if (this.platform.height() < 731) {
+        this.isSmallPhone = true;
+      } else {
+        this.isSmallPhone = false;
+      }
+    });
     this.getHistorialDocumentos();
   }
 
@@ -109,8 +120,8 @@ export class EstudioEpidemiologicoPage implements OnInit {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
     xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xmlhttp.responseType = 'document';
+/*     xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */    xmlhttp.responseType = 'document';
       // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
     const sr =
 

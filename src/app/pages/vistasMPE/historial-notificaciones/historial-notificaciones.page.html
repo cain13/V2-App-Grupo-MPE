@@ -3,22 +3,27 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>
+    <ion-title *ngIf="!isSmallPhone">
         <ion-text color="light">
          Historial de Documentos
         </ion-text>
     </ion-title>
+    <ion-title *ngIf="isSmallPhone">
+      <ion-text color="light">
+       Historial
+      </ion-text>
+  </ion-title>
   </ion-toolbar>
   <ion-toolbar color="dark">
-      <ion-searchbar [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar Documento"></ion-searchbar>
-      <ion-buttons slot="end">
-        <ion-button size="small" shape="round" color="medium" (click)="searchFilter()">
-          <ion-icon name="options"></ion-icon>
-        </ion-button>
-      </ion-buttons>
-    </ion-toolbar>
+    <ion-searchbar style="margin-top: 2mm; margin-bottom: 0mm;" [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar Certificado"></ion-searchbar>
+    <ion-buttons slot="end" style="margin-top: 2mm;"> 
+      <ion-button size="small" shape="round" color="medium" (click)="searchFilter()">
+        <ion-icon name="options"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
     <ion-list-header *ngIf="hayConsultor" (click)="seleccionarEmpresa()">
-      <ion-label color="primary"  >
+      <ion-label color="primary">
         <h2>Cambiar de empresa</h2>
         <small color="primary">{{empresaCoonsultor.NombreCliente}}</small>
       </ion-label>
@@ -46,8 +51,8 @@
   </ion-list> -->
 
   <ion-list *ngIf="listaCertAptitud.length !== 0" class="ion-no-padding" [@staggerIn]="listaDocumentos">
-    <ion-list-header color="dark">
-      <ion-text color="light" style="font-size: large;"> Certificados Aptitud</ion-text>
+    <ion-list-header color="dark" mode="md">
+      <ion-text color="light" style="font-size: large;">Certificados Aptitud</ion-text>
     </ion-list-header>
     <ion-item class="bg-white"  *ngFor="let certificado of listaCertAptitud"  tappable (click)="downloadDocumento(certificado.IdDocumento)">
       <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
@@ -67,7 +72,7 @@
   </ion-list>
 
   <ion-list *ngIf="listaMemoriaAnual.length !== 0" class="ion-no-padding" [@staggerIn]="listaDocumentos">
-    <ion-list-header>Memoria Anual</ion-list-header>
+    <ion-list-header mode="md">Memoria Anual</ion-list-header>
     <ion-item class="bg-white"  *ngFor="let memAnual of listaMemoriaAnual"  tappable (click)="downloadDocumento(memAnual.IdDocumento)">
       <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
       <ion-label>
@@ -86,7 +91,7 @@
   </ion-list>
 
   <ion-list *ngIf="listaPlanificacion.length !== 0" class="ion-no-padding" [@staggerIn]="listaDocumentos">
-    <ion-list-header>Planificación VS</ion-list-header>
+    <ion-list-header mode="md">Planificación VS</ion-list-header>
     <ion-item class="bg-white"  *ngFor="let plan of listaPlanificacion"  tappable (click)="downloadDocumento(plan.IdDocumento)">
       <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
       <ion-label>
@@ -105,7 +110,7 @@
   </ion-list>
 
   <ion-list *ngIf="listaEstudioEpi.length !== 0" class="ion-no-padding" [@staggerIn]="listaDocumentos">
-    <ion-list-header>Estudio Epidemiológico</ion-list-header>
+    <ion-list-header mode="md">Estudio Epidemiológico</ion-list-header>
     <ion-item class="bg-white"  *ngFor="let estudio of listaEstudioEpi"  tappable (click)="downloadDocumento(estudio.IdDocumento)">
       <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
       <ion-label>

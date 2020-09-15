@@ -8,9 +8,7 @@
 </ion-header>
 
 <ion-content>
-  <img [src]="post.postImageUrl">
-
-  <ion-card class="bg-white">
+  <ion-card class="bg-white" *ngFor="let post of posts">
       <ion-item>
         <ion-avatar slot="start">
           <img [src]="user.profileImage">

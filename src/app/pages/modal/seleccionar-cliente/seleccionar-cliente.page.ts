@@ -33,13 +33,14 @@ export class SeleccionarClientePage implements OnInit {
   }
 
   getClientes() {
-    try{
+    try {
       this.usuario = this.usuarioService.getUsuario();
       this.usuarioService.present('Cargando datos...');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-/*  */      xmlhttp.responseType = 'document';
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */      xmlhttp.responseType = 'document';
         // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
       const sr =
         '<?xml version="1.0" encoding="utf-8"?>' +
@@ -100,7 +101,7 @@ export class SeleccionarClientePage implements OnInit {
     this.getCentros(nifCliente);
     this.closeModal();
     this.usuarioService.dismiss();
-    //this.navCtrl.navigateRoot('certificado-aptitud');
+    // this.navCtrl.navigateRoot('certificado-aptitud');
   }
 
   getCentros(nif) {
@@ -110,7 +111,8 @@ export class SeleccionarClientePage implements OnInit {
 
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-      xmlhttp.responseType = 'document';
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */      xmlhttp.responseType = 'document';
         // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
       const sr =
       '<?xml version="1.0" encoding="utf-8"?>' +
@@ -156,16 +158,16 @@ export class SeleccionarClientePage implements OnInit {
     }
   }
 
-  todosClientesSeleccionar(){
+  todosClientesSeleccionar() {
     // tslint:disable-next-line: no-shadowed-variable
     const EmpresaConsultor = {
-      Nif: "",
-      NombreCliente: "Todos los clientes"
+      Nif: '',
+      NombreCliente: 'Todos los clientes'
     };
     this.usuarioService.guardarEmpresaConsultor(EmpresaConsultor);
-    this.getCentros("");
+    this.getCentros('');
     this.closeModal();
     this.usuarioService.dismiss();
-    //this.navCtrl.navigateRoot('certificado-aptitud');
+    // this.navCtrl.navigateRoot('certificado-aptitud');
   }
 }

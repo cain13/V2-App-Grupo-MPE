@@ -129,7 +129,8 @@ export class TestPage implements OnInit {
        const xmlhttp = new XMLHttpRequest();
        xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
        xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-        xmlhttp.responseType = 'document';
+/*        xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */       xmlhttp.responseType = 'document';
          // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
        const sr =
         '<?xml version="1.0" encoding="utf-8"?>' +
@@ -436,7 +437,7 @@ export class TestPage implements OnInit {
 
 
   enviarRespuestas() {
-    console.log('Enviar Respuesta')
+    console.log('Enviar Respuesta');
     this.respuestasTest.FechaRealizacion = moment().locale('es').format('YYYY-MM-DDT00:00:00');
 
     let auxResp = '';
@@ -492,7 +493,8 @@ export class TestPage implements OnInit {
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-      xmlhttp.responseType = 'document';
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */      xmlhttp.responseType = 'document';
         // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
       const sr =
         '<?xml version="1.0" encoding="utf-8"?>' +

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>20970879179-5vndbl6jkfjr03mh8bh2n4gah2p4tdk1.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.20970879179-5vndbl6jkfjr03mh8bh2n4gah2p4tdk1</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDPbdPoY9nVCUTqkydNslG7DSzXVmJ7HUU</string>
+	<key>GCM_SENDER_ID</key>
+	<string>20970879179</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.grupompe.prevencionapp</string>
+	<key>PROJECT_ID</key>
+	<string>mpe-grupo</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mpe-grupo.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:20970879179:ios:1987e42b6885308e1bc34e</string>
+	<key>DATABASE_URL</key>
+	<string>https://mpe-grupo.firebaseio.com</string>
+</dict>
+</plist>

@@ -37,7 +37,7 @@ export class AppComponent {
   private textoCompartirAPP = 'Disfrute de la App de GrupoMPE para la gestión laboral, puede descargarla pinchando en el siguiente enlace!!';
   private urlCompartirAPP = 'http://onelink.to/ept9em';
 
-  public Version = 'Versión 1.0.1';
+  public Version = 'Versión 1.0.2';
   constructor(
     private platform: Platform,
     private menu: MenuController,
@@ -90,16 +90,16 @@ export class AppComponent {
         icon: 'clipboard-outline'
       },
       {
-        title: 'Formularios',
-        url: '/test',
-        direct: 'forward',
-        icon: 'school-outline'
-      },
-      {
         title: 'Citas Penditenes',
         url: '/citas-pendientes-trabajador',
         direct: 'forward',
         icon: 'timer-outline'
+      },
+      {
+        title: 'Formularios',
+        url: '/test',
+        direct: 'forward',
+        icon: 'school-outline'
       }
 
     ];
@@ -155,14 +155,14 @@ export class AppComponent {
         url: '/edit-profile',
         direct: 'forward',
         icon: 'person-outline'
-      },
+      } /*,
       {
         title: 'Cerrar Sesion',
         url: '/blanco',
         direct: 'forward',
         icon: 'power-outline'
       },
-      /* ,
+      ,
       {
         title: 'Centros MPE',
         url: '/property-list',
@@ -522,7 +522,7 @@ export class AppComponent {
         icon: 'logo-facebook',
         handler: () => {
           console.log('Lanzamos Facebook');
-          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, '../../assets/img/ionProperty-ico.png', this.urlCompartirAPP).then( () => {
+          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
@@ -537,7 +537,7 @@ export class AppComponent {
         icon: 'logo-twitter',
         handler: () => {
           console.log('Lanzamos Twitter');
-          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, '../../assets/img/ionProperty-ico.png', this.urlCompartirAPP).then( () => {
+          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
@@ -552,13 +552,13 @@ export class AppComponent {
         icon: 'logo-whatsapp',
         handler: () => {
           console.log('Lanzamos Whatsapp');
-          this.socialSharing.shareViaWhatsApp(this.textoCompartirAPP, '../../assets/img/ionProperty-ico.png', this.urlCompartirAPP).then( () => {
+          this.socialSharing.shareViaWhatsApp(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
           }).catch( error => {
 
-
+            console.log('Lanzamos Whatsapp error',error);
 
           });
         }
@@ -588,6 +588,13 @@ export class AppComponent {
     await actionSheet.present();
   }
 
+
+  cerrarSesion(){
+    console.log('Cerrar sesion');
+   // this.usuarioService.BorrarEmpleado();
+   // this.usuarioService.guardarUsuario(null);
+    this.navCtrl.navigateRoot('login');
+  }
   // goToEditProgile() {
   //   this.router.navigateByUrl('/edit-profile');
   // }

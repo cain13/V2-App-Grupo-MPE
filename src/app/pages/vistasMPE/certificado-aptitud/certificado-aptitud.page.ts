@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, OnInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 
 import { PropertyService } from '../../../providers';
@@ -39,7 +39,7 @@ import { NotificacionesPage } from '../notificaciones/notificaciones.page';
   ]
 })
 
-export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
+export class CertificadoAptitudPage implements OnInit, ViewDidLeave, ViewWillEnter {
   listaCertificados = [];
   searchKey = '';
   properties: Array<any>;
@@ -51,7 +51,8 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
   cantidad$: Observable<number>;
   pagina = 0;
   arrayIdSelec: string[] = [];
-  filtros: DatosFiltros  isSmallPhone: boolean;
+  filtros: DatosFiltros;
+  isSmallPhone = false;
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
@@ -86,7 +87,8 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
 
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+
     this.platform.ready().then(() => {
       console.log('Width: ' + this.platform.width());
       console.log('Height: ' + this.platform.height());
@@ -96,7 +98,9 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
         this.isSmallPhone = false;
       }
     });
+
   }
+
 
   ionViewWillEnter() {
     console.log('this.infiniteScroll.disabled 0 ', this.infiniteScroll.disabled);
@@ -149,11 +153,22 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
             nifConsultor = this.empresaCoonsultor.Nif;
           }
         }
+
+        let fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
+        let fecha_hasta = moment().add(1, 'month').format('YYYY-MM-DDT00:00:00');
+        if (this.filtros.fecha_desde !== undefined && this.filtros.fecha_desde !== null) {
+          fecha_desde = this.filtros.fecha_desde;
+        }
+        if (this.filtros.fecha_hasta !== undefined && this.filtros.fecha_hasta !== null) {
+          fecha_hasta = this.filtros.fecha_hasta;
+        }
+
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
 
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-        xmlhttp.responseType = 'document';
+/*         xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */        xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
         const sr =
           '<?xml version="1.0" encoding="utf-8"?>' +
@@ -167,8 +182,8 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
             '<soap:Body>' +
               '<ObtenerCertificadosAptitudRelacionDocumentos xmlns="http://tempuri.org/">' +
                 '<FiltroCerApt>' +
-                  '<FechaDesde>1900-01-01T00:00:00</FechaDesde>' +
-                  '<FechaHasta>' + moment().format('YYYY-MM-DDT00:00:00') + '</FechaHasta>' +
+                  '<FechaDesde>' + fecha_desde + '</FechaDesde>' +
+                  '<FechaHasta>'  + fecha_hasta +  '</FechaHasta>' +
                   '<NombreTrabajador>' + this.filtros.nombre + '</NombreTrabajador>' +
                   '<Dni>' + this.filtros.dni + '</Dni>' +
                   '<NifClienteConsultor>' + nifConsultor + '</NifClienteConsultor>' +
@@ -259,7 +274,8 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
 
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-        xmlhttp.responseType = 'document';
+/*         xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */        xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
         const sr =
           '<?xml version="1.0" encoding="utf-8"?>' +
@@ -365,8 +381,8 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
     const xmlhttp = new XMLHttpRequest();
     xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
     xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-    xmlhttp.responseType = 'document';
+/*     xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */    xmlhttp.responseType = 'document';
       // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
     const sr =
 

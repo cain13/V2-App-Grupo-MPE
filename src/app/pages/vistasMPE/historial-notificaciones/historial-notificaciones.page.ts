@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CertificadoPDF, RespuestaObtenerCertPDF, RespuestaHistorial, ObtenerHistoriaDocumentos } from 'src/app/interfaces/interfaces-grupo-mpe';
-import { PopoverController, ModalController, IonInfiniteScroll, ViewDidLeave } from '@ionic/angular';
+import { PopoverController, ModalController, IonInfiniteScroll, ViewDidLeave, Platform } from '@ionic/angular';
 import { PropertyService } from 'src/app/providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { NgxXml2jsonService } from 'ngx-xml2json';
@@ -41,6 +41,7 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
   listaPlanificacion = [];
   listaEstudioEpi = [];
   listaOtros = [];
+  isSmallPhone: boolean;
 
 
 
@@ -53,6 +54,7 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
     private usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
     private historialService: HitorialNotificacionesService,
+    private platform: Platform
     ) {
       this.usuario = this.usuarioService.getUsuario();
       this.empresaCoonsultor = this.usuarioService.getEmpresaConsultor();
@@ -66,6 +68,15 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
 
   ngOnInit() {
     this.pagina = 0;
+    this.platform.ready().then(() => {
+      console.log('Width: ' + this.platform.width());
+      console.log('Height: ' + this.platform.height());
+      if (this.platform.height() < 731) {
+        this.isSmallPhone = true;
+      } else {
+        this.isSmallPhone = false;
+      }
+    });
     this.getHistorialDocumentos();
 
   }
@@ -94,12 +105,19 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
             nifConsultor = this.empresaCoonsultor.Nif;
           }
         }
-        const fecha_desde = '1900-01-01T00:00:00';
-        const fecha_hasta = moment().add(1, 'days').format('YYYY-MM-DDT00:00:00');
+        let fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
+        let fecha_hasta = moment().add(1, 'month').format('YYYY-MM-DDT00:00:00');
+        if (this.filtros.fecha_desde !== undefined && this.filtros.fecha_desde !== null) {
+          fecha_desde = this.filtros.fecha_desde;
+        }
+        if (this.filtros.fecha_hasta !== undefined && this.filtros.fecha_hasta !== null) {
+          fecha_hasta = this.filtros.fecha_hasta;
+        }
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-        xmlhttp.responseType = 'document';
+/*         xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */        xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
         const sr =
         '<?xml version="1.0" encoding="utf-8"?>' +
@@ -113,8 +131,8 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
           '<soap:Body>' +
             '<ObtenerHistoricoNotificacionesRelacionDocumentos xmlns="http://tempuri.org/">' +
               '<FiltroNot>' +
-                '<FechaDesde>' + this.filtros.fecha_desde + '</FechaDesde>' +
-                '<FechaHasta>' + this.filtros.fecha_hasta + '</FechaHasta>' +
+                '<FechaDesde>' + fecha_desde + '</FechaDesde>' +
+                '<FechaHasta>' + fecha_hasta + '</FechaHasta>' +
                 '<NifClienteConsultor>'  + nifConsultor + '</NifClienteConsultor>' +
               '</FiltroNot>' +
               '<NumeroPagina>' + this.pagina + '</NumeroPagina>' +
@@ -199,7 +217,8 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-          xmlhttp.responseType = 'document';
+/*         xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */        xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
         const sr =
         '<?xml version="1.0" encoding="utf-8"?>' +
@@ -292,7 +311,8 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-      xmlhttp.responseType = 'document';
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */      xmlhttp.responseType = 'document';
         // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
       const sr =
 

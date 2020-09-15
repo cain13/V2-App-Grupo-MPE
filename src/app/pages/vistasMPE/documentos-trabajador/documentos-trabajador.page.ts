@@ -47,7 +47,7 @@ import { ViewWillEnter } from '@ionic/angular';
     ])
   ]
 })
-export class DocumentosTrabajadorPage implements OnInit, ViewWillEnter, ViewDidLeave{
+export class DocumentosTrabajadorPage implements OnInit, ViewWillEnter, ViewDidLeave {
 
   listaDocumentos: Documento[] = [];
   cantidad$: Observable<number>;
@@ -89,12 +89,12 @@ export class DocumentosTrabajadorPage implements OnInit, ViewWillEnter, ViewDidL
 
 
     }
-    ionViewDidLeave(){
+    ionViewDidLeave() {
       this.pagina = 0;
-      console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+      console.log('this.infiniteScroll.disabled 1 ', this.infiniteScroll.disabled);
       if (this.infiniteScroll.disabled === true ) {
         this.infiniteScroll.disabled = false;
-        console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+        console.log('this.infiniteScroll.disabled ', this.infiniteScroll.disabled);
       }
     }
 
@@ -102,15 +102,16 @@ export class DocumentosTrabajadorPage implements OnInit, ViewWillEnter, ViewDidL
   getDocumentos(event?) {
     let aux: Documento[] = [];
     try {
-      if(event === undefined || event === null && this.pagina === 0){
-        this.pagina=0;
-        console.log("Numero pagina ", this.pagina);
+      if (event === undefined || event === null && this.pagina === 0) {
+        this.pagina = 0;
+        console.log('Numero pagina ', this.pagina);
         this.usuarioService.present('Cargando...');
       }
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-      xmlhttp.responseType = 'document';
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */      xmlhttp.responseType = 'document';
         // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
       const sr =
         '<?xml version="1.0" encoding="utf-8"?>' +
@@ -197,7 +198,8 @@ export class DocumentosTrabajadorPage implements OnInit, ViewWillEnter, ViewDidL
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-      xmlhttp.responseType = 'document';
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */      xmlhttp.responseType = 'document';
         // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
       const sr =
 

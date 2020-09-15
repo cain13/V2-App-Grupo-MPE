@@ -195,7 +195,7 @@ export class LoginPage implements OnInit {
       this.passwordIcon2 = 'eye-off-outline';
 
     }
-    console.log('EDDD:', this.passwordIcon2)
+    console.log('EDDD:', this.passwordIcon2);
 
   }
 
@@ -266,7 +266,11 @@ export class LoginPage implements OnInit {
 
 
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-      xmlhttp.setRequestHeader('content-type', 'text/xml');
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Headers', 'Content-Type');
+ */      xmlhttp.setRequestHeader('content-type', 'text/xml');
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */
+      console.log('HEADER2: ', xmlhttp.getResponseHeader);
       xmlhttp.responseType = 'document';
         // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
       const sr =
@@ -282,7 +286,9 @@ export class LoginPage implements OnInit {
             '<ObtenerDatosConsultor xmlns="http://tempuri.org/" />' +
           '</soap:Body>' +
         '</soap:Envelope>';
-
+      console.log('USUARIO: ', this.onLoginForm.value.usuario);
+      console.log('CONTRASEÑA: ', this.onLoginForm.value.password);
+      console.log('MENSAJE MANDADO A LA API:', sr);
       xmlhttp.onreadystatechange = () => {
             if (xmlhttp.readyState === 4) {
                 if (xmlhttp.status === 200) {
@@ -372,7 +378,9 @@ export class LoginPage implements OnInit {
 
     xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
     xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-    xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+    console.log('HEADERS: ', xmlhttp.getResponseHeader);
+    /*xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+    xmlhttp.setRequestHeader('Access-Control-Allow-Headers', '*');*/
     xmlhttp.responseType = 'document';
       // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
     const sr =

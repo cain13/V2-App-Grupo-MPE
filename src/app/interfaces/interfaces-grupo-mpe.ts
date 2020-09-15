@@ -501,6 +501,54 @@ export interface Asistencia {
 }
 
 
+export interface RespuestaCentrosMPE{
+  "soap:Envelope": {
+    "$": {
+      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
+      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
+      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+    },
+    "soap:Body": [
+      {
+        "ObtenerCentrosMpeResponse": [
+          {
+            "$": {
+              "xmlns": "http://tempuri.org/"
+            },
+            "ObtenerCentrosMpeResult": [
+              {
+                "CentroMpeInfo": CentroMPE[]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+}
+
+
+
+export interface RespuestaCentroMPEInfo {
+
+  CentroMpeInfo: CentroMPE[];
+
+}
+
+export interface CentroMPE{
+  Nombre: string;
+  Direccion: string;
+  CodigoPostal: string;
+  Localidad: string;
+  Provincia: string;
+  Horario: string;
+  Telefono: string;
+  Email: string;
+  Latitud: string;
+  Longitud: string;
+  Imagen: string;
+}
+
 export interface RespuestaClientes {
   'soap:Envelope': {
     '$': {
@@ -663,4 +711,19 @@ export interface RespuestaAPItoken {
   Codigo: number;
   Mensaje: string;
 
+}
+
+
+export interface InfoCentrosMapa {
+
+  Nombre: string,
+  Direccion: string,
+  CodigoPostal: number,
+  Localidad: string,
+  Provincia: string,
+  Horario: string,
+  Telefono: number,
+  Email: string,
+  Latitud: number,
+  Longitud: number
 }

@@ -58,39 +58,46 @@ export class AsistenciaPage implements OnInit, ViewDidLeave {
     this.getAsistencias();
   }
 
-  ionViewDidLeave(){
+  ionViewDidLeave() {
     this.pagina = 0;
-    console.log("this.infiniteScroll.disabled 1 ", this.infiniteScroll.disabled);
+    console.log('this.infiniteScroll.disabled 1 ', this.infiniteScroll.disabled);
     if (this.infiniteScroll.disabled === true ) {
       this.infiniteScroll.disabled = false;
-      console.log("this.infiniteScroll.disabled ", this.infiniteScroll.disabled);
+      console.log('this.infiniteScroll.disabled ', this.infiniteScroll.disabled);
     }
   }
 
   getAsistencias(event?) {
 
     let aux: Asistencia[];
-    if(this.filtro !== undefined && this.filtro !== null){
+    if (this.filtro !== undefined && this.filtro !== null) {
       try {
-        if(event === undefined || event === null && this.pagina === 0){
-          this.pagina=0;
-          console.log("Numero pagina ", this.pagina);
+        if (event === undefined || event === null && this.pagina === 0) {
+          this.pagina = 0;
+          console.log('Numero pagina ', this.pagina);
           this.usuarioService.present('Cargando...');
           this.listaAsistencias = [];
         }
-        
+
         let nifConsultor = '';
         if (this.usuario.Tipo === 'CONSULTOR') {
           if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
             nifConsultor = this.empresaCoonsultor.Nif;
           }
         }
-        const fecha_desde = '1900-01-01T00:00:00';
-        const fecha_hasta = moment().format('YYYY-MM-DDT00:00:00');
+        let fecha_desde = moment().format('YYYY-MM-DDT00:00:00');
+        let fecha_hasta = moment().add(1, 'month').format('YYYY-MM-DDT00:00:00');
+        if (this.filtro.fecha_desde !== undefined && this.filtro.fecha_desde !== null) {
+          fecha_desde = this.filtro.fecha_desde;
+        }
+        if (this.filtro.fecha_hasta !== undefined && this.filtro.fecha_hasta !== null) {
+          fecha_hasta = this.filtro.fecha_hasta;
+        }
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-          xmlhttp.responseType = 'document';
+/*         xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */        xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
         const sr =
         '<?xml version="1.0" encoding="utf-8"?>' +
@@ -168,14 +175,14 @@ export class AsistenciaPage implements OnInit, ViewDidLeave {
       } catch (error) {
         this.usuarioService.dismiss();
       }
-    }else{
+    } else {
       try {
-        if(event === undefined || event === null && this.pagina === 0){
-          this.pagina=0;
-          console.log("Numero pagina ", this.pagina);
+        if (event === undefined || event === null && this.pagina === 0) {
+          this.pagina = 0;
+          console.log('Numero pagina ', this.pagina);
           this.usuarioService.present('Cargando...');
         }
-        
+
         let nifConsultor = '';
         if (this.usuario.Tipo === 'CONSULTOR') {
           if (this.empresaCoonsultor !== undefined && this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {
@@ -187,7 +194,8 @@ export class AsistenciaPage implements OnInit, ViewDidLeave {
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-          xmlhttp.responseType = 'document';
+/*         xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */        xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
         const sr =
         '<?xml version="1.0" encoding="utf-8"?>' +
