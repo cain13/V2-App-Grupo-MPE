@@ -99,7 +99,6 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
 
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-        xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
         xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
 
@@ -215,8 +214,7 @@ export class CitasPendientesPage implements OnInit, ViewDidLeave {
         const xmlhttp = new XMLHttpRequest();
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-        xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
-        xmlhttp.responseType = 'document';
+          xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
         const sr =
         '<?xml version="1.0" encoding="utf-8"?>' +

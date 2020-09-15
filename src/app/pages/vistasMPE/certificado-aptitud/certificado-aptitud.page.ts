@@ -51,7 +51,7 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
   cantidad$: Observable<number>;
   pagina = 0;
   arrayIdSelec: string[] = [];
-  filtros: DatosFiltros;
+  filtros: DatosFiltros  isSmallPhone: boolean;
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
@@ -70,7 +70,8 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
     private usuarioService: UsuarioService,
     private certificadosService: CertificadosService,
     private notificacionesService: NotificacionesService,
-    private documentosService: DocumentosTrabajadoresService
+    private documentosService: DocumentosTrabajadoresService,
+    private platform: Platform
   ) {
 
     this.usuario = this.usuarioService.getUsuario();
@@ -85,6 +86,17 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
 
   }
 
+  ngOnInit() {
+    this.platform.ready().then(() => {
+      console.log('Width: ' + this.platform.width());
+      console.log('Height: ' + this.platform.height());
+      if (this.platform.height() < 731) {
+        this.isSmallPhone = true;
+      } else {
+        this.isSmallPhone = false;
+      }
+    });
+  }
 
   ionViewWillEnter() {
     console.log('this.infiniteScroll.disabled 0 ', this.infiniteScroll.disabled);
@@ -141,7 +153,6 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
 
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-        xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
         xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
         const sr =
@@ -248,7 +259,6 @@ export class CertificadoAptitudPage implements ViewDidLeave, ViewWillEnter {
         xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
 
         xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-        xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
         xmlhttp.responseType = 'document';
           // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
         const sr =

@@ -8,7 +8,7 @@
           {{ 'app.name' | translate }} <ion-text color="tertiary" class="fw700"> {{ 'app.version' | translate }}</ion-text>
         </ion-text>
     </ion-title >
-    <ion-title style="margin-top: 0cm;  margin-bottom: 1mm;">
+    <ion-title style="margin-top: 0cm;  margin-bottom: 1mm;" *ngIf="!isSmallPhone">
       <ion-text color="light" style="font-size: x-small; margin-top: 0cm; margin-bottom: 3mm;">
         {{usuario.Nombre}}
       </ion-text>

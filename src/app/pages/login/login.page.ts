@@ -266,8 +266,7 @@ export class LoginPage implements OnInit {
 
 
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-      xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-      xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+      xmlhttp.setRequestHeader('content-type', 'text/xml');
       xmlhttp.responseType = 'document';
         // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
       const sr =
