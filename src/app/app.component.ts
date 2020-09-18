@@ -56,9 +56,15 @@ export class AppComponent {
   ) {
     this.appPagesTrabajador = [
       {
+        title: 'Inicio',
+        url: '/tab-inicio',
+        direct: 'root',
+        icon: 'home-outline'
+      },
+      {
         title: 'Reconocimientos Médicos',
         url: '/documentos-trabajador',
-        direct: 'root',
+        direct: 'forward',
         icon: 'document-outline'
       },
       {
@@ -72,15 +78,27 @@ export class AppComponent {
         url: '/citas-pendientes-trabajador',
         direct: 'forward',
         icon: 'timer-outline'
+      },
+      {
+        title: 'Centros Favoritos',
+        url: '/favorites',
+        direct: 'forward',
+        icon: 'heart'
       }
 
     ];
 
     this.appPagesGuardiaCivil = [
       {
+        title: 'Inicio',
+        url: '/tab-inicio',
+        direct: 'root',
+        icon: 'home-outline'
+      },
+      {
         title: 'Reconocimientos Médicos',
         url: '/documentos-trabajador',
-        direct: 'root',
+        direct: 'forward',
         icon: 'document-outline'
       },
       {
@@ -100,15 +118,27 @@ export class AppComponent {
         url: '/test',
         direct: 'forward',
         icon: 'school-outline'
+      },
+      {
+        title: 'Centros Favoritos',
+        url: '/favorites',
+        direct: 'forward',
+        icon: 'heart'
       }
 
     ];
 
     this.appPagesVSAll = [
       {
+        title: 'Inicio',
+        url: '/tab-inicio',
+        direct: 'root',
+        icon: 'home-outline'
+      },
+      {
         title: 'Certificado de Aptitud',
         url: '/certificado-aptitud',
-        direct: 'root',
+        direct: 'forward',
         icon: 'document-outline'
       },
       {
@@ -146,6 +176,12 @@ export class AppComponent {
         url: '/historial-notificaciones',
         direct: 'forward',
         icon: 'clipboard-outline'
+      },
+      {
+        title: 'Centros Favoritos',
+        url: '/favorites',
+        direct: 'forward',
+        icon: 'heart'
       }
     ];
 
@@ -155,6 +191,12 @@ export class AppComponent {
         url: '/edit-profile',
         direct: 'forward',
         icon: 'person-outline'
+      },
+      {
+        title: 'Buscar Centro MPE',
+        url: '/home-location',
+        direct: 'forward',
+        icon: 'map-outline'
       } /*,
       {
         title: 'Cerrar Sesion',

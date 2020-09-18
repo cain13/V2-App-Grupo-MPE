@@ -54,6 +54,11 @@ import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 // Compartir APP
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 
+// Geolocalizacion
+import { Geolocation } from '@ionic-native/geolocation/ngx';
+import { ComponentsModule } from './components/components.module';
+
+
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -99,7 +104,9 @@ export function HttpLoaderFactory(http: HttpClient) {
     File,
     FingerprintAIO,
     FCM,
-    SocialSharing
+    SocialSharing,
+    Geolocation,
+    ComponentsModule
   ],
   bootstrap: [AppComponent]
 })

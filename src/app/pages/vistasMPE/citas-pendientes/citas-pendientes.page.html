@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <!-- <ion-toolbar color="primary">
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
@@ -8,7 +8,9 @@
         Citas pendientes
         </ion-text>
     </ion-title>
-  </ion-toolbar>
+  </ion-toolbar> -->
+  <app-header></app-header>
+
   <ion-toolbar color="dark">
     <ion-searchbar style="margin-top: 2mm; margin-bottom: 0mm;" [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar Certificado"></ion-searchbar>
     <ion-buttons slot="end" style="margin-top: 2mm;"> 

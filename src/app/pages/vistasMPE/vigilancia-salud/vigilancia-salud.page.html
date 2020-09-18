@@ -1,0 +1,19 @@
+<app-header></app-header>
+<ion-content>
+
+  <ion-list class="ion-no-padding" [@staggerIn]="opciones">
+    <ion-list-header color="danger" mode="md" style="text-align: center;">
+      <ion-text color="light" style="font-size: large;">Vigilancia de la Salud</ion-text>
+    </ion-list-header>
+    <ion-item class="bg-white"  *ngFor="let opt of opciones"  tappable [routerLink]="opt.Url">
+      <ion-icon slot="start" name="{{opt.Icon}}"></ion-icon>
+      <ion-label>
+        <h2> 
+          <ion-text color="dark" class = "ion-text-wrap"><strong>{{opt.Titulo}}</strong></ion-text>
+        </h2>
+      </ion-label>
+      <ion-icon color="dark" slot="end" name="arrow-forward-outline"></ion-icon>
+    </ion-item>
+ </ion-list> 
+
+</ion-content>

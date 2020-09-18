@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { EstudioEpidemiologicoPageRoutingModule } from './estudio-epidemiologico-routing.module';
 
 import { EstudioEpidemiologicoPage } from './estudio-epidemiologico.page';
+import { ComponentsModule } from '../../../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    EstudioEpidemiologicoPageRoutingModule
+    EstudioEpidemiologicoPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [EstudioEpidemiologicoPage]
 })

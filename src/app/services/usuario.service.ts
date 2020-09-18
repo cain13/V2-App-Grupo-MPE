@@ -7,6 +7,7 @@ import { FileOpener } from '@ionic-native/file-opener/ngx';
 import { File } from '@ionic-native/file/ngx';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NotificacionesPage } from '../pages/vistasMPE/notificaciones/notificaciones.page';
+import { CentroAPI } from '../interfaces/centros-interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,7 @@ export class UsuarioService {
   haFiltradoCitas: boolean;
   desactivarSegundoPlano: boolean;
   recuentoNotificaciones: number;
+  centrosFav: CentroAPI[];
 
   header = new HttpHeaders().set('Content-Type', 'application/json');
 
@@ -188,6 +190,33 @@ export class UsuarioService {
     return this.citas;
 
   }
+
+  async addCentroFav(centro: CentroAPI) {
+
+    await this.dataBaseService.addCentroFav(centro).then(res => {
+
+      console.log('UsuarioService: AddCentroFav todo OK ', centro);
+
+    }).catch(error => {
+      console.log('ERROR AddCentroFav UsuarioService: ', error);
+
+    });
+
+  }
+
+  async borrarCentroFav(id: number) {
+
+    await this.dataBaseService.borrarCentroFav(id).then(res => {
+
+      console.log('UsuarioService: BorrarCentroFav todo OK ', id);
+
+    }).catch(error => {
+      console.log('ERROR BorrarCentroFav UsuarioService: ', error);
+
+    });
+
+  }
+ 
 
 
 

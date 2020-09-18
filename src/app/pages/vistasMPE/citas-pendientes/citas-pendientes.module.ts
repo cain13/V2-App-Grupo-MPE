@@ -7,13 +7,15 @@ import { IonicModule } from '@ionic/angular';
 import { CitasPendientesPageRoutingModule } from './citas-pendientes-routing.module';
 
 import { CitasPendientesPage } from './citas-pendientes.page';
+import { ComponentsModule } from '../../../components/components.module';
 
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
-    CitasPendientesPageRoutingModule
+    CitasPendientesPageRoutingModule,
+    ComponentsModule
   ],
   declarations: [CitasPendientesPage]
 })

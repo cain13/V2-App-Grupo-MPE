@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 
 
 import { CertificadoAptitudPage } from './certificado-aptitud.page';
+import { ComponentsModule } from '../../../components/components.module';
 
 const routes: Routes = [
   {
@@ -23,7 +24,8 @@ const routes: Routes = [
     ReactiveFormsModule,
     IonicModule,
     TranslateModule.forChild(),
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ComponentsModule
   ],
   declarations: [CertificadoAptitudPage]
 })

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router, NavigationExtras } from '@angular/router';
 import {
   NavController,
@@ -28,6 +28,9 @@ import { NgxXml2jsonService } from 'ngx-xml2json';
 import { RespuestaCentroMPEInfo, RespuestaCentrosMPE, RespuestaCitasEmpleado, RespuestaCitasEmpleadoaInfo } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { CentroMPE } from '../../interfaces/interfaces-grupo-mpe';
 import { CentrosMpeService } from '../../services/centros-mpe.service';
+import { ViewWillEnter } from '@ionic/angular';
+import { MapasService } from '../../services/mapas.service';
+import { CentroAPI } from '../../interfaces/centros-interfaces';
 
 
 @Component({
@@ -43,14 +46,14 @@ import { CentrosMpeService } from '../../services/centros-mpe.service';
     ])
   ]
 })
-export class HomeResultsPage {
+export class HomeResultsPage implements OnInit, ViewWillEnter {
 
   properties: Array<any>;
   searchKey = '';
   label = '';
   yourLocation = '463 Beacon Street Guest House';
 
-  listaCentroMpe = [];
+  listaCentroMpe: CentroAPI[];
 
   constructor(
     public navCtrl: NavController,
@@ -64,84 +67,32 @@ export class HomeResultsPage {
     private router: Router,
     public usuarioService: UsuarioService,
     private ngxXml2jsonService: NgxXml2jsonService,
-    private centrosMpeService: CentrosMpeService
+    private centrosMpeService: CentrosMpeService,
+    private mapasService: MapasService
   ) {
 
   }
 
+  ngOnInit() {
+    this.listaCentroMpe = this.mapasService.getCentrosFiltrados();
+
+  }
+
   ionViewWillEnter() {
-    this.getCentrosMpe();
+
+
+
+  }
+
+  mostrarInfoCentro(centro: CentroAPI) {
+
+    this.mapasService.guardarCentroSeleccionado(centro);
+    this.navCtrl.navigateForward('property-detail');
+
   }
 
   getCentrosMpe() {
 
-    try {
-      let aux: CentroMPE[];
-      this.usuarioService.present('Cargando Centros...');
-     
-      const xmlhttp = new XMLHttpRequest();
-      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-      xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-      xmlhttp.responseType = 'document';
-        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
-      const sr =
-      '<?xml version="1.0" encoding="utf-8"?>' +
-      '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
-        '<soap:Header>' +
-          '<AuthHeader xmlns="http://tempuri.org/">' +
-          '<Usuario>contavila@galicia.com</Usuario>' +
-          '<Password>MPEVILA</Password>' +
-          '</AuthHeader>' +
-        '</soap:Header>' +
-        '<soap:Body>' +
-          '<ObtenerCentrosMpe xmlns="http://tempuri.org/" />' +
-        '</soap:Body>' +
-      '</soap:Envelope>';
-
-      xmlhttp.onreadystatechange =  () => {
-            if (xmlhttp.readyState === 4) {
-                if (xmlhttp.status === 200) {
-                    const xml = xmlhttp.responseXML;
-                    const obj: RespuestaCentrosMPE = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                    // tslint:disable-next-line: max-line-length
-                    console.log('Respuesta: ', obj);
-
-                    // tslint:disable-next-line: max-line-length
-                    const a: RespuestaCentroMPEInfo = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerTrabajadorCitasPendientesRelacionResponse']['ObtenerTrabajadorCitasPendientesRelacionResult']));
-                    console.log(a);
-
-                    if (a.CentroMpeInfo !== undefined) {
-                      if (!Array.isArray(a.CentroMpeInfo)) {
-
-                        this.listaCentroMpe.push(a.CentroMpeInfo);
-                      } else {
-                        for (const cent of a.CentroMpeInfo) {
-                          cent.Imagen = "assets/img/properties/house12.jpg"
-                          this.listaCentroMpe.push(cent);
-                        }
-                        aux = a.CentroMpeInfo;
-                      }
-
-                    this.centrosMpeService.setCentroMpe(this.listaCentroMpe);
-                    console.log('ListaHistorial ' + this.listaCentroMpe);
-                    console.log('event ' , event);
-                   
-                    this.usuarioService.dismiss();
-                  }
-                } else {
-                  this.usuarioService.dismiss();
-                  console.log('200 ' + xmlhttp.response);
-                  // tslint:disable-next-line: max-line-length
-                  this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
-                }
-            } else {
-              this.usuarioService.dismiss();
-            }
-        };
-      xmlhttp.send(sr);
-    } catch (error) {
-      this.usuarioService.dismiss();
-    }
   }
   settings() {
     this.navCtrl.navigateForward('settings');
@@ -173,7 +124,7 @@ export class HomeResultsPage {
 
     loader.present();
     loader.onWillDismiss().then(() => {
-      let navigationExtras: NavigationExtras = {
+      const navigationExtras: NavigationExtras = {
         state: {
           cat: '',
           label: label

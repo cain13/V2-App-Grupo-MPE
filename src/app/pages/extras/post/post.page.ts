@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { UsuarioService } from '../../../services/usuario.service';
 import { RespuestaAPIPost, UsuarioLogin, UsuarioPost } from '../../../interfaces/usuario-interfaces';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import 'rxjs/add/operator/timeout';
 
 
 @Component({
@@ -50,7 +49,7 @@ export class PostPage implements OnInit {
               private http: HttpClient) { }
 
   async ngOnInit() {
-    await this.usuarioService.present('Cargando anuncios...')
+    await this.usuarioService.present('Cargando anuncios...');
 
     this.usuario = this.usuarioService.getUsuario();
 
@@ -58,35 +57,35 @@ export class PostPage implements OnInit {
 
       tipoUsuario: this.usuario.Tipo
 
-    }
+    };
 
     await this.obtenerPost(usuarioPost).then(resp => {
 
       console.log(resp);
       this.postAPI = resp;
       console.log(resp);
-      
+
 
     }).catch( error => {
 
-      console.log('ERROR CONEXION: ', error)
+      console.log('ERROR CONEXION: ', error);
 
     });
 
-    this.usuarioService.dismiss();  
+    this.usuarioService.dismiss();
 
   }
 
   async obtenerPost(usuarioPost: UsuarioPost): Promise <RespuestaAPIPost[]> {
     // tslint:disable-next-line: no-shadowed-variable
     const URL = 'https://mpecronos.com/api/Fichar/Fichar';
-  
-  
+
+
     const respuesta = await  this.http.post<RespuestaAPIPost[]>(URL, usuarioPost, {headers: this.header}).toPromise();
-  
+
     return respuesta;
-  
-  
+
+
   }
 
 

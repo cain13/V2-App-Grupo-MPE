@@ -19,9 +19,9 @@ const routes: Routes = [
   { path: 'schedule-visit', loadChildren: () => import('./pages/schedule-visit/schedule-visit.module').then(m => m.ScheduleVisitPageModule) },
   { path: 'bycategory', loadChildren: () => import('./pages/bycategory/bycategory.module').then(m => m.BycategoryPageModule) },
   { path: 'property-list', loadChildren: () => import('./pages/property-list/property-list.module').then(m => m.PropertyListPageModule) },
-  { path: 'property-detail/:id', loadChildren: () => import('./pages/property-detail/property-detail.module').then(m => m.PropertyDetailPageModule) },
+  { path: 'property-detail', loadChildren: () => import('./pages/property-detail/property-detail.module').then(m => m.PropertyDetailPageModule) },
   { path: 'broker-list', loadChildren: () => import('./pages/broker-list/broker-list.module').then(m => m.BrokerListPageModule) },
-  { path: 'broker-detail/:id', loadChildren: () => import('./pages/broker-detail/broker-detail.module').then(m => m.BrokerDetailPageModule) },
+  { path: 'broker-detail', loadChildren: () => import('./pages/broker-detail/broker-detail.module').then(m => m.BrokerDetailPageModule) },
   { path: 'broker-chat', loadChildren: () => import('./pages/broker-chat/broker-chat.module').then(m => m.BrokerChatPageModule) },
   { path: 'checkout', loadChildren: () => import('./pages/checkout/checkout.module').then(m => m.CheckoutPageModule) },
   { path: 'favorites', loadChildren: () => import('./pages/favorites/favorites.module').then(m => m.FavoritesPageModule) },
@@ -34,7 +34,7 @@ const routes: Routes = [
   { path: 'extras/popupmenu', loadChildren: () => import('./pages/extras/popupmenu/popupmenu.module').then(m => m.PopupmenuPageModule) },
   { path: 'extras/charts', loadChildren: () => import('./pages/extras/charts/charts.module').then(m => m.ChartsPageModule) },
   { path: 'extras/post', loadChildren: () => import('./pages/extras/post/post.module').then(m => m.PostPageModule) },
-  { path: '', redirectTo: '/certificado-aptitud', pathMatch: 'full' },
+  { path: '', redirectTo: '/tab-inicio', pathMatch: 'full' },
   {
     path: 'filtro-documentos',
     loadChildren: () => import('./pages/modal/filtro-documentos/filtro-documentos.module').then( m => m.FiltroDocumentosPageModule)
@@ -131,16 +131,25 @@ const routes: Routes = [
     path: 'citas-pendientes-trabajador',
     loadChildren: () => import('./pages/vistasMPE/citas-pendientes-trabajador/citas-pendientes-trabajador.module').then( m => m.CitasPendientesTrabajadorPageModule)
   },
-
-
-
-
-
-
-
-
-
-
+  {
+    path: 'inicio',
+    loadChildren: () => import('./pages/vistasMPE/inicio/inicio.module').then( m => m.InicioPageModule)
+  },
+  {
+    path: 'noticias-mas-info',
+    loadChildren: () => import('./pages/vistasMPE/noticias-mas-info/noticias-mas-info.module').then( m => m.NoticiasMasInfoPageModule)
+  },
+  {
+    path: 'tab-inicio',
+    loadChildren: () => import('./pages/vistasMPE/tab-inicio/tab-inicio.module').then( m => m.TabInicioPageModule)
+  },
+  {
+    path: 'vigilancia-salud',
+    loadChildren: () => import('./pages/vistasMPE/vigilancia-salud/vigilancia-salud.module').then( m => m.VigilanciaSaludPageModule)
+  },  {
+    path: 'home-location-menu',
+    loadChildren: () => import('./pages/vistasMPE/home-location-menu/home-location-menu.module').then( m => m.HomeLocationMenuPageModule)
+  },
 
 
 

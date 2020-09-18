@@ -61,7 +61,7 @@ export class BlancoPage implements OnInit {
           this.menuCtrl.enable(false, 'menuTrabajadores');
           this.menuCtrl.enable(true, 'menuCompleto');
           this.getCentros();
-          this.navCtrl.navigateRoot('certificado-aptitud');
+          this.navCtrl.navigateRoot('tab-inicio');
 
         } else if ( this.usuario.Tipo === 'CONSULTOR') {
           console.log('ACCEDEMOS COMO CONSULTOR');
@@ -75,7 +75,7 @@ export class BlancoPage implements OnInit {
             this.menuCtrl.enable(false, 'menuTrabajadores');
             this.menuCtrl.enable(true, 'menuGuardiaCivil');
             this.menuCtrl.enable(false, 'menuCompleto');
-            this.navCtrl.navigateRoot('documentos-trabajador');
+            this.navCtrl.navigateRoot('tab-inicio');
 
           } else {
 
@@ -83,7 +83,7 @@ export class BlancoPage implements OnInit {
             this.menuCtrl.enable(true, 'menuTrabajadores');
             this.menuCtrl.enable(false, 'menuGuardiaCivil');
             this.menuCtrl.enable(false, 'menuCompleto');
-            this.navCtrl.navigateRoot('documentos-trabajador');
+            this.navCtrl.navigateRoot('tab-inicio');
 
           }
         }
@@ -143,7 +143,7 @@ export class BlancoPage implements OnInit {
         component: SeleccionarClientePage
       });
       modal.onDidDismiss().then(() => {
-        this.navCtrl.navigateRoot('certificado-aptitud');
+        this.navCtrl.navigateRoot('tab-inicio');
       });
       return await modal.present();
     }

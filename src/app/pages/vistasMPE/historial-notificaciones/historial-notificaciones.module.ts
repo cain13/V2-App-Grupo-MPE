@@ -9,6 +9,7 @@ import { HistorialNotificacionesPageRoutingModule } from './historial-notificaci
 import { HistorialNotificacionesPage } from './historial-notificaciones.page';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ComponentsModule } from '../../../components/components.module';
 
 const routes: Routes = [
   {
@@ -24,7 +25,8 @@ const routes: Routes = [
     IonicModule,
     HistorialNotificacionesPageRoutingModule,
     TranslateModule.forChild(),
-    RouterModule.forChild(routes)
+    RouterModule.forChild(routes),
+    ComponentsModule
   ],
   declarations: [HistorialNotificacionesPage]
 })

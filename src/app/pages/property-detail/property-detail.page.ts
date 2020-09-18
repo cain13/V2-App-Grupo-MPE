@@ -1,8 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { NavController, ActionSheetController, ModalController, ToastController } from '@ionic/angular';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { ImagePage } from '../modal/image/image.page';
+import { MapasService } from '../../services/mapas.service';
+import { CentroAPI } from '../../interfaces/centros-interfaces';
+import { UsuarioService } from '../../services/usuario.service';
+import { UsuarioLogin } from '../../interfaces/usuario-interfaces';
+import { DatabaseService } from '../../services/database.service';
 
 import {
   PropertyService,
@@ -32,11 +37,14 @@ import {
     ])
   ]
 })
-export class PropertyDetailPage {
+export class PropertyDetailPage implements OnInit {
 
   propertyID: any;
   property: any;
-  propertyopts: String = 'description';
+  propertyopts: String = 'location';
+  centro: CentroAPI;
+  usuario: UsuarioLogin;
+  isCentroFav: boolean;
 
   constructor (
     public asCtrl: ActionSheetController,
@@ -46,14 +54,43 @@ export class PropertyDetailPage {
     public route: ActivatedRoute,
     public router: Router,
     private propertyService: PropertyService,
+    private mapasService: MapasService,
+    private usuarioService: UsuarioService,
+    private databaseService: DatabaseService
   ) {
-    this.propertyID = this.route.snapshot.paramMap.get('id');
+    this.centro = this.mapasService.getCentroSelec();
+    this.usuario = this.usuarioService.getUsuario();
 
-    this.property = this.propertyService.getItem(this.propertyID) ?
-    this.propertyService.getItem(this.propertyID) :
-    this.propertyService.getProperties()[0];
+    console.log(this.usuario);
   }
 
+  async ngOnInit() {
+    await this.usuarioService.present('Cargando centro...');
+    if (this.usuario !== undefined) {
+      await this.databaseService.obtenerCentroFav(this.centro.Id).then( res => {
+
+        if (res) {
+
+          this.isCentroFav = true;
+
+        } else {
+
+          this.isCentroFav = false;
+
+        }
+
+      }).catch( error => {
+
+        this.isCentroFav = false;
+
+      });
+
+
+    }
+
+    this.usuarioService.dismiss();
+
+  }
   ionViewWillEnter() {
   }
 
@@ -66,7 +103,7 @@ export class PropertyDetailPage {
   }
 
 
-  favorite(property) {
+  /* favorite(property) {
     this.propertyService.favorite(property)
         .then(async res => {
             const toast = await this.toastCtrl.create({
@@ -86,6 +123,54 @@ export class PropertyDetailPage {
 
             toast.present();
         });
+  } */
+
+  async favorite(centro: CentroAPI) {
+
+    await this.usuarioService.addCentroFav(centro).then( async () => {
+
+      const toast = await this.toastCtrl.create({
+        message: 'Centro añadido a favoritos.',
+        duration: 2000,
+        position: 'bottom',
+      });
+      this.isCentroFav = true;
+      toast.present();
+
+    }).catch( async error => {
+      console.log('ERROR: ', error);
+      const toast = await this.toastCtrl.create({
+        message: 'Error al añadir a favoritos.',
+        duration: 2000,
+        position: 'bottom',
+      });
+      toast.present();
+    });
+
+  }
+
+  async borrarFavorite(centro: CentroAPI) {
+
+    await this.usuarioService.borrarCentroFav(centro.Id).then( async () => {
+
+      const toast = await this.toastCtrl.create({
+        message: 'Centro borrado de favoritos.',
+        duration: 2000,
+        position: 'bottom',
+      });
+      this.isCentroFav = false;
+      toast.present();
+
+    }).catch( async error => {
+      console.log('ERROR: ', error);
+      const toast = await this.toastCtrl.create({
+        message: 'Error al borrar de favoritos.',
+        duration: 2000,
+        position: 'bottom',
+      });
+      toast.present();
+    });
+
   }
 
   async share() {

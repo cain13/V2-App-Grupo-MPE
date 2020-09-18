@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
-import { NavController, MenuController, LoadingController } from '@ionic/angular';
+import { Component, OnInit } from '@angular/core';
+import { NavController, MenuController, LoadingController, ViewWillEnter } from '@ionic/angular';
 import { TranslateProvider } from '../../providers';
+import { Geolocation } from '@ionic-native/geolocation/ngx';
 
-import { environment } from '../../../environments/environment';
+
+import { MapasService } from '../../services/mapas.service';
 
 import {
   trigger,
@@ -12,6 +14,9 @@ import {
   query,
   stagger
 } from '@angular/animations';
+import { CentroAPI } from 'src/app/interfaces/centros-interfaces';
+import { UsuarioService } from '../../services/usuario.service';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -27,33 +32,69 @@ import {
     ])
   ]
 })
-export class HomeLocationPage {
+export class HomeLocationPage implements OnInit, ViewWillEnter {
 
   setlocation: String;
   items: string[];
   showItems: Boolean = false;
+  arrayCentros: CentroAPI[];
+  latitud: number;
+  longitud: number;
+  idMenu = 0;
 
   constructor(
     public navCtrl: NavController,
     public menuCtrl: MenuController,
     public loadingCtrl: LoadingController,
-    private translate: TranslateProvider
+    private geolocation: Geolocation,
+    private translate: TranslateProvider,
+    private mapasService: MapasService,
+    private usuarioService: UsuarioService,
+    private activeRoute: ActivatedRoute
   ) {
+  }
 
+  async ngOnInit() {
+    await this.usuarioService.present('Cargando Centros...');
+    await this.mapasService.getCentros().then(res => {
+
+      this.arrayCentros = res.Centros;
+      this.mapasService.guardarCentros(this.arrayCentros);
+
+    }).catch( error => {
+
+      console.log('Error al cargar centros: ', error);
+
+    });
+    console.log('CENTROS API:' , this.arrayCentros);
+    this.usuarioService.dismiss();
   }
 
   ionViewWillEnter() {
     this.menuCtrl.enable(false);
   }
 
+
+
   initializeItems() {
-    this.items = [
-      'Sevilla, Calle caminos, 6',
-      'Barcelona, C/ Valencia, 85',
-      'Madrid, C/ Churruca 14',
-      'Murcia, Calle Alcalde Clemente, s/n.',
-      'Valencia, Calle del Pintor Navarro, 23'
-    ];
+
+    this.items = [];
+    for (const centro of this.arrayCentros) {
+      if (this.items === []) {
+
+        this.items.push(centro.Provincia);
+
+      } else {
+
+        const busqueda = this.items.find(aux => aux === centro.Provincia);
+        if (busqueda === undefined ) {
+
+          this.items.push(centro.Provincia);
+
+        }
+      }
+
+    }
   }
 
   getItems(ev: any) {
@@ -90,11 +131,45 @@ export class HomeLocationPage {
     this.navCtrl.navigateForward('messages');
   }
 
-  goToHomeResults() {
-    this.navCtrl.navigateRoot('home-results');
+  async goToHomeResults(provincia: string) {
+    await this.usuarioService.present('Cargando centros de ' + provincia + '...');
+    this.arrayCentros.filter(centro => centro.Provincia === provincia);
+    console.log('Centros filtrados: ', this.arrayCentros.filter(centro => centro.Provincia === provincia));
+    this.mapasService.guardarCentrosFiltrados(this.arrayCentros.filter(centro => centro.Provincia === provincia));
+    await this.usuarioService.dismiss();
+    this.navCtrl.navigateForward('home-results');
+
+
   }
 
-  goToCentrosMPE() {
-    this.navCtrl.navigateForward('property-list');
+  async goToCentrosMPE() {
+    await this.usuarioService.present('Cargando centros cercanos...');
+    await this.obtenerLocalizacion();
+    await this.mapasService.getCentros(this.latitud, this.longitud).then( res => {
+      this.mapasService.guardarCentrosFiltrados(res.Centros);
+      this.usuarioService.dismiss();
+      this.navCtrl.navigateForward('home-results');
+    }).catch( error => {
+
+      console.log('Error al cargar los centros: ', error);
+      this.usuarioService.presentAlert('Error al cargar centros cercanos.', 'Pruebe de nuevo más tarde', '');
+
+    });
   }
+
+  async obtenerLocalizacion() {
+    await this.geolocation.getCurrentPosition().then((resp) => {
+      console.log('Coordenadas');
+      console.log(resp.coords.latitude);
+      console.log(resp.coords.longitude);
+      this.latitud = parseFloat(resp.coords.latitude.toString());
+      this.longitud = parseFloat(resp.coords.longitude.toString());
+    }).catch(err => {
+
+      console.log('No tiene GPS ', err);
+    });
+    console.log('Mapas - Coordenadas: ', this.latitud, ' ', this.longitud);
+
+  }
+
 }

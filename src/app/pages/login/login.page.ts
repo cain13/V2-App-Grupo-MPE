@@ -36,11 +36,7 @@ export class LoginPage implements OnInit {
   mostrarContra = false;
   passwordIcon = 'eye-outline';
   passwordIcon2 = 'eye-off-outline';
-
-
-
-
-
+  plataforma: string;
 
   constructor(
     public navCtrl: NavController,
@@ -67,6 +63,19 @@ export class LoginPage implements OnInit {
       this.tokenAPI = token;
     });
 
+    /* this.platform.ready().then(() => {
+
+      if (this.platform.is('ios')) {
+
+        this.plataforma = 'ios';
+
+      } else if (this.platform.is('android')) {
+
+        this.plataforma = 'android';
+
+      }
+    }); */
+    console.log('PLATAFORMA: ', this.plataforma);
     this.usuario = this.usuarioService.getUsuario();
 
     if (this.usuario === null || this.usuario === undefined) {
@@ -144,7 +153,7 @@ export class LoginPage implements OnInit {
               this.menuCtrl.enable(false, 'menuTrabajadores');
               this.menuCtrl.enable(true, 'menuCompleto');
               this.getCentros();
-              this.navCtrl.navigateRoot('certificado-aptitud');
+              this.navCtrl.navigateRoot('tab-inicio');
 
             } else if ( this.usuario.Tipo === 'CONSULTOR') {
               console.log('ACCEDEMOS COMO CONSULTOR');
@@ -158,7 +167,7 @@ export class LoginPage implements OnInit {
                 this.menuCtrl.enable(false, 'menuTrabajadores');
                 this.menuCtrl.enable(true, 'menuGuardiaCivil');
                 this.menuCtrl.enable(false, 'menuCompleto');
-                this.navCtrl.navigateRoot('documentos-trabajador');
+                this.navCtrl.navigateRoot('tab-inicio');
 
               } else {
 
@@ -166,7 +175,7 @@ export class LoginPage implements OnInit {
                 this.menuCtrl.enable(true, 'menuTrabajadores');
                 this.menuCtrl.enable(false, 'menuGuardiaCivil');
                 this.menuCtrl.enable(false, 'menuCompleto');
-                this.navCtrl.navigateRoot('documentos-trabajador');
+                this.navCtrl.navigateRoot('tab-inicio');
 
               }
             }
@@ -325,7 +334,7 @@ export class LoginPage implements OnInit {
                       this.menuCtrl.enable(false, 'menuTrabajadores');
                       this.menuCtrl.enable(true, 'menuCompleto');
                       this.getCentros();
-                      this.navCtrl.navigateRoot('certificado-aptitud');
+                      this.navCtrl.navigateRoot('tab-inicio');
 
                     } else if ( usuario.Tipo === 'CONSULTOR') {
                       console.log('ACCEDEMOS COMO CONSULTOR');
@@ -339,7 +348,7 @@ export class LoginPage implements OnInit {
                         this.menuCtrl.enable(false, 'menuTrabajadores');
                         this.menuCtrl.enable(true, 'menuGuardiaCivil');
                         this.menuCtrl.enable(false, 'menuCompleto');
-                        this.navCtrl.navigateRoot('documentos-trabajador');
+                        this.navCtrl.navigateRoot('tab-inicio');
 
                       } else {
 
@@ -347,7 +356,7 @@ export class LoginPage implements OnInit {
                         this.menuCtrl.enable(true, 'menuTrabajadores');
                         this.menuCtrl.enable(false, 'menuGuardiaCivil');
                         this.menuCtrl.enable(false, 'menuCompleto');
-                        this.navCtrl.navigateRoot('documentos-trabajador');
+                        this.navCtrl.navigateRoot('tab-inicio');
 
                       }
                     }
@@ -367,7 +376,7 @@ export class LoginPage implements OnInit {
       component: SeleccionarClientePage
     });
     modal.onDidDismiss().then(() => {
-      this.navCtrl.navigateRoot('certificado-aptitud');
+      this.navCtrl.navigateRoot('tab-inicio');
     });
     return await modal.present();
   }

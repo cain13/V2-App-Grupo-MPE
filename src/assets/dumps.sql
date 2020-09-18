@@ -21,3 +21,21 @@ CREATE TABLE IF NOT EXISTS notificacion (
 	Ruta TEXT NOT NULL,
 	Icono TEXT NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS centrosFavoritos (
+	IdCentroFav INTEGER PRIMARY KEY AUTOINCREMENT,
+	Id INTEGER  NOT NULL,
+	Direccion TEXT  DEFAULT NULL,
+    DireccionCompleto TEXT  DEFAULT NULL,
+    Nombre TEXT  DEFAULT NULL,
+    Localidad TEXT  DEFAULT NULL,
+    Provincia TEXT  DEFAULT NULL,
+    CodigoPostal TEXT  DEFAULT NULL,
+    Telefono TEXT  DEFAULT NULL,
+    Email TEXT  DEFAULT NULL,
+    Imagen TEXT  DEFAULT NULL,
+    Latitud INTEGER DEFAULT 0,
+    Longitud INTEGER DEFAULT 0,
+    Distancia TEXT  DEFAULT NULL,
+    Horario TEXT  DEFAULT NULL
+);

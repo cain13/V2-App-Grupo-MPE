@@ -81,3 +81,12 @@ export interface RespuestaAPIPost {
     Longitud: string;
 
 }
+
+export interface Opciones {
+
+    Titulo: string;
+    Icon: string;
+    Url: string;
+    Tab?: string;
+
+}

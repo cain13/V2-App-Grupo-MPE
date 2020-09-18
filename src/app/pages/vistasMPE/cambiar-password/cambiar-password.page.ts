@@ -28,10 +28,13 @@ export class CambiarPasswordPage implements OnInit {
     this.platform.ready().then(() => {
       console.log('Width: ' + this.platform.width());
       console.log('Height: ' + this.platform.height());
-      if (this.platform.height() < 731) {
+      if (this.platform.width() <= 360) {
         this.isSmallPhone = true;
+        console.log('Si es movil pequeño');
       } else {
         this.isSmallPhone = false;
+        console.log('No es movil pequeño');
+
       }
     });
     if (this.cambiarPassword === null || this.cambiarPassword === undefined) {

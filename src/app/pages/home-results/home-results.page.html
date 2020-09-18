@@ -5,7 +5,7 @@
     </ion-buttons>
     <ion-title>
         <ion-text color="light">
-        Asistencia
+        Centros Cercanos
         </ion-text>
     </ion-title>
   </ion-toolbar>
@@ -37,7 +37,7 @@
     
         <div class="ion-no-margin" [@staggerIn]="listaCentroMpe">
           <!-- <ion-item lines="none" class="bg-white" tappable routerLink="/property-detail/{{property.id}}" *ngFor="let property of properties | termSearch:label:'label'"> -->
-          <ion-item lines="none" class="bg-white" tappable *ngFor="let centros of listaCentroMpe | termSearch:label:'label'">
+          <ion-item lines="none" class="bg-white" tappable *ngFor="let centros of listaCentroMpe | termSearch:label:'label'" (click)="mostrarInfoCentro(centros)">
             <ion-thumbnail slot="start">
               <img [src]="centros.Imagen">
             </ion-thumbnail>
@@ -46,14 +46,14 @@
                   <ion-text color="dark"><strong>{{ centros.Direccion }}</strong></ion-text>
               </h2>
               <p class="text-12x">
-                <ion-text color="primary">{{centros.city}}</ion-text> ∙ <ion-text color="secondary">{{ centros.CodigoPostal}}</ion-text>
+                <ion-text color="primary">{{centros.Provincia}}</ion-text> ∙ <ion-text color="secondary">{{ centros.CodigoPostal}}</ion-text>
               </p>
-              <p class="text-12x">
-                <ion-text color="primary">{{centros.address}}</ion-text> 
+              <p class="text-12x" *ngIf="centros.Telefono.lenght < 6">
+                <ion-text color="primary">{{centros.Telefono}}</ion-text> 
               </p>
 
-              <ion-badge slot="end" color="secondary">
-                <ion-text color="light">{{ centros.Telefono }}</ion-text>
+              <ion-badge slot="end" color="secondary" >
+                <ion-text color="light">{{ centros.Distancia}}</ion-text>
               </ion-badge>
 
             </ion-label>

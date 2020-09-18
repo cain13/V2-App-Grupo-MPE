@@ -501,30 +501,30 @@ export interface Asistencia {
 }
 
 
-export interface RespuestaCentrosMPE{
-  "soap:Envelope": {
-    "$": {
-      "xmlns:soap": "http://schemas.xmlsoap.org/soap/envelope/",
-      "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance",
-      "xmlns:xsd": "http://www.w3.org/2001/XMLSchema"
+export interface RespuestaCentrosMPE {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
     },
-    "soap:Body": [
+    'soap:Body': [
       {
-        "ObtenerCentrosMpeResponse": [
+        'ObtenerCentrosMpeResponse': [
           {
-            "$": {
-              "xmlns": "http://tempuri.org/"
+            '$': {
+              'xmlns': 'http://tempuri.org/'
             },
-            "ObtenerCentrosMpeResult": [
+            'ObtenerCentrosMpeResult': [
               {
-                "CentroMpeInfo": CentroMPE[]
+                'CentroMpeInfo': CentroMPE[]
               }
             ]
           }
         ]
       }
     ]
-  }
+  };
 }
 
 
@@ -535,7 +535,7 @@ export interface RespuestaCentroMPEInfo {
 
 }
 
-export interface CentroMPE{
+export interface CentroMPE {
   Nombre: string;
   Direccion: string;
   CodigoPostal: string;
@@ -716,14 +716,34 @@ export interface RespuestaAPItoken {
 
 export interface InfoCentrosMapa {
 
-  Nombre: string,
-  Direccion: string,
-  CodigoPostal: number,
-  Localidad: string,
-  Provincia: string,
-  Horario: string,
-  Telefono: number,
-  Email: string,
-  Latitud: number,
-  Longitud: number
+  Nombre: string;
+  Direccion: string;
+  CodigoPostal: number;
+  Localidad: string;
+  Provincia: string;
+  Horario: string;
+  Telefono: number;
+  Email: string;
+  Latitud: number;
+  Longitud: number;
+}
+
+export interface RespuestaAPINoticias {
+  Respuesta: string;
+  Noticias:  Noticia[];
+  Promocion: Noticia[];
+  Codigo:    number;
+}
+
+export interface Noticia {
+  IdNoticia:        number;
+  Descripcion:      string;
+  Titulo:           string;
+  Url:              string;
+  PathImagen:       string;
+  DescripcionCorta: string;
+  TipoNoticia:      string;
+  TipoEmpleado:     string;
+  FechaInicio:      string;
+  FechaFin:         string;
 }
