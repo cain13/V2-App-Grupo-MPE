@@ -146,10 +146,32 @@ const routes: Routes = [
   {
     path: 'vigilancia-salud',
     loadChildren: () => import('./pages/vistasMPE/vigilancia-salud/vigilancia-salud.module').then( m => m.VigilanciaSaludPageModule)
-  },  {
+  },
+  {
     path: 'home-location-menu',
     loadChildren: () => import('./pages/vistasMPE/home-location-menu/home-location-menu.module').then( m => m.HomeLocationMenuPageModule)
+  },  {
+    path: 'certificado-aptitud-menu',
+    loadChildren: () => import('./pages/vistasMPE/certificado-aptitud-menu/certificado-aptitud-menu.module').then( m => m.CertificadoAptitudMenuPageModule)
   },
+  {
+    path: 'citas-pendientes-menu',
+    loadChildren: () => import('./pages/vistasMPE/citas-pendientes-menu/citas-pendientes-menu.module').then( m => m.CitasPendientesMenuPageModule)
+  },
+  {
+    path: 'documentos-trabajador-menu',
+    loadChildren: () => import('./pages/vistasMPE/documentos-trabajador-menu/documentos-trabajador-menu.module').then( m => m.DocumentosTrabajadorMenuPageModule)
+  },
+  {
+    path: 'documentos-covid-menu',
+    loadChildren: () => import('./pages/vistasMPE/documentos-covid-menu/documentos-covid-menu.module').then( m => m.DocumentosCovidMenuPageModule)
+  },
+  {
+    path: 'citas-pendientes-trabajador-menu',
+    loadChildren: () => import('./pages/vistasMPE/citas-pendientes-trabajador-menu/citas-pendientes-trabajador-menu.module').then( m => m.CitasPendientesTrabajadorMenuPageModule)
+  },
+
+  
 
 
 

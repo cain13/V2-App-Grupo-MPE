@@ -86,7 +86,8 @@ export function HttpLoaderFactory(http: HttpClient) {
       }
     }),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyBnTnX1cVqp8AbMAL6TNL50WV8pKPI6t7Q'
+      apiKey: 'AIzaSyDM_zkRTTP-VuyvypxSeEGcM8PMSfyqZ4k'
+     // apiKey: 'AIzaSyBnTnX1cVqp8AbMAL6TNL50WV8pKPI6t7Q'
     }),
     PipesModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })

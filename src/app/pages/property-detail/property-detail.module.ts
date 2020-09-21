@@ -25,7 +25,8 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     TranslateModule.forChild(),
     AgmCoreModule.forRoot({
-      apiKey: 'AIzaSyD9BxeSvt3u--Oj-_GD-qG2nPr1uODrR0Y'
+      apiKey: 'AIzaSyDM_zkRTTP-VuyvypxSeEGcM8PMSfyqZ4k'
+      //apiKey: 'AIzaSyD9BxeSvt3u--Oj-_GD-qG2nPr1uODrR0Y'
     })
   ],
   declarations: [PropertyDetailPage]

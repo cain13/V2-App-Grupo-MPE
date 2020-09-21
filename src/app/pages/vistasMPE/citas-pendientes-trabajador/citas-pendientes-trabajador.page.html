@@ -1,14 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons slot="start">
-      <ion-back-button></ion-back-button>
-    </ion-buttons>
-    <ion-title>
-        <ion-text color="light">
-        Citas Pendientes
-        </ion-text>
-    </ion-title>
-  </ion-toolbar>
+  <app-header></app-header>
   <ion-toolbar color="dark">
       <ion-searchbar [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar..."></ion-searchbar>
       <!-- <ion-buttons slot="end">

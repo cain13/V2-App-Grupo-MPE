@@ -18,6 +18,7 @@ export class TabInicioPage implements OnInit {
 
     this.usuario = this.usuarioService.getUsuario();
 
+    
   }
 
   ngOnInit() {

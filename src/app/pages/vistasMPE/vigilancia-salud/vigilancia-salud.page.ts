@@ -14,28 +14,38 @@ export class VigilanciaSaludPage implements OnInit {
 
     this.opciones = [{
       Titulo: 'Certificado de Aptitud',
-      Url: '/certificado-aptitud',
-      Icon: 'document-outline'
+      Url: '/certificado-aptitud-menu',
+      Icon: 'document-outline',
+      direct: 'forward'
+    },{
+      Titulo: 'Citas Pendientes',
+      Url: '/citas-pendientes-menu',
+      direct: 'forward',
+      Icon: 'timer-outline'
     },
     {
       Titulo: 'Planificación VS',
       Url: '/planficacion-vs',
-      Icon: 'calendar-outline'
+      Icon: 'calendar-outline',
+      direct: 'forward'
     },
     {
       Titulo: 'Memoria Anual',
       Url: '/memoria-anual',
-      Icon: 'folder-outline'
+      Icon: 'folder-outline',
+      direct: 'forward'
     },
     {
       Titulo: 'Estudio Epidemiológico',
       Url: '/estudio-epidemiologico',
-      Icon: 'flask-outline'
+      Icon: 'flask-outline',
+      direct: 'forward'
     },
     {
       Titulo: 'Asistencia',
       Url: '/asistencia',
-      Icon: 'help-buoy'
+      Icon: 'help-buoy',
+      direct: 'forward'
     }];
 
   }

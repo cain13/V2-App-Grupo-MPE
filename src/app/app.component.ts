@@ -55,61 +55,44 @@ export class AppComponent {
     // public router: Router
   ) {
     this.appPagesTrabajador = [
-      {
-        title: 'Inicio',
-        url: '/tab-inicio',
-        direct: 'root',
-        icon: 'home-outline'
-      },
+   
       {
         title: 'Reconocimientos Médicos',
-        url: '/documentos-trabajador',
+        url: '/documentos-trabajador-menu',
         direct: 'forward',
         icon: 'document-outline'
       },
       {
         title: 'Documentos COVID',
-        url: '/documentos-covid',
+        url: '/documentos-covid-menu',
         direct: 'forward',
         icon: 'clipboard-outline'
       },
       {
         title: 'Citas Penditenes',
-        url: '/citas-pendientes-trabajador',
+        url: '/citas-pendientes-trabajador-menu',
         direct: 'forward',
         icon: 'timer-outline'
-      },
-      {
-        title: 'Centros Favoritos',
-        url: '/favorites',
-        direct: 'forward',
-        icon: 'heart'
       }
 
     ];
 
     this.appPagesGuardiaCivil = [
       {
-        title: 'Inicio',
-        url: '/tab-inicio',
-        direct: 'root',
-        icon: 'home-outline'
-      },
-      {
         title: 'Reconocimientos Médicos',
-        url: '/documentos-trabajador',
+        url: '/documentos-trabajador-menu',
         direct: 'forward',
         icon: 'document-outline'
       },
       {
         title: 'Pruebas COVID',
-        url: '/documentos-covid',
+        url: '/documentos-covid-menu',
         direct: 'forward',
         icon: 'clipboard-outline'
       },
       {
         title: 'Citas Penditenes',
-        url: '/citas-pendientes-trabajador',
+        url: '/citas-pendientes-trabajador-menu',
         direct: 'forward',
         icon: 'timer-outline'
       },
@@ -118,26 +101,14 @@ export class AppComponent {
         url: '/test',
         direct: 'forward',
         icon: 'school-outline'
-      },
-      {
-        title: 'Centros Favoritos',
-        url: '/favorites',
-        direct: 'forward',
-        icon: 'heart'
       }
 
     ];
 
     this.appPagesVSAll = [
       {
-        title: 'Inicio',
-        url: '/tab-inicio',
-        direct: 'root',
-        icon: 'home-outline'
-      },
-      {
         title: 'Certificado de Aptitud',
-        url: '/certificado-aptitud',
+        url: '/certificado-aptitud-menu',
         direct: 'forward',
         icon: 'document-outline'
       },
@@ -161,7 +132,7 @@ export class AppComponent {
       },
       {
         title: 'Citas Pendientes',
-        url: '/citas-pendientes',
+        url: '/citas-pendientes-menu',
         direct: 'forward',
         icon: 'timer-outline'
       },
@@ -176,28 +147,28 @@ export class AppComponent {
         url: '/historial-notificaciones',
         direct: 'forward',
         icon: 'clipboard-outline'
+      }
+    ];
+
+    this.appPages = [
+      {
+        title: 'Buscar Centro MPE',
+        url: '/home-location',
+        direct: 'forward',
+        icon: 'map-outline'
       },
       {
         title: 'Centros Favoritos',
         url: '/favorites',
         direct: 'forward',
         icon: 'heart'
-      }
-    ];
-
-    this.appPages = [
-      {
+      },{
         title: 'Editar Perfil',
         url: '/edit-profile',
         direct: 'forward',
         icon: 'person-outline'
-      },
-      {
-        title: 'Buscar Centro MPE',
-        url: '/home-location',
-        direct: 'forward',
-        icon: 'map-outline'
-      } /*,
+      }
+       /*,
       {
         title: 'Cerrar Sesion',
         url: '/blanco',
@@ -537,9 +508,11 @@ export class AppComponent {
       if (this.routerOutlet.canGoBack()) {
         console.log('Vista Fichar');
         if (this.usuarioService.getUsuario().Tipo === 'CLIENTE') {
-          this.navCtrl.navigateRoot('certificado-aptitud');
+          //this.navCtrl.navigateRoot('certificado-aptitud');
+          this.navCtrl.navigateRoot('tab-inicio');
         } else {
-          this.navCtrl.navigateRoot('documentos-trabajador');
+          //this.navCtrl.navigateRoot('documentos-trabajador');
+          this.navCtrl.navigateRoot('tab-inicio');
         }
       } else {
         if (Date.now() - this.lastBack > 500) {
@@ -553,6 +526,10 @@ export class AppComponent {
 
   closeMenu() {
     this.menu.close();
+  }
+
+  inicioMenu() {
+    this.navCtrl.navigateRoot('tab-inicio');
   }
 
   async compartirAPP() {

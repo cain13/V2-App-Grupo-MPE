@@ -11,21 +11,21 @@
 <ion-content>
   <!-- # -->
   <div id="nearby-map" class="nearby-map">
-		<agm-map *ngIf="arrayCentros" [latitude]="arrayCentros[0]?.Latitud" [longitude]="nearProperties[0]?.Longitud" [zoom]="5">
+		<agm-map *ngIf="arrayCentros" [latitude]="arrayCentros[1]?.Latitud" [longitude]="arrayCentros[1]?.Longitud" [zoom]="5">
 			<agm-marker *ngFor="let centro of arrayCentros"
 			 [latitude]="centro.Latitud" [longitude]="centro.Longitud">
 				<agm-info-window>
           <ion-item tappable routerLink="/property-detail/{{centro.Id}}">
-            <ion-thumbnail slot="start">
-              <img [src]="centro.Imagen">
+            <ion-thumbnail  slot="start">
+              <img  [src]="centro.Imagen">
             </ion-thumbnail>
             <ion-label>
               <h3>
-                <strong>{{centro.Localidad}}</strong>
+                <strong >Centro MPE</strong>
               </h3>
               <p class="ion-no-margin">
-                <ion-text color="primary">{{centro.Localidad}}, {{centro.Provincia}} •
-                  <span class="fw700">{{ centro.CodigoPostal }}</span>
+                <ion-text class="ion-text-wrap" *ngIf="centro.Localidad !== undefined && centro.Direccion !== undefined" color="primary">{{centro.Direccion}}, {{centro.Provincia}} •
+                  <span *ngIf="centro.CodigoPostal !== undefined" class="fw700">{{centro.CodigoPostal}}</span>
                 </ion-text>
               </p>
             </ion-label>

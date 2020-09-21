@@ -1,16 +1,10 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
-
-
 import { PropertyService } from '../../../providers';
-
-
 import { FiltroDocumentosPage } from '../../modal/filtro-documentos/filtro-documentos.page';
 import { RespuestaAPIGetDocumentos, ObtenerDocumentosTrabajadores, RespuestaDocumentoPDFTrabajador, ObtenerDocumentoPDFTrabajador, Documento } from '../../../interfaces/interfaces-grupo-mpe';
 import { UsuarioService } from '../../../services/usuario.service';
 import { Notificacion } from 'src/app/interfaces/usuario-interfaces';
-
 import { NgxXml2jsonService } from 'ngx-xml2json';
-
 // Para generar pdfs
 import { File } from '@ionic-native/file/ngx';
 import { FileOpener } from '@ionic-native/file-opener/ngx';

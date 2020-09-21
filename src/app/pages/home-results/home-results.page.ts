@@ -91,17 +91,20 @@ export class HomeResultsPage implements OnInit, ViewWillEnter {
 
   }
 
-  getCentrosMpe() {
+  favorite(){}
 
+  getCentrosMpe() {
+    this.listaCentroMpe = this.mapasService.getCentrosGuardados();
   }
   settings() {
     this.navCtrl.navigateForward('settings');
   }
 
   onInput(event) {
-    this.service.findByName(this.searchKey)
+    console.log(event.target.value);
+    this.mapasService.findByName(event.target.value)
         .then(data => {
-            this.properties = data;
+            this.listaCentroMpe = data;
         })
         .catch(error => alert(JSON.stringify(error)));
   }
@@ -111,10 +114,7 @@ export class HomeResultsPage implements OnInit, ViewWillEnter {
   }
 
   findAll() {
-    this.service.findAll()
-      .then(data => this.properties = data)
-      .catch(error => alert(error));
-
+    this.listaCentroMpe = this.mapasService.getCentrosGuardados();
   }
 
   async openPropertyListPage(label?: any) {
@@ -141,15 +141,15 @@ export class HomeResultsPage implements OnInit, ViewWillEnter {
       inputs: [
         {
           name: 'location',
-          placeholder: 'Enter your new Location',
+          placeholder: 'Inserte nueva localización',
           type: 'text'
         },
       ],
       buttons: [
         {
-          text: 'Cancel',
+          text: 'Cancelar',
           handler: data => {
-            console.log('Cancel clicked');
+            console.log('Cancelar clicked');
           }
         },
         {
@@ -158,7 +158,7 @@ export class HomeResultsPage implements OnInit, ViewWillEnter {
             console.log('Change clicked', data);
             this.yourLocation = data.location;
             const toast = await this.toastCtrl.create({
-              message: 'Location was change successfully',
+              message: 'localizaciçon guardada!',
               duration: 3000,
               position: 'top',
               buttons: [
@@ -166,7 +166,7 @@ export class HomeResultsPage implements OnInit, ViewWillEnter {
                   text: 'Ok',
                   role: 'cancel',
                   handler: () => {
-                    console.log('Cancel clicked');
+                    console.log('Cancelar clicked');
                   }
                 }
               ]

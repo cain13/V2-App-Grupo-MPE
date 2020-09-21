@@ -1,0 +1,49 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+        <ion-text color="light">
+        Citas Pendientes
+        </ion-text>
+    </ion-title>
+  </ion-toolbar>
+  <ion-toolbar color="dark">
+      <ion-searchbar [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar..."></ion-searchbar>
+      <!-- <ion-buttons slot="end">
+        <ion-button size="small" shape="round" color="medium" (click)="searchFilter()">
+          <ion-icon name="options"></ion-icon>
+        </ion-button>
+      </ion-buttons> -->
+    </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list class="ion-no-padding" [@staggerIn]="listaCitas">
+    <ion-item class="bg-white"  *ngFor="let certificado of listaCitas"  tappable>
+      <ion-label>
+        <h2> 
+          <ion-text color="dark"><strong>{{certificado.Trabajador}}</strong></ion-text>
+        </h2>
+        <p class="text-12x" >
+          <ion-text color="secondary">{{certificado.NifTrabajador}}</ion-text>
+        </p>
+        <p class="text-12x" *ngIf="certificado.NombreCentroMedico!== undefined && certificado.NombreCentroMedico !== null && certificado.NombreCentroMedico.length > 0">
+          <ion-text color="secondary">{{certificado.NombreCentroMedico}}</ion-text>
+        </p> 
+        <p class="text-12x" style="float: left;">
+          <ion-text color="secondary">{{certificado.FechaDocumento | date: 'dd/MM/yyyy HH:mm'}}</ion-text>
+        </p>
+        <ion-badge style="float: right;" color="success">{{certificado.SituacionReconocimientoMedico}}</ion-badge>
+      </ion-label>
+    </ion-item> 
+  </ion-list>
+
+  <ion-infinite-scroll threshold="100px" (ionInfinite)="getCitasPendientes($event)">
+    <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Cargando citas...">
+      
+    </ion-infinite-scroll-content>
+  </ion-infinite-scroll>
+</ion-content>
+

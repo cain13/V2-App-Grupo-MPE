@@ -3,7 +3,7 @@
     <name>Grupo MPE</name>
     <description>Grupo MPE | Prevención de riesgos laborables</description>
     <author email="soporte@abmcloudsolutions.com" href="https://mpeprevencion.com/">Grupo MPE</author>
-    <content original-src="index.html" src="http://localhost:8100" />
+    <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
     <allow-intent href="https://*/*" />

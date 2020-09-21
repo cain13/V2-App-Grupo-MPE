@@ -1,14 +1,19 @@
 <ion-header>
-  <app-header></app-header>
-
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Estudio Epidemiologico</ion-title>
+  </ion-toolbar>
   <ion-toolbar color="dark">
-    <ion-searchbar style="margin-top: 2mm; margin-bottom: 0mm;" [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar Certificado"></ion-searchbar>
+    <ion-searchbar style="margin-top: 2mm; margin-bottom: 0mm;" [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar..."></ion-searchbar>
     <ion-buttons slot="end" style="margin-top: 2mm;"> 
       <ion-button size="small" shape="round" color="medium" (click)="searchFilter()">
         <ion-icon name="options"></ion-icon>
       </ion-button>
     </ion-buttons>
-</ion-toolbar>
+  </ion-toolbar>
+
 </ion-header>
 
 <ion-content>

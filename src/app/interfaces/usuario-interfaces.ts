@@ -63,6 +63,13 @@ export interface DatosFiltros {
 
 }
 
+export interface CentrosMPEFiltros {
+
+    codigoPostal?: string;
+    provincia?: string;
+    localidad?: string;
+}
+
 export interface UsuarioPost{
 
     tipoUsuario: string;
@@ -88,5 +95,5 @@ export interface Opciones {
     Icon: string;
     Url: string;
     Tab?: string;
-
+    direct: string;
 }

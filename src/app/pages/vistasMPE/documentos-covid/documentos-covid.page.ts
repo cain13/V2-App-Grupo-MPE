@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 
 import { PropertyService } from '../../../providers';
@@ -28,6 +28,7 @@ import { PopoverController,
          IonInfiniteScroll,
          ViewDidLeave,
          ViewWillEnter} from '@ionic/angular';
+import { UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
 
 @Component({
   selector: 'app-documentos-covid',
@@ -42,13 +43,13 @@ import { PopoverController,
     ])
   ]
 })
-export class DocumentosCOVIDPage implements ViewDidLeave, ViewWillEnter {
+export class DocumentosCOVIDPage implements ViewDidLeave, ViewWillEnter, OnInit {
 
   listaDocumentos = [];
   Cantidad = 0;
   searchKey = '';
   pagina = 0;
-
+  usuario: UsuarioLogin;
 
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
@@ -61,13 +62,16 @@ export class DocumentosCOVIDPage implements ViewDidLeave, ViewWillEnter {
     private ngxXml2jsonService: NgxXml2jsonService,
     private documentosService: DocumentosTrabajadoresService
     ) {  }
+  ngOnInit(){
+    this.usuario = this.usuarioService.getUsuario();
+  }
 
 
     ionViewWillEnter() {
       this.pagina = 0;
       this.RecuentoNotificaciones();
       this.getDocumentos();
-
+      this.usuario = this.usuarioService.getUsuario();
 
     }
 
@@ -85,8 +89,13 @@ export class DocumentosCOVIDPage implements ViewDidLeave, ViewWillEnter {
     try {
       if (event === undefined || event === null && this.pagina === 0) {
         this.pagina = 0;
+        this.listaDocumentos = [];
         console.log('Numero pagina ', this.pagina);
         this.usuarioService.present('Cargando...');
+      }
+      console.log("Usuario Covid ",this.usuario);
+      if( this.usuario === undefined){
+
       }
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);

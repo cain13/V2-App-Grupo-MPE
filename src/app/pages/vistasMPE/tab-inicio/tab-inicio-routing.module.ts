@@ -34,7 +34,15 @@ const routes: Routes = [
         loadChildren: () => import('../certificado-aptitud/certificado-aptitud.module').then( m => m.CertificadoAptitudPageModule)
       },
       {
-        path: 'covid',
+        path: 'citas-pendientes-trabajador',
+        loadChildren: () => import('../citas-pendientes-trabajador/citas-pendientes-trabajador.module').then( m => m.CitasPendientesTrabajadorPageModule)
+      },
+      {
+        path: 'documentos-trabajador',
+        loadChildren: () => import('../documentos-trabajador/documentos-trabajador.module').then( m => m.DocumentosTrabajadorPageModule)
+      },
+      {
+        path: 'documentos-covid',
         loadChildren: () => import('../documentos-covid/documentos-covid.module').then( m => m.DocumentosCOVIDPageModule)
       }
 

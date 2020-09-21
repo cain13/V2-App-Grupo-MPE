@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CentroAPI, RespuestaAPICentros } from '../interfaces/centros-interfaces';
 import { Centro } from '../interfaces/interfaces-grupo-mpe';
+import { CentrosMPEFiltros } from '../interfaces/usuario-interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -11,6 +12,7 @@ export class MapasService {
   centrosAPI: CentroAPI[];
   centrosAPIFiltrados: CentroAPI[];
   centroSelec: CentroAPI;
+  centroFiltro: CentrosMPEFiltros;
 
   constructor(private http: HttpClient) { }
 
@@ -40,16 +42,19 @@ export class MapasService {
   }
 
   guardarCentrosFiltrados(centros: CentroAPI[]) {
-
-
     this.centrosAPIFiltrados = centros;
-
   }
 
   getCentrosFiltrados(): CentroAPI[] {
-
     return this.centrosAPIFiltrados;
+  }
 
+  guardarFiltroCentros(filtro: CentrosMPEFiltros) {
+    this.centroFiltro = filtro;
+  }
+
+  getFiltroCentro(filtro: CentrosMPEFiltros) {
+    return this.centroFiltro;
   }
 
   guardarCentroSeleccionado(centro: CentroAPI) {
@@ -62,6 +67,13 @@ export class MapasService {
 
     return this.centroSelec;
 
+  }
+
+  findByName(searchKey: string) {
+    console.log(searchKey);
+    const key: string = searchKey.toUpperCase();
+    return Promise.resolve(this.centrosAPI.filter((centro: any) =>
+        (centro.Direccion +  ' ' + centro.CodigoPostal + ' ' + centro.Provincia + ' ' + centro.Localidad).toUpperCase().indexOf(key) > -1));
   }
 
 }
