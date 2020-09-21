@@ -8,6 +8,7 @@ export interface UsuarioLogin {
     Recordarme: boolean;
     EsBuzo: boolean;
     EsGuardiaCivil: boolean;
+    RequiereMantoux: boolean;
 
 }
 

@@ -15,7 +15,6 @@ export class TestService {
   guardarArrayTest(arrayTest: TestInfo[]) {
     console.log('ARRAY TEST: ', arrayTest);
     this.arrayTest = arrayTest;
-
   }
 
   getArrayTest(): TestInfo[] {
