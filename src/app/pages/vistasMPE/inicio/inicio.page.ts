@@ -41,7 +41,18 @@ export class InicioPage implements OnInit {
   header = new HttpHeaders().set('Content-Type', 'application/json');
   noticias: Noticia[];
   promociones: Noticia[];
-
+  imagenDestacada: Noticia = {
+    IdNoticia:9999,
+    Descripcion:      "imagen destacada",
+    Titulo:           "",
+    Url:              "",
+    PathImagen:       "https://mpecronos.com/Documentos/imagenesMPE/promo.png",
+    DescripcionCorta: "",
+    TipoNoticia:      "",
+    TipoEmpleado:     "",
+    FechaInicio:      "",
+    FechaFin:         ""
+  };
 
   constructor(  private usuarioService: UsuarioService,
                 private notificacionesService: NotificacionesService,
@@ -65,8 +76,9 @@ export class InicioPage implements OnInit {
         console.log('NOTICIAS resp: ', resp.Noticias);
         console.log('NOTICIAS resp : ', resp.Promocion);
         console.log('NOTICIAS: ', resp.Respuesta);
-
-
+        if(resp.ImagenDestacada !== undefined){
+          this.imagenDestacada = resp.ImagenDestacada;
+        }
         this.noticias = resp.Noticias;
         this.promociones = resp.Promocion;
         console.log('NOTICIAS THIS: ', this.noticias);
