@@ -158,16 +158,39 @@ export class TestPage implements OnInit {
                  const obj: RespuestaAPITest = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                  // tslint:disable-next-line: max-line-length
                  const a: TestInfo[] = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerTestsResponse']['ObtenerTestsResult']['TestInfo']));
-                 let arrayTest: TestInfo[] = [];
+                 const arrayTest: TestInfo[] = [];
 
                  if (a !== undefined && !Array.isArray(a)) {
+                   const tes: TestInfo = a;
+                   if ( tes.HacerTest.toString() === 'true') {
 
-                  arrayTest.push(a);
+                    tes.HacerTest = false;
+
+                  } else {
+
+                    tes.HacerTest = true;
+
+                  }
+
+                  arrayTest.push(tes);
 
                 } else {
+                  for ( const tes of a ) {
+                    if ( tes.HacerTest.toString() === 'true') {
 
-                  arrayTest = a;
+                      tes.HacerTest = false;
 
+                    } else {
+
+                      tes.HacerTest = true;
+
+                    }
+
+                    arrayTest.push(tes);
+
+                  }
+/*                   arrayTest = a;
+ */
                 }
                 this.testServices.guardarArrayTest(arrayTest);
 
