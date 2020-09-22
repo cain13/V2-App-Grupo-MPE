@@ -322,7 +322,8 @@ export class LoginPage implements OnInit {
                       Tipo: a.Tipo,
                       Recordarme:  this.checkRemember,
                       EsBuzo: a.EsBuzo,
-                      EsGuardiaCivil: a.EsGuardiaCivil
+                      EsGuardiaCivil: a.EsGuardiaCivil,
+                      RequiereMantoux: a.RequiereMantoux
                     };
 
                     this.usuarioService.login(usuario);

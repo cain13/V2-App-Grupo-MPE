@@ -29,11 +29,25 @@ export class ElegirTestPage implements OnInit {
   ngOnInit() {
     this.usuario = this.usuarioService.getUsuario();
     const aux = this.testService.getArrayTest();
-    if ( this.usuario.EsBuzo.toString() === 'true' ) {
+
+
+    if ( this.usuario.EsBuzo.toString() === 'true' && this.usuario.RequiereMantoux.toString() === 'true') {
 
       this.arrayTest = aux;
 
-    } else {
+    } else if (this.usuario.EsBuzo.toString() === 'true' && this.usuario.RequiereMantoux.toString() === 'false') {
+
+      for (const test of aux) {
+
+        if (test.Permiso !== 'MANTOUX') {
+
+          this.arrayTest.push(test);
+
+        }
+
+      }
+
+    } else if (this.usuario.EsBuzo.toString() === 'false' && this.usuario.RequiereMantoux.toString() === 'true') {
 
       for (const test of aux) {
 
@@ -45,7 +59,21 @@ export class ElegirTestPage implements OnInit {
 
       }
 
+    } else {
+
+      for (const test of aux) {
+
+        if (test.Permiso !== 'BUCEO' && test.Permiso !== 'MANTOUX') {
+
+          this.arrayTest.push(test);
+
+        }
+
+      }
+
     }
+    console.log('TIPO DE DATO: ', typeof this.arrayTest[0].HacerTest);
+    console.log('TIPO DE DATO 2: ', this.arrayTest[0].HacerTest.toString() === 'false');
     console.log(this.arrayTest);
   }
 

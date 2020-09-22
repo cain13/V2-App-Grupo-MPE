@@ -39,6 +39,7 @@ export interface ObtenerDatosConsultorResult {
   Tipo: string;
   EsBuzo: boolean;
   EsGuardiaCivil: boolean;
+  RequiereMantoux: boolean;
 
 }
 
@@ -624,6 +625,7 @@ export interface TestInfo {
 
   Nombre: String;
   Permiso: String;
+  HacerTest: Boolean;
   Preguntas: PreguntaInfo;
 
 }
