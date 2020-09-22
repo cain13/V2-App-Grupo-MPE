@@ -730,6 +730,7 @@ export interface InfoCentrosMapa {
 
 export interface RespuestaAPINoticias {
   Respuesta: string;
+  ImagenDestacada: Noticia;
   Noticias:  Noticia[];
   Promocion: Noticia[];
   Codigo:    number;
