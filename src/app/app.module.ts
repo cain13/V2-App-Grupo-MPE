@@ -17,6 +17,10 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 
+import { FileChooser } from '@ionic-native/file-chooser/ngx';
+import { FilePath } from '@ionic-native/file-path/ngx';
+import { Camera } from '@ionic-native/camera/ngx';
+
 // Services/Providers
 import { TranslateProvider, PropertyService } from './providers';
 
@@ -57,6 +61,11 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 // Geolocalizacion
 import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ComponentsModule } from './components/components.module';
+
+
+//Subir Imagenes
+import { FileTransfer } from '@ionic-native/file-transfer/ngx';
+
 
 
 
@@ -105,6 +114,11 @@ export function HttpLoaderFactory(http: HttpClient) {
     File,
     FingerprintAIO,
     FCM,
+    FileTransfer,
+    FileChooser,
+    FilePath,
+    File,
+    Camera,
     SocialSharing,
     Geolocation,
     ComponentsModule

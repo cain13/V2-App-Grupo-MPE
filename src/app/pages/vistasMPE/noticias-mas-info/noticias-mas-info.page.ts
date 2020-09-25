@@ -23,7 +23,7 @@ export class NoticiasMasInfoPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.noticia = JSON.parse(params.noticia);
     });
-    console.log('NOTICIA:', this.noticia.FechaFin)
+    console.log('NOTICIA:', this.noticia.FechaFin);
 
   }
 

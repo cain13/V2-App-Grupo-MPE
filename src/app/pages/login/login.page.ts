@@ -204,14 +204,17 @@ export class LoginPage implements OnInit {
       this.passwordIcon2 = 'eye-off-outline';
 
     }
-    console.log('EDDD:', this.passwordIcon2);
 
   }
 
 
 
   async forgotPass() {
-    const alert = await this.alertCtrl.create({
+
+    window.open('https://grupompe.es/MpeNube/RecuperarPassApp.aspx', '_system');
+
+
+    /* const alert = await this.alertCtrl.create({
       header: this.translate.get('app.pages.login.label.forgot'),
       message: this.translate.get('app.pages.login.text.forgot'),
       inputs: [
@@ -260,7 +263,7 @@ export class LoginPage implements OnInit {
       ]
     });
 
-    await alert.present();
+    await alert.present(); */
   }
 
   // // //
