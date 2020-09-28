@@ -626,7 +626,7 @@ export interface TestInfo {
   Nombre: String;
   Permiso: String;
   HacerTest: Boolean;
-  Preguntas: PreguntaInfo;
+  Preguntas?: PreguntaInfo;
 
 }
 
@@ -683,12 +683,19 @@ export interface RespuestaSubPreguntaInfo {
 
 export interface RespuestasTestAPI {
 
-  Usuario: string;
-  Password: string;
+  Usuario: String;
+  Password: String;
   NombreTest: String;
   Permiso: String;
   FechaRealizacion: String;
-  Respuestas: RespuestaTest[];
+  Respuestas?: RespuestaTest[];
+  ImagenesMantoux?: ImagenesMantoux[];
+}
+
+export interface ImagenesMantoux {
+
+  FechaFoto; String;
+  Foto: any;
 
 }
 
@@ -749,4 +756,18 @@ export interface Noticia {
   TipoEmpleado:     string;
   FechaInicio:      string;
   FechaFin:         string;
+}
+
+export interface RespuestaAPIDocumentos {
+  error: boolean;
+  Mensaje: string;
+}
+
+
+
+export interface ImagenTestMantoux {
+  numeroPregunta: number;
+  foto: string;
+  fechaFoto: string;
+
 }
