@@ -33,6 +33,7 @@ export class AppComponent {
   public appPages: Array<Pages>;
   public appPagesVSAll: Array<Pages>;
   public appPagesTrabajador: Array<Pages>;
+  
   public appPagesGuardiaCivil: Array<Pages>;
   private textoCompartirAPP = 'Disfrute de la App de GrupoMPE para la gestión laboral, puede descargarla pinchando en el siguiente enlace!!';
   private urlCompartirAPP = 'http://onelink.to/ept9em';

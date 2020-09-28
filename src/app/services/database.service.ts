@@ -22,7 +22,7 @@ export class DatabaseService {
 
     this.platform.ready().then(() => {
       this.sqlite.create({
-        name: 'Cronos.db',
+        name: 'grupompe.db',
         location: 'default'
       })
       .then(async (db: SQLiteObject) => {
