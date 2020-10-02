@@ -73,6 +73,12 @@ export class UsuarioService {
 
   }
 
+  async actualizarPerfil(usuario: UsuarioLogin) {
+
+    await this.dataBaseService.addUsuario(usuario);
+
+  }
+
   guardarUsuario(usuario: UsuarioLogin) {
 
     this.usuario = usuario;

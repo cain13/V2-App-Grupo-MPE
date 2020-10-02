@@ -4,6 +4,9 @@ import { TranslateProvider } from '../../providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { CambiarPasswordPage } from '../vistasMPE/cambiar-password/cambiar-password.page';
 import { UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { DatabaseService } from '../../services/database.service';
+
 
 @Component({
   selector: 'app-edit-profile',
@@ -14,8 +17,13 @@ export class EditProfilePage implements OnInit {
 
   Nombre = '';
   Tipo = '';
+  Email = '';
+  Telefono = '';
+
   usuario: UsuarioLogin;
   EsGuardiaCivil = false;
+  public editProfileForm: FormGroup;
+
   constructor(
     public modalCtrl: ModalController,
     public navCtrl: NavController,
@@ -23,18 +31,56 @@ export class EditProfilePage implements OnInit {
     public toastCtrl: ToastController,
     private translate: TranslateProvider,
     private usuarioService: UsuarioService,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private formBuilder: FormBuilder,
+
     ) { }
 
   ngOnInit() {
+    
     this.Nombre = this.usuarioService.usuario.Nombre;
     this.Tipo = this.usuarioService.usuario.Tipo;
     this.usuario = this.usuarioService.getUsuario();
     if(this.usuario.EsGuardiaCivil){
       this.Tipo = 'GUARDIA CIVIL';
       this.EsGuardiaCivil = true;
+      this.Email = this.usuario.Email;
+      this.Telefono = this.usuario.Telefono;
     }
+
+    if(this.EsGuardiaCivil) {
+      this.editProfileForm = this.formBuilder.group({
+        nombre: [this.usuario.Nombre, Validators.compose([
+          Validators.required
+        ])],
+        telefono: [this.usuario.Telefono, Validators.compose([
+          Validators.required
+        ])],
+        movil: [this.usuario.Movil, Validators.compose([
+          Validators.required
+        ])],
+        email: [this.usuario.Email, Validators.compose([
+          Validators.required
+        ])]
+      });
+
+    } else {
+
+      this.editProfileForm = this.formBuilder.group({
+        nombre: [this.usuario.Nombre, Validators.compose([
+          Validators.required
+        ])],
+        tipo: [this.usuario.Tipo, Validators.compose([
+          Validators.required
+        ])]
+      });
+
+    }
+
+
   }
+
+
 
   async sendData() {
     // send booking info
@@ -65,6 +111,88 @@ export class EditProfilePage implements OnInit {
     });
     // end
   }
+
+  guardarCambios() {
+    try {
+      this.usuarioService.present('Actualizando datos...');
+      const xmlhttp = new XMLHttpRequest();
+
+
+      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Headers', 'Content-Type');
+ */      xmlhttp.setRequestHeader('content-type', 'text/xml');
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */
+      console.log('HEADER2: ', xmlhttp.getResponseHeader);
+      xmlhttp.responseType = 'document';
+        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+      const sr =
+          '<?xml version="1.0" encoding="utf-8"?>' +
+          '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+            '<soap:Header>' +
+              '<AuthHeader xmlns="http://tempuri.org/">' +
+                '<Usuario>' +this.usuario.Usuario+ '</Usuario>' +
+                '<Password>' + this.usuario.Password + '</Password>' +
+              '</AuthHeader>' +
+            '</soap:Header>' +
+            '<soap:Body>' +
+              '<InsertarDatosTrabajador xmlns="http://tempuri.org/">' +
+                '<Datos>' +
+                  '<Nombre>' + this.editProfileForm.value.nombre + '</Nombre>' +
+                  '<Movil>' + this.editProfileForm.value.movil+ '</Movil>' +
+                  '<Telefono>' + this.editProfileForm.value.telefono + '</Telefono>' +
+                  '<Email>' + this.editProfileForm.value.email + '</Email>' +
+                '</Datos>' +
+              '</InsertarDatosTrabajador>' +
+            '</soap:Body>' +
+          '</soap:Envelope>';
+
+
+      console.log('MENSAJE MANDADO A LA API:', sr);
+      xmlhttp.onreadystatechange = () => {
+        console.log('XMLHTTP: ', xmlhttp);
+            if (xmlhttp.readyState === 4) {
+
+                const aux: UsuarioLogin = this.usuario;
+                aux.Email = this.editProfileForm.value.email;
+                aux.Nombre = this.editProfileForm.value.nombre;
+                aux.Telefono = this.editProfileForm.value.telefono;
+                aux.Movil = this.editProfileForm.value.movil;
+
+                if(aux.Email === null) {
+                  aux.Email='';
+                }
+                if(aux.Nombre === null) {
+                  aux.Nombre='';
+                }
+                if(aux.Telefono === null) {
+                  aux.Telefono='';
+                }
+                if(aux.Movil === null) {
+                  aux.Movil='';
+                }
+
+
+                if (xmlhttp.status === 200) {
+                   
+                  this.usuarioService.actualizarPerfil(aux);
+                  this.usuarioService.presentToast('Datos actualizados correctamente');
+                    
+                } else if (xmlhttp.status === 500 ) {
+                  this.usuarioService.presentAlert('Error', 'Fallo al actualizar datos','Intentelo de nuevo más tarde');
+                }
+            }
+            this.usuarioService.dismiss();
+        };
+
+        console.log('XMLHTTP: ', xmlhttp);
+      xmlhttp.send(sr);
+    } catch (error) {
+      this.usuarioService.dismiss();
+    }
+
+  }
+
   async cambiarPassword () {
     const modal = await this.modalCtrl.create({
       component: CambiarPasswordPage

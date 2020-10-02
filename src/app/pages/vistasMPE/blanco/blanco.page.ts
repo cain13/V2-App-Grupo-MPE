@@ -41,7 +41,7 @@ export class BlancoPage implements OnInit {
 
         } else {
 
-         this.usuario = {
+          this.usuario = {
             Usuario: ultimoUsuario.Usuario,
             Password: ultimoUsuario.Password,
             Tipo: ultimoUsuario.Tipo,
@@ -50,7 +50,11 @@ export class BlancoPage implements OnInit {
             Recordarme: ultimoUsuario.Recordarme,
             EsBuzo: ultimoUsuario.EsBuzo,
             EsGuardiaCivil: ultimoUsuario.EsGuardiaCivil,
-            RequiereMantoux: ultimoUsuario.RequiereMantoux
+            RequiereMantoux: ultimoUsuario.RequiereMantoux,
+            Email: ultimoUsuario.Email,
+            Movil: ultimoUsuario.Movil,
+            Telefono: ultimoUsuario.Telefono
+
           };
 
          this.usuarioService.guardarUsuario(this.usuario);

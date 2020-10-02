@@ -81,9 +81,9 @@ export class DatabaseService {
           console.log('DB: Tabla USUARIOS vacia'); }).catch(error => { console.log('DB: ERROR AL BORRAR TABLAS USUARIO'); });
 
         // tslint:disable-next-line: max-line-length
-        const data = [usuario.Usuario, usuario.Password, usuario.FingerID, usuario.Tipo, usuario.Nombre, usuario.Recordarme, usuario.EsBuzo, usuario.EsGuardiaCivil, usuario.RequiereMantoux];
+        const data = [usuario.Usuario, usuario.Password, usuario.FingerID, usuario.Tipo, usuario.Nombre, usuario.Recordarme, usuario.EsBuzo, usuario.EsGuardiaCivil, usuario.RequiereMantoux, usuario.Email, usuario.Movil, usuario.Telefono];
         // tslint:disable-next-line: max-line-length
-        const respuesta = await this.storage.executeSql('INSERT INTO usuariosTable (Usuario, Password_, FingerID, Tipo, Nombre, Recordarme, EsBuzo, EsGuardiaCivil, RequiereMantoux) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)', data).then(() => {
+        const respuesta = await this.storage.executeSql('INSERT INTO usuariosTable (Usuario, Password_, FingerID, Tipo, Nombre, Recordarme, EsBuzo, EsGuardiaCivil, RequiereMantoux, Email, Movil, Telefono) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', data).then(() => {
           console.log('DB: Usuario añadido a la BD');
 
         });
@@ -115,7 +115,10 @@ export class DatabaseService {
         Recordarme: res.rows.item(0).Recordarme,
         EsBuzo: res.rows.item(0).EsBuzo,
         EsGuardiaCivil: res.rows.item(0).EsGuardiaCivil,
-        RequiereMantoux: res.rows.item(0).RequiereMantoux
+        RequiereMantoux: res.rows.item(0).RequiereMantoux,
+        Email: res.rows.item(0).Email,
+        Movil: res.rows.item(0).Movil,
+        Telefono: res.rows.item(0).Telefono
       };
     } else { return null; }
 

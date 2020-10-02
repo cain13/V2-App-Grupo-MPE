@@ -9,6 +9,9 @@ export interface UsuarioLogin {
     EsBuzo: boolean;
     EsGuardiaCivil: boolean;
     RequiereMantoux: boolean;
+    Email: string;
+    Movil: string
+    Telefono: string;
 
 }
 

@@ -40,6 +40,29 @@ export interface ObtenerDatosConsultorResult {
   EsBuzo: boolean;
   EsGuardiaCivil: boolean;
   RequiereMantoux: boolean;
+  Email: string;
+  Movil: string
+  Telefono: string;
+  Tests?: Tests
+
+}
+
+export interface RespuestaEditarPerfil {
+
+  RespuestaEditarPerfil
+
+}
+
+export interface Tests {
+
+  EstadoTestInfo: EstadoTestInfo[];
+
+}
+
+export interface EstadoTestInfo{
+
+  NombreTest: string;
+  HacerTest: boolean;
 
 }
 
