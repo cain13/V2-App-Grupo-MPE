@@ -1,6 +1,14 @@
 <ion-header>
-  <app-header></app-header>
-
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+      <ion-title style="margin-top: 2mm; margin-bottom: 0mm;">
+          <ion-text color="light">
+           Historial de Documentos
+          </ion-text>
+      </ion-title >
+    </ion-toolbar>  
   <ion-toolbar color="dark">
     <ion-searchbar style="margin-top: 2mm; margin-bottom: 0mm;" [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar..."></ion-searchbar>
     <ion-buttons slot="end" style="margin-top: 2mm;"> 

@@ -756,6 +756,7 @@ export interface Noticia {
   TipoEmpleado:     string;
   FechaInicio:      string;
   FechaFin:         string;
+  URLYoutube:       string;
 }
 
 export interface RespuestaAPIDocumentos {

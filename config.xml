@@ -108,4 +108,5 @@
     <plugin name="cordova-sqlite-storage" spec="^3.4.0" />
     <allow-navigation href="http://localhost:8101" sessionid="256a9ab5" />
     <allow-navigation href="http://localhost:8100" sessionid="fffdc583" />
+    <allow-navigation href="https://*youtube.com/*" />
 </widget>

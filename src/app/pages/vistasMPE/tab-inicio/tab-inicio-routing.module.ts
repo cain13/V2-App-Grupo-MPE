@@ -44,7 +44,12 @@ const routes: Routes = [
       {
         path: 'documentos-covid',
         loadChildren: () => import('../documentos-covid/documentos-covid.module').then( m => m.DocumentosCOVIDPageModule)
-      }
+      },
+      {
+        path: 'test-menu',
+        loadChildren: () => import('../test-menu/test-menu.module').then( m => m.TestMenuPageModule)
+      },
+    
 
     ]
   }

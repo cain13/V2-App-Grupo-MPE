@@ -98,6 +98,7 @@ export class DocumentosTrabajadorPage implements OnInit, ViewWillEnter, ViewDidL
     try {
       if (event === undefined || event === null && this.pagina === 0) {
         this.pagina = 0;
+        this.listaDocumentos = [];
         console.log('Numero pagina ', this.pagina);
         this.usuarioService.present('Cargando...');
       }

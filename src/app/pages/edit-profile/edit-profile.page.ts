@@ -3,6 +3,7 @@ import { ModalController, NavController, LoadingController, ToastController, Ale
 import { TranslateProvider } from '../../providers';
 import { UsuarioService } from 'src/app/services/usuario.service';
 import { CambiarPasswordPage } from '../vistasMPE/cambiar-password/cambiar-password.page';
+import { UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
 
 @Component({
   selector: 'app-edit-profile',
@@ -13,6 +14,8 @@ export class EditProfilePage implements OnInit {
 
   Nombre = '';
   Tipo = '';
+  usuario: UsuarioLogin;
+  EsGuardiaCivil = false;
   constructor(
     public modalCtrl: ModalController,
     public navCtrl: NavController,
@@ -26,6 +29,11 @@ export class EditProfilePage implements OnInit {
   ngOnInit() {
     this.Nombre = this.usuarioService.usuario.Nombre;
     this.Tipo = this.usuarioService.usuario.Tipo;
+    this.usuario = this.usuarioService.getUsuario();
+    if(this.usuario.EsGuardiaCivil){
+      this.Tipo = 'GUARDIA CIVIL';
+      this.EsGuardiaCivil = true;
+    }
   }
 
   async sendData() {

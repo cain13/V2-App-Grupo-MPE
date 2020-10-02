@@ -80,10 +80,22 @@ export class AppComponent {
 
     this.appPagesGuardiaCivil = [
       {
+        title: 'Formularios',
+        url: '/test',
+        direct: 'forward',
+        icon: 'school-outline'
+      },
+      {
         title: 'Reconocimientos Médicos',
         url: '/documentos-trabajador-menu',
         direct: 'forward',
         icon: 'document-outline'
+      },
+      {
+        title: 'Pruebas de Tuberculina',
+        url: '/documentos-covid-menu',
+        direct: 'forward',
+        icon: 'document-text-outline'
       },
       {
         title: 'Pruebas COVID',
@@ -97,12 +109,7 @@ export class AppComponent {
         direct: 'forward',
         icon: 'timer-outline'
       },
-      {
-        title: 'Formularios',
-        url: '/test',
-        direct: 'forward',
-        icon: 'school-outline'
-      }
+      
 
     ];
 
@@ -169,80 +176,7 @@ export class AppComponent {
         direct: 'forward',
         icon: 'person-outline'
       }
-       /*,
-      {
-        title: 'Cerrar Sesion',
-        url: '/blanco',
-        direct: 'forward',
-        icon: 'power-outline'
-      },
-      ,
-      {
-        title: 'Centros MPE',
-        url: '/property-list',
-        direct: 'forward',
-        icon: 'home'
-      },
-      {
-        title: 'Contactos',
-        url: '/broker-list',
-        direct: 'forward',
-        icon: 'people'
-      },
-      {
-        title: 'Mapa Centros MPE',
-        url: '/nearby',
-        direct: 'forward',
-        icon: 'compass'
-      },
-      {
-        title: 'Centros MPE',
-        url: '/bycategory',
-        direct: 'forward',
-        icon: 'albums'
-      },
-      {
-        title: 'Documentos',
-        url: '/invoices',
-        direct: 'forward',
-        icon: 'document-outline'
-      },
-      {
-        title: 'Centros Favoritos',
-        url: '/favorites',
-        direct: 'forward',
-        icon: 'heart'
-      },
-      {
-        title: 'Sobre Nosotros',
-        url: '/about',
-        direct: 'forward',
-        icon: 'information-circle-outline'
-      },
-      {
-        title: 'Soporte',
-        url: '/support',
-        direct: 'forward',
-        icon: 'help-buoy'
-      },
-      {
-        title: 'Configuración APP',
-        url: '/settings',
-        direct: 'forward',
-        icon: 'cog'
-      },
-      {
-        title: 'Walkthrough',
-        url: '/',
-        direct: 'root',
-        icon: 'images-outline'
-      },
-      {
-        title: 'Extras',
-        url: '/extras',
-        direct: 'forward',
-        icon: 'newspaper-outline'
-      } */
+      
     ];
 
 
@@ -542,7 +476,7 @@ export class AppComponent {
         icon: 'logo-facebook',
         handler: () => {
           console.log('Lanzamos Facebook');
-          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
+          this.socialSharing.shareViaFacebook(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
@@ -597,7 +531,7 @@ export class AppComponent {
           });
         }
       }, {
-        text: 'Cancel',
+        text: 'Cancelar',
         icon: 'close',
         role: 'cancel',
         handler: () => {
@@ -608,6 +542,15 @@ export class AppComponent {
     await actionSheet.present();
   }
 
+
+
+  contactoMpe(){
+    this.navCtrl.navigateForward('contacto-mpe');
+  }
+
+  proteccion(){
+    window.open('https:mpeprevencion.com/proteccion-datos.html', '_system');
+  }
 
   cerrarSesion(){
     console.log('Cerrar sesion');

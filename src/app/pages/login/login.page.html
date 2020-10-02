@@ -51,6 +51,12 @@
       </ion-item>
 
       <ion-row></ion-row>
+      <ion-item lines="none">
+        <a style="text-decoration: none;" href="https:mpeprevencion.com/terminos-condiciones.html"><ion-label (click)="forgotPass()">Terminos y Condiciones</ion-label></a>
+        <ion-checkbox #botonTerminos mode="ios" slot="end" color="light" checked={{terminos}} ></ion-checkbox>
+      </ion-item>
+
+      <ion-row></ion-row>
         <ion-item style="width: max-content; text-align: center;" lines="none" *ngIf="soportaFingerID"> 
           <ion-thumbnail slot="start">
             <img src="assets/finger.png">

@@ -170,6 +170,14 @@ const routes: Routes = [
     path: 'citas-pendientes-trabajador-menu',
     loadChildren: () => import('./pages/vistasMPE/citas-pendientes-trabajador-menu/citas-pendientes-trabajador-menu.module').then( m => m.CitasPendientesTrabajadorMenuPageModule)
   },
+  {
+    path: 'test-menu',
+    loadChildren: () => import('./pages/vistasMPE/test-menu/test-menu.module').then( m => m.TestMenuPageModule)
+  },
+  {
+    path: 'contacto-mpe',
+    loadChildren: () => import('./pages/vistasMPE/contacto-mpe/contacto-mpe.module').then( m => m.ContactoMpePageModule)
+  },
 
   
 

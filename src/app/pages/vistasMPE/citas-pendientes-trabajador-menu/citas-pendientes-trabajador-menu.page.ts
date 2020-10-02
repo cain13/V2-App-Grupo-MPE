@@ -60,12 +60,11 @@ export class CitasPendientesTrabajadorMenuPage implements OnInit {
     }
 
     getCitasPendientes(event?) {
-
-      let aux: Asistencia[];
-
+      let aux: Asistencia[] = [];
       try {
         if (event === undefined || event === null && this.pagina === 0) {
           this.pagina = 0;
+          this.listaCitas = [];
           console.log('Numero pagina ', this.pagina);
           this.usuarioService.present('Cargando Citas...');
         }

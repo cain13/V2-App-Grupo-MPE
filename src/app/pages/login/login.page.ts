@@ -25,12 +25,15 @@ export class LoginPage implements OnInit {
   soportaFingerID: boolean;
   @ViewChild('botonHuella', {static: false}) botonHuella: IonCheckbox;
   @ViewChild('botonRecordarme', {static: false}) botonRecordarme: IonCheckbox;
+  @ViewChild('botonTerminos', {static: false}) botonTerminos: IonCheckbox;
   @ViewChild('botonMostarContra', {static: false}) botonMostarContra: IonCheckbox;
 
   checkFinger = false;
   checkRemember = true;
+  checkTermino = true;
   usuario: UsuarioLogin;
   recordarme = true;
+  terminos = true;
   loginFinger: boolean;
   tokenAPI: string;
   mostrarContra = false;
@@ -207,6 +210,9 @@ export class LoginPage implements OnInit {
 
   }
 
+  Terminos() {
+    window.open('https:mpeprevencion.com/terminos-condiciones.html', '_system');
+  }
 
 
   async forgotPass() {
@@ -275,7 +281,12 @@ export class LoginPage implements OnInit {
     try {
       this.usuarioService.present('Accediendo...');
       const xmlhttp = new XMLHttpRequest();
-
+      this.checkTermino = this.botonTerminos.checked;
+      if(!this.checkTermino){
+        this.usuarioService.dismiss();
+        this.presentAlert('Debe aceptar los terminos y condiciones', 'Advertencia');
+        return;
+      }
 
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
 /*       xmlhttp.setRequestHeader('Access-Control-Allow-Headers', 'Content-Type');
@@ -458,10 +469,16 @@ export class LoginPage implements OnInit {
   }
 
   async presentAlert(subtitulo: string, mensaje: string) {
+    let error = 'Error'
+    if(mensaje.length > 0){
+      error = mensaje;
+    }else{
+      mensaje = 'Error'
+    }
     const alert = await this.alertCtrl.create({
-      header: 'Error',
+      header: mensaje,
       subHeader: subtitulo,
-      message: mensaje,
+      message: '',
       buttons: ['OK']
     });
 

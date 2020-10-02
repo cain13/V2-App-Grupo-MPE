@@ -3,7 +3,7 @@
     <ion-buttons slot="start">
       <ion-back-button></ion-back-button>
     </ion-buttons>
-    <ion-title>{{ 'app.pages.editprofile.title.header' | translate }}</ion-title>
+    <ion-title>Perfil Usuario</ion-title>
     <ion-buttons slot="end" color="dark" >
       <ion-button icon-left color="light" (click)="Borrardatos()">
         <ion-icon name="log-out-outline" ></ion-icon> 
@@ -17,7 +17,7 @@
   <ion-card class="ion-no-margin">
     <ion-card-content class="bg-profile">
       <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar">
-      <h1 class="fw500">{{Nombre}}</h1>
+      <h1 class="fw500" *ngIf="!EsGuardiaCivil">{{Nombre}}</h1>
       <h1 color="light" class="ion-margin-bottom">{{Tipo}}</h1>
     </ion-card-content>
   
@@ -30,21 +30,30 @@
               <ion-label class="fw700">{{ 'app.label.userdata' | translate }}</ion-label>
             </ion-list-header>
 
-            <ion-item>
+            <ion-item *ngIf="!EsGuardiaCivil">
               <ion-label color="dark" position="stacked">Nombre:</ion-label>
               <ion-text>{{Nombre}}</ion-text>
             </ion-item>
-    <!-- 
-            <ion-item>
-              <ion-label color="dark" position="stacked">{{ 'app.label.email' | translate }}:</ion-label>
-              <ion-text>{{Tipo}}</ion-text>
-            </ion-item> -->
-    
-            <ion-item>
+          
+            <ion-item *ngIf="!EsGuardiaCivil">
               <ion-label color="dark" position="stacked">Tipo:</ion-label>
               <ion-text>{{Tipo}}</ion-text>
             </ion-item>
+
+            <ion-item *ngIf="EsGuardiaCivil">
+              <ion-label color="dark" position="stacked">Nombre:</ion-label>
+              <ion-text></ion-text>
+            </ion-item>
+            <ion-item *ngIf="EsGuardiaCivil">
+              <ion-label color="dark" position="stacked">Teléfono:</ion-label>
+              <ion-text></ion-text>
+            </ion-item>
+            <ion-item *ngIf="EsGuardiaCivil">
+              <ion-label color="dark" position="stacked">Email:</ion-label>
+              <ion-text></ion-text>
+            </ion-item>
           </ion-list>
+
           <!-- <ion-list>
             <ion-radio-group [(ngModel)]="Tipo">
               <ion-list-header color="light">
@@ -66,6 +75,10 @@
       </ion-row>
     </ion-grid>
   </ion-card>
+  <ion-button *ngIf="EsGuardiaCivil"  [disabled]="EsGuardiaCivil" icon-left expand="full" color="primary" (click)="cambiarPassword()" tappable class="ion-no-padding">
+    <ion-icon slot="start" name="save-outline"></ion-icon>
+    Guardar Cambios
+  </ion-button>
   <ion-button icon-left expand="full" color="primary" (click)="cambiarPassword()" tappable class="ion-no-padding">
     <ion-icon slot="start" name="lock-closed-outline"></ion-icon>
     Cambiar Contraseña

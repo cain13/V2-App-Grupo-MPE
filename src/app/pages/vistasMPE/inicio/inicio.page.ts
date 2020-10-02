@@ -51,7 +51,8 @@ export class InicioPage implements OnInit {
     TipoNoticia:      "",
     TipoEmpleado:     "",
     FechaInicio:      "",
-    FechaFin:         ""
+    FechaFin:         "",
+    URLYoutube:       "",
   };
 
   constructor(  private usuarioService: UsuarioService,
@@ -127,7 +128,9 @@ export class InicioPage implements OnInit {
       Empleado: this.usuario.Tipo
 
     };
-
+    if(this.usuario.EsGuardiaCivil){
+      usuario.Empleado = "GuardiaCivil";
+    }
     const respuesta = await  this.http.post<RespuestaAPINoticias>(URL, usuario, {headers: this.header}).toPromise();
 
     return respuesta;

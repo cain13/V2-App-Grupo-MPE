@@ -10,7 +10,7 @@ import { Opciones, UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 export class TabInicioPage implements OnInit {
 
   usuario: UsuarioLogin;
-
+  esGuardiaCivil = false;
   opcionesTab: Opciones[];
 
 
@@ -18,7 +18,9 @@ export class TabInicioPage implements OnInit {
 
     this.usuario = this.usuarioService.getUsuario();
 
-    
+    if(this.usuario.EsGuardiaCivil){
+      this.esGuardiaCivil = true;
+    }    
   }
 
   ngOnInit() {

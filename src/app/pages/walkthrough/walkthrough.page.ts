@@ -24,14 +24,14 @@ export class WalkthroughPage implements OnInit {
       image: 'assets/img/house01.png',
     },
     {
-      title: ' <strong>¿Donde estamos?</strong>',
-      description: 'Encuentra tu Centro MPE más cercano, para tu próximo reconociemnto medico o para cualquier necesidad.',
+      title: ' <strong>¿A que nos dedicamos?</strong>',
+      description: 'MPE tiene su mayor actividad como servicio de prevención de riesgos laborales, así como formación a empresas y privados, consultoría, sistemas de gestión de calidad y otros muchos productos enfocados a su empresa.',
       image: 'assets/img/business01.png',
     },
     {
-      title: '<strong>Su centro medico en la mano.</strong>',
-      description: 'Ten acceso los resultados de sus reconocimientos y toda la información que necesite de Grupo MPE.',
-      image: 'assets/img/rent01.png',
+      title: '<strong>Grupo MPE siempre a tu lado.</strong>',
+      description: 'Ten acceso a toda la documentación e información que necesite de Grupo MPE.',
+      image: 'assets/img/ionProperty-ico.png',
     }
   ];
 
