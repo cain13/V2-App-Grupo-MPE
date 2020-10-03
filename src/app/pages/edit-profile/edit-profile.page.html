@@ -21,7 +21,7 @@
       <h1 color="light" class="ion-margin-bottom">{{Tipo}}</h1>
     </ion-card-content>
   
-    <ion-grid fixed class="ion-no-padding">
+    <!-- <ion-grid fixed class="ion-no-padding">
       <ion-row>
         <ion-col size="12" class="ion-padding">
 
@@ -53,7 +53,54 @@
               <ion-text></ion-text>
             </ion-item>
           </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-grid> -->
+    <ion-grid fixed class="ion-no-padding">
+      <ion-row>
+        <ion-col size="12" class="ion-padding">
 
+          <ion-list class="ion-margin-bottom">
+            <ion-list-header color="light">
+              <ion-label class="fw700">{{ 'app.label.userdata' | translate }}</ion-label>
+            </ion-list-header>
+            <form [formGroup]="editProfileForm">
+
+              <ion-item *ngIf="!EsGuardiaCivil">
+                <ion-label color="dark" position="stacked">Nombre:</ion-label>
+                <ion-input color="dark" type="text" formControlName="nombre"></ion-input>
+              </ion-item>
+            
+              <ion-item *ngIf="!EsGuardiaCivil">
+                <ion-label color="dark" position="stacked">Tipo:</ion-label>
+                <ion-input color="dark" type="text" formControlName="tipo"></ion-input>
+              </ion-item>
+
+              <ion-item *ngIf="EsGuardiaCivil">
+                <ion-label color="dark" position="stacked">Nombre:</ion-label>
+                <ion-input color="dark" type="text" formControlName="nombre"></ion-input>
+              </ion-item>
+
+              <ion-item *ngIf="EsGuardiaCivil">
+                <ion-label color="dark" position="stacked">Teléfono:</ion-label>
+                <ion-input color="dark" type="text" formControlName="telefono"></ion-input>
+              </ion-item>
+
+              <ion-item *ngIf="EsGuardiaCivil">
+                <ion-label color="dark" position="stacked">Móvil:</ion-label>
+                <ion-input color="dark" type="text" formControlName="movil"></ion-input>
+              </ion-item>
+
+              <ion-item *ngIf="EsGuardiaCivil">
+                <ion-label color="dark" position="stacked">Email:</ion-label>
+                <ion-input color="dark" type="text" formControlName="email"></ion-input>
+              </ion-item>
+
+            </form>
+          </ion-list>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
           <!-- <ion-list>
             <ion-radio-group [(ngModel)]="Tipo">
               <ion-list-header color="light">
@@ -71,11 +118,9 @@
               </ion-item>
             </ion-radio-group>
           </ion-list> -->
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+        
   </ion-card>
-  <ion-button *ngIf="EsGuardiaCivil"  [disabled]="EsGuardiaCivil" icon-left expand="full" color="primary" (click)="cambiarPassword()" tappable class="ion-no-padding">
+  <ion-button *ngIf="EsGuardiaCivil"  icon-left expand="full" color="primary" (click)="guardarCambios()" tappable class="ion-no-padding">
     <ion-icon slot="start" name="save-outline"></ion-icon>
     Guardar Cambios
   </ion-button>
