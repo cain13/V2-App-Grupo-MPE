@@ -25,14 +25,16 @@ export class NoticiasMasInfoPage implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.noticia = JSON.parse(params.noticia);
     });
-    let urlYoutube = "https://youtube.com/embed/";
-    let splitYoutube =  this.noticia.URLYoutube.split('/');
-    let file = splitYoutube[splitYoutube.length-1];
-    file = file.replace('watch?v=','');
-    urlYoutube += file;
-    this.trustedVideoUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(urlYoutube);
-    console.log('NOTICIA:', this.noticia.FechaFin);
 
+    if(this.noticia.URLYoutube !== undefined && this.noticia.URLYoutube !== null &&  this.noticia.URLYoutube.length > 0){
+      let urlYoutube = "https://youtube.com/embed/";
+      let splitYoutube =  this.noticia.URLYoutube.split('/');
+      let file = splitYoutube[splitYoutube.length-1];
+      file = file.replace('watch?v=','');
+      urlYoutube += file;
+      this.trustedVideoUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(urlYoutube);
+      console.log('NOTICIA:', this.noticia.FechaFin);
+    }
   }
 
 

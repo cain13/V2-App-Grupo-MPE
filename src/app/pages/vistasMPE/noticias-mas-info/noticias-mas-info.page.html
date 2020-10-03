@@ -17,12 +17,15 @@
     </ion-list-header>
   </ion-list>
 
-  <ion-card >
-    <!--<img src="{{noticia.PathImagen}}" />-->
-    <iframe width="100%" [src]="trustedVideoUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  <ion-card  *ngIf="noticia.URLYoutube === null || noticia.URLYoutube === undefined" >
+    <img src="{{noticia.PathImagen}}" />
   </ion-card>
 
-  <ion-card>
+  <ion-card *ngIf="noticia.URLYoutube !== null && noticia.URLYoutube !== undefined ">
+    <iframe  width="100%" [src]="trustedVideoUrl" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+  </ion-card>
+
+  <ion-card >
     <ion-card-header>
       <ion-card-title>{{noticia.Titulo}}</ion-card-title>
       <ion-card-subtitle>{{noticia.FechaInicio | date: 'dd/MM/yyyy'}}</ion-card-subtitle>
@@ -30,7 +33,7 @@
     <ion-card-content>
       {{noticia.Descripcion}}
       <label> </label>
-      <ion-button *ngIf="noticia.Url.length > 0" color="primary" expand="block" (click)="vistarWeb()" > 
+      <ion-button *ngIf="noticia.Url !== undefined && noticia.FechaFin !== null && noticia.Url.length > 0" color="primary" expand="block" (click)="vistarWeb()" > 
         <ion-icon slot="start" name="earth-outline"></ion-icon>
         Vistar Web
       </ion-button>

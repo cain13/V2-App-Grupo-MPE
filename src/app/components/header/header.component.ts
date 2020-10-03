@@ -17,6 +17,8 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
   cantidad$: Observable<number>;
   isSmallPhone = false;
 
+  EsGuardiaCivil = false;
+
   @Input() titulo: string = 'Grupo MPE';
 
 
@@ -42,6 +44,7 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
       }
     });
     this.usuario = this.usuarioService.getUsuario();
+    this.EsGuardiaCivil = this.usuario.EsGuardiaCivil;
 
   }
 
