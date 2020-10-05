@@ -470,15 +470,12 @@ export class AppComponent {
         icon: 'logo-facebook',
         handler: () => {
           console.log('Lanzamos Facebook');
-          this.socialSharing.shareViaFacebook(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
-
-
-
-          }).catch( error => {
-
-
-
-          });
+            // Sharing via email is possible
+            this.socialSharing.shareViaFacebook('https://mpeprevencion.com/qr-appmpe.html', null, null).then( () => {
+              console.log('Then Lanzamos Facebook');
+            }).catch( error => {
+              console.log('error Facebook', error);
+            });
         }
       }, {
         text: 'Twitter',
@@ -490,8 +487,8 @@ export class AppComponent {
 
 
           }).catch( error => {
-
-
+            console.log('Lanzamos Twitter error', error);
+            this.usuarioService.presentAlert('Error', 'No tiene la app de Twitter en su móvil', 'Descarguela y pruebe de nuevo, gracias.');
 
           });
         }
@@ -506,7 +503,9 @@ export class AppComponent {
 
           }).catch( error => {
 
-            console.log('Lanzamos Whatsapp error',error);
+            console.log('Lanzamos Whatsapp error', error);
+            this.usuarioService.presentAlert('Error', 'No tiene la app de Whatsapp en su móvil', 'Descarguela y pruebe de nuevo, gracias.');
+
 
           });
         }
@@ -515,7 +514,7 @@ export class AppComponent {
         icon: 'mail-outline',
         handler: () => {
           console.log('Lanzamos Email');
-          this.socialSharing.shareViaEmail(this.textoCompartirAPP + ':' + this.urlCompartirAPP, 'my subject', null).then( () => {
+          this.socialSharing.shareViaEmail(this.textoCompartirAPP + ':' + this.urlCompartirAPP, 'Descarga la App de prevención de Grupo MPE', null).then( () => {
 
 
           }).catch( error => {
@@ -542,8 +541,14 @@ export class AppComponent {
     this.navCtrl.navigateForward('contacto-mpe');
   }
 
-  proteccion(){
-    window.open('https:mpeprevencion.com/proteccion-datos.html', '_system');
+  proteccionGuardiaCivil() {
+    window.open('https:mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
+  }
+
+  proteccionGenerico() {
+
+    window.open('https:mpeprevencion.com/proteccion_datos_MPE.html', '_system');
+
   }
 
   cerrarSesion(){

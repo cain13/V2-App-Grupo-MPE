@@ -32,6 +32,8 @@ export class UsuarioService {
   recuentoNotificaciones: number;
   centrosFav: CentroAPI[];
 
+  vieneDeLogin = false;
+
   header = new HttpHeaders().set('Content-Type', 'application/json');
 
 
@@ -194,6 +196,18 @@ export class UsuarioService {
   getCitas(): Asistencia[] {
 
     return this.citas;
+
+  }
+
+  setLogin() {
+
+    this.vieneDeLogin = true;
+
+  }
+
+  getLogin() {
+
+    return this.vieneDeLogin;
 
   }
 

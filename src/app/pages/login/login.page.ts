@@ -11,6 +11,7 @@ import { SeleccionarClientePage } from '../modal/seleccionar-cliente/seleccionar
 import { EmpresaConsultor } from '../../interfaces/usuario-interfaces';
 import { Token } from '@angular/compiler/src/ml_parser/lexer';
 import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
+import { ModalCondicionesPage } from '../vistasMPE/modal-condiciones/modal-condiciones.page';
 
 
 
@@ -137,6 +138,7 @@ export class LoginPage implements OnInit {
   async ionViewWillEnter() {
 /*     this.usuarioService.desactivarSegundoPlano = true;
  */    this.menuCtrl.enable(false);
+    this.usuarioService.setLogin(); 
     console.log('USUARIO: ', this.usuario);
     if (this.usuario !== undefined && this.usuario.FingerID.toString() === 'true') {
       await this.usuarioService.present('Accediendo...');
@@ -347,6 +349,7 @@ export class LoginPage implements OnInit {
                     this.usuarioService.guardarUsuario(usuario);
                     this.guardarTokenAPI(usuario.Tipo);
                     console.log('Tipo Empleado ' + usuario.Tipo);
+                    
                     if ( usuario.Tipo === 'CLIENTE') {
                       console.log('ACCEDEMOS COMO CLIENTE');
                       this.menuCtrl.enable(false, 'menuTrabajadores');
@@ -441,6 +444,7 @@ export class LoginPage implements OnInit {
 
     xmlhttp.send(sr);
   }
+
 
 
   async guardarTokenAPI(tipoUsuario: string) {
