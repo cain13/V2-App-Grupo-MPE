@@ -442,13 +442,7 @@ export class AppComponent {
 
       if (this.routerOutlet.canGoBack()) {
         console.log('Vista Fichar');
-        if (this.usuarioService.getUsuario().Tipo === 'CLIENTE') {
-          //this.navCtrl.navigateRoot('certificado-aptitud');
           this.navCtrl.navigateRoot('tab-inicio');
-        } else {
-          //this.navCtrl.navigateRoot('documentos-trabajador');
-          this.navCtrl.navigateRoot('tab-inicio');
-        }
       } else {
         if (Date.now() - this.lastBack > 500) {
           navigator['app'].exitApp();

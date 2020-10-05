@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { PopoverController, ModalController, IonCheckbox, IonRadio, AlertController, NavController, ActionSheetController, ToastController } from '@ionic/angular';
+import { PopoverController, ModalController, IonCheckbox, IonRadio, AlertController, NavController, ActionSheetController, ToastController, Platform } from '@ionic/angular';
 import { ElegirTestPage } from 'src/app/components/elegir-test/elegir-test.page';
 import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 import { UsuarioService } from '../../../services/usuario.service';
@@ -10,7 +10,7 @@ import { SubrespuestaModalPage } from '../subrespuesta-modal/subrespuesta-modal.
 import { SubRespuestaInfo, RespuestaSubPreguntas, RespuestaSubPreguntaInfo } from '../../../interfaces/interfaces-grupo-mpe';
 import * as moment from 'moment';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import {  FileTransfer, FileUploadOptions,FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { FileTransferObject } from '@ionic-native/file-transfer/ngx';
 
 
 declare var window: any;
@@ -41,7 +41,7 @@ export class TestPage implements OnInit {
   tituloArchivo: string;
   isImagenAdjuntada: boolean;
   imagenesRespuesta: ImagenTestMantoux[] = [];
-
+  popover: PopoverController;
 
 
 
@@ -60,7 +60,14 @@ export class TestPage implements OnInit {
               private toastController: ToastController,
               private camera: Camera,
               public alertCtrl: AlertController,
-              ) { }
+              private platform: Platform
+              ) 
+  {
+    this.platform.backButton.subscribeWithPriority(10, () => {
+      console.log('Handler was called!');
+      this.CerrarPopoOvr();
+    });
+  }
 
   ngOnInit() {
     this.usuario = this.usuarioService.getUsuario();
@@ -69,7 +76,13 @@ export class TestPage implements OnInit {
 
   }
 
-
+async CerrarPopoOvr(){
+  const popover = await this.popoverController.getTop();
+      if (popover) {
+          popover.dismiss();
+      }
+      this.navCtrl.navigateRoot('/tab-inicio');
+}
 
   async seleccionarTest() {
 
@@ -101,11 +114,12 @@ export class TestPage implements OnInit {
 
   async mostrarPopoverSeleccionarTest() {
     this.testEnviadoCorrectamente = false;
-    const popover = await this.popoverController.create({
+    let popover = await this.popoverController.create({
       component: ElegirTestPage,
       animated: true,
       showBackdrop: true,
-      backdropDismiss: false
+      backdropDismiss: true,
+      
     });
 
     popover.onDidDismiss().then(() => {

@@ -1,3 +1,11 @@
+import {
+  trigger,
+  style,
+  animate,
+  transition,
+  query,
+  stagger
+} from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
 import { Opciones } from 'src/app/interfaces/usuario-interfaces';
 
@@ -5,6 +13,14 @@ import { Opciones } from 'src/app/interfaces/usuario-interfaces';
   selector: 'app-vigilancia-salud',
   templateUrl: './vigilancia-salud.page.html',
   styleUrls: ['./vigilancia-salud.page.scss'],
+  animations: [
+    trigger('staggerIn', [
+      transition('* => *', [
+        query(':enter', style({ opacity: 0, transform: `translate3d(100px,0,0)` }), { optional: true }),
+        query(':enter', stagger('150ms', [animate('250ms', style({ opacity: 1, transform: `translate3d(0,0,0)` }))]), { optional: true })
+      ])
+    ])
+  ]
 })
 export class VigilanciaSaludPage implements OnInit {
 
@@ -45,6 +61,11 @@ export class VigilanciaSaludPage implements OnInit {
       Titulo: 'Asistencia',
       Url: '/asistencia',
       Icon: 'help-buoy',
+      direct: 'forward'
+    },{
+      Titulo: 'Historial Documentos',
+      Url: '/historial-notificaciones',
+      Icon: 'clipboard-outline',
       direct: 'forward'
     }];
 

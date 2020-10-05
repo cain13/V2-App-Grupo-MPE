@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { PopoverController, ModalController, IonCheckbox, IonRadio, AlertController, NavController, ActionSheetController, ToastController } from '@ionic/angular';
+import { Component, OnInit, ViewChildren, QueryList, ViewChild } from '@angular/core';
+import { PopoverController, ModalController, IonCheckbox, IonRadio, AlertController, NavController, ActionSheetController, ToastController, ViewWillEnter, Platform, IonRouterOutlet } from '@ionic/angular';
 import { ElegirTestPage } from 'src/app/components/elegir-test/elegir-test.page';
 import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 import { UsuarioService } from '../../../services/usuario.service';
@@ -24,7 +24,7 @@ declare var window: any;
   templateUrl: './test-menu.page.html',
   styleUrls: ['./test-menu.page.scss'],
 })
-export class TestMenuPage implements OnInit {
+export class TestMenuPage implements ViewWillEnter,OnInit {
 
   usuario: UsuarioLogin;
   test: TestInfo;
@@ -45,8 +45,8 @@ export class TestMenuPage implements OnInit {
   isImagenAdjuntada: boolean;
   imagenesRespuesta: ImagenTestMantoux[] = [];
 
-
-
+  @ViewChild(IonRouterOutlet, { static : true }) routerOutlet: IonRouterOutlet;
+  lastBack = Date.now();
 
   @ViewChildren('CheckRespuesta') botonRespuestas: QueryList<IonCheckbox>;
 
@@ -62,16 +62,43 @@ export class TestMenuPage implements OnInit {
               private toastController: ToastController,
               private camera: Camera,
               public alertCtrl: AlertController,
-              private notificacionesService: NotificacionesService
-              ) { }
+              private platform: Platform
+              ) {
+                this.platform.backButton.subscribeWithPriority(10, () => {
+                  console.log('Handler was called inicio!');
+                  this.CerrarPopoOvr();
+                });
+               }
 
   ngOnInit() {
     this.usuario = this.usuarioService.getUsuario();
-    this.getTest();
+    //this.getTest();
 
   }
   
+  ionViewWillEnter() {
+    //this.usuario = this.usuarioService.getUsuario();
+    this.getTest();
+  }
 
+  async CerrarPopoOvr(){
+    const popover = await this.popoverController.getTop();
+    if (popover) {
+        popover.dismiss();
+    }
+    if (this.routerOutlet.canGoBack()) {
+      console.log("canGoBack");
+        this.navCtrl.navigateRoot('tab-inicio');
+    } else {
+      console.log("Salir");
+      console.log("Date.now() ",Date.now());
+      console.log("lastBack ",this.lastBack);
+      if (Date.now() - this.lastBack > 500) {
+        navigator['app'].exitApp();
+      }
+      this.lastBack = Date.now();
+    }
+  }
 
   async seleccionarTest() {
 

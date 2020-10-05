@@ -104,7 +104,7 @@ export class DatabaseService {
   }
 
   async obtenerUltimoUsuario(): Promise<UsuarioLogin> {
-    const res =  await this.storage.executeSql('SELECT * FROM usuariosTable LIMIT 1', []);
+    const res =  await this.storage.executeSql('SELECT * FROM usuariosTable LIMIT 1 ', []);
     if (res.rows.length !== 0) {
       return {
         Usuario: res.rows.item(0).Usuario,

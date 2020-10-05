@@ -104,9 +104,7 @@ export class InicioPage implements OnInit {
   }
 
   ionViewWillEnter() {
-    this.notificacionesService.aumentarNotificaciones();
-    this.cantidad$ = this.notificacionesService.getNotifiaciones$();
-    this.cantidad$.subscribe(num => this.Cantidad = num);
+    this.usuario = this.usuarioService.getUsuario();
     console.log('Cantidad$ Notificacioens: ', this.Cantidad);
     this.menuCtrl.enable(true);
 
@@ -128,7 +126,8 @@ export class InicioPage implements OnInit {
       Empleado: this.usuario.Tipo
 
     };
-    if(this.usuario.EsGuardiaCivil){
+    if(this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true'){
+      console.log("GuardiaCivil Inicio ",this.usuario.EsGuardiaCivil);
       usuario.Empleado = "GuardiaCivil";
     }
     const respuesta = await  this.http.post<RespuestaAPINoticias>(URL, usuario, {headers: this.header}).toPromise();
