@@ -63,10 +63,7 @@ export class TestPage implements OnInit {
               private platform: Platform
               ) 
   {
-    this.platform.backButton.subscribeWithPriority(10, () => {
-      console.log('Handler was called!');
-      this.CerrarPopoOvr();
-    });
+   
   }
 
   ngOnInit() {
@@ -75,14 +72,6 @@ export class TestPage implements OnInit {
 
 
   }
-
-async CerrarPopoOvr(){
-  const popover = await this.popoverController.getTop();
-      if (popover) {
-          popover.dismiss();
-      }
-      this.navCtrl.navigateRoot('/tab-inicio');
-}
 
   async seleccionarTest() {
 

@@ -17,7 +17,7 @@
   <ion-card class="ion-no-margin">
     <ion-card-content class="bg-profile">
       <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar">
-      <h1 class="fw500" *ngIf="EsGuardiaCivil !== undefined && !EsGuardiaCivil">{{Nombre}}</h1>
+      <h1 class="fw500">{{Nombre}}</h1>
       <h1 color="light" class="ion-margin-bottom">{{Tipo}}</h1>
     </ion-card-content>
   
@@ -81,17 +81,17 @@
                 <ion-input color="dark" type="text" formControlName="nombre"></ion-input>
               </ion-item>-->
 
-              <ion-item *ngIf="EsGuardiaCivil !== undefined && EsGuardiaCivil">
+              <ion-item *ngIf="usuario.Telefono !== undefined && EsGuardiaCivil !== undefined && EsGuardiaCivil">
                 <ion-label color="dark" position="stacked">Teléfono:</ion-label>
                 <ion-input color="dark" type="text" formControlName="telefono"></ion-input>
               </ion-item>
 
-              <ion-item *ngIf="EsGuardiaCivil !== undefined && EsGuardiaCivil">
+              <ion-item *ngIf="usuario.Movil !== undefined && EsGuardiaCivil !== undefined && EsGuardiaCivil">
                 <ion-label color="dark" position="stacked">Móvil:</ion-label>
                 <ion-input color="dark" type="text" formControlName="movil"></ion-input>
               </ion-item>
 
-              <ion-item *ngIf="EsGuardiaCivil !== undefined && EsGuardiaCivil">
+              <ion-item *ngIf="usuario.Email !== undefined && EsGuardiaCivil !== undefined && EsGuardiaCivil">
                 <ion-label color="dark" position="stacked">Email:</ion-label>
                 <ion-input color="dark" type="text" formControlName="email"></ion-input>
               </ion-item>

@@ -42,7 +42,8 @@ export class EditProfilePage implements OnInit {
     this.Tipo = this.usuarioService.usuario.Tipo;
     this.usuario = this.usuarioService.getUsuario();
     if(this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true'){
-      this.Tipo = 'GUARDIA CIVIL';
+      this.Nombre = 'GUARDIA CIVIL';
+      this.Tipo = this.usuarioService.usuario.Nombre;
       this.EsGuardiaCivil = true;
       this.Email = this.usuario.Email;
       this.Telefono = this.usuario.Telefono;
@@ -50,16 +51,16 @@ export class EditProfilePage implements OnInit {
 
     if(this.EsGuardiaCivil) {
       this.editProfileForm = this.formBuilder.group({
-        nombre: [this.usuario.Nombre, Validators.compose([
+        nombre: [this.usuario.Nombre.toString(), Validators.compose([
           Validators.required
         ])],
-        telefono: [this.usuario.Telefono, Validators.compose([
+        telefono: [this.usuario.Telefono.toString(), Validators.compose([
           Validators.required
         ])],
-        movil: [this.usuario.Movil, Validators.compose([
+        movil: [this.usuario.Movil.toString(), Validators.compose([
           Validators.required
         ])],
-        email: [this.usuario.Email, Validators.compose([
+        email: [this.usuario.Email.toString(), Validators.compose([
           Validators.required
         ])]
       });
@@ -67,10 +68,10 @@ export class EditProfilePage implements OnInit {
     } else {
 
       this.editProfileForm = this.formBuilder.group({
-        nombre: [this.usuario.Nombre, Validators.compose([
+        nombre: [this.usuario.Nombre.toString(), Validators.compose([
           Validators.required
         ])],
-        tipo: [this.usuario.Tipo, Validators.compose([
+        tipo: [this.usuario.Tipo.toString(), Validators.compose([
           Validators.required
         ])]
       });

@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
-import { MenuController, ModalController, NavController, Platform } from '@ionic/angular';
+import { IonRouterOutlet, MenuController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { Noticia, ObtenerDatosConsultorResult, RespuestaAPIGetDatos, RespuestaAPINoticias } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { UsuarioLogin, EmpresaConsultor } from 'src/app/interfaces/usuario-interfaces';
@@ -64,6 +64,9 @@ export class InicioPage implements OnInit {
   botonRecordarme: any;
   onLoginForm: any;
 
+  @ViewChild(IonRouterOutlet, { static : true }) routerOutlet: IonRouterOutlet;
+  lastBack = Date.now();
+
   constructor(  private usuarioService: UsuarioService,
                 private notificacionesService: NotificacionesService,
                 private platform: Platform,
@@ -72,6 +75,7 @@ export class InicioPage implements OnInit {
                 public modalCtrl: ModalController,
                 private http: HttpClient,
                 private ngxXml2jsonService: NgxXml2jsonService,
+                private popoverController: PopoverController
     ) {
     this.usuario = this.usuarioService.getUsuario();
   }
@@ -120,10 +124,19 @@ export class InicioPage implements OnInit {
   }
 
   ionViewWillEnter() {
+     
     this.usuario = this.usuarioService.getUsuario();
     console.log('Cantidad$ Notificacioens: ', this.Cantidad);
     this.menuCtrl.enable(true);
+    this.CerrarPopoOvr();
+  }
 
+  async CerrarPopoOvr(){
+    const popover = await this.popoverController.getTop();
+        if (popover) {
+            popover.dismiss();
+        }
+       // this.navCtrl.navigateRoot('/tab-inicio');
   }
 
   async notifications() {

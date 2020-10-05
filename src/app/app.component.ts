@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ɵCodegenComponentFactoryResolver } from '@angular/core';
 // import { Router } from '@angular/router';
 
-import { Platform, MenuController, NavController, IonRouterOutlet, ActionSheetController } from '@ionic/angular';
+import { Platform, MenuController, NavController, IonRouterOutlet, ActionSheetController, PopoverController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -33,7 +33,7 @@ export class AppComponent {
   public appPages: Array<Pages>;
   public appPagesVSAll: Array<Pages>;
   public appPagesTrabajador: Array<Pages>;
-  
+  private HayModal = false;
   public appPagesGuardiaCivil: Array<Pages>;
   private textoCompartirAPP = 'Disfrute de la App de GrupoMPE para la gestión laboral, puede descargarla pinchando en el siguiente enlace!!';
   private urlCompartirAPP = 'http://onelink.to/ept9em';
@@ -52,11 +52,12 @@ export class AppComponent {
     private fcm: FCM,
     private notificacionesService: NotificacionesService,
     public actionSheetController: ActionSheetController,
-    private socialSharing: SocialSharing
+    private socialSharing: SocialSharing,
+    private popoverController: PopoverController
     // public router: Router
   ) {
     this.appPagesTrabajador = [
-   
+
       {
         title: 'Reconocimientos Médicos',
         url: '/documentos-trabajador-menu',
@@ -109,7 +110,7 @@ export class AppComponent {
         direct: 'forward',
         icon: 'timer-outline'
       },
-      
+
 
     ];
 
@@ -170,13 +171,13 @@ export class AppComponent {
         url: '/favorites',
         direct: 'forward',
         icon: 'heart'
-      },{
+      }, {
         title: 'Editar Perfil',
         url: '/edit-profile',
         direct: 'forward',
         icon: 'person-outline'
       }
-      
+
     ];
 
 
@@ -438,13 +439,14 @@ export class AppComponent {
 
   }
   backButtonEvent() {
-    this.platform.backButton.subscribeWithPriority(0, () => {
+    this.platform.backButton.subscribeWithPriority(0, async () => {
 
       if (this.routerOutlet.canGoBack()) {
         console.log('Vista Fichar');
           this.navCtrl.navigateRoot('tab-inicio');
       } else {
-        if (Date.now() - this.lastBack > 500) {
+        await this.CerrarPopoOvr();
+        if (this.HayModal === false && Date.now() - this.lastBack > 500) {
           navigator['app'].exitApp();
         }
         this.lastBack = Date.now();
@@ -452,7 +454,16 @@ export class AppComponent {
       this.usuarioService.dismiss();
     });
   }
-
+  async CerrarPopoOvr() {
+    const popover = await this.popoverController.getTop();
+        if (popover) {
+            this.HayModal = true;
+            popover.dismiss();
+        } else {
+          this.HayModal = false;
+        }
+       // this.navCtrl.navigateRoot('/tab-inicio');
+  }
   closeMenu() {
     this.menu.close();
   }
@@ -462,6 +473,7 @@ export class AppComponent {
   }
 
   async compartirAPP() {
+    try {
     const actionSheet = await this.actionSheetController.create({
       header: 'Compartir APP',
       cssClass: 'my-custom-class',
@@ -490,18 +502,18 @@ export class AppComponent {
             console.log('Lanzamos Twitter error', error);
             this.usuarioService.presentAlert('Error', 'No tiene la app de Twitter en su móvil', 'Descarguela y pruebe de nuevo, gracias.');
 
-          });
-        }
-      }, {
-        text: 'Whatsapp',
-        icon: 'logo-whatsapp',
-        handler: () => {
-          console.log('Lanzamos Whatsapp');
-          this.socialSharing.shareViaWhatsApp(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
+            });
+          }
+        }, {
+          text: 'Whatsapp',
+          icon: 'logo-whatsapp',
+          handler: () => {
+            console.log('Lanzamos Whatsapp');
+            this.socialSharing.shareViaWhatsApp(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
-          }).catch( error => {
+            }).catch( error => {
 
             console.log('Lanzamos Whatsapp error', error);
             this.usuarioService.presentAlert('Error', 'No tiene la app de Whatsapp en su móvil', 'Descarguela y pruebe de nuevo, gracias.');
@@ -517,27 +529,31 @@ export class AppComponent {
           this.socialSharing.shareViaEmail(this.textoCompartirAPP + ':' + this.urlCompartirAPP, 'Descarga la App de prevención de Grupo MPE', null).then( () => {
 
 
-          }).catch( error => {
+            }).catch( error => {
 
 
 
-          });
-        }
-      }, {
-        text: 'Cancelar',
-        icon: 'close',
-        role: 'cancel',
-        handler: () => {
-          console.log('Cancel clicked');
-        }
-      }]
-    });
-    await actionSheet.present();
+            });
+          }
+        }, {
+          text: 'Cancelar',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }]
+      });
+
+      await actionSheet.present();
+    } catch (error) {
+        console.log('Fallo al cargar ');
+    }
   }
 
 
 
-  contactoMpe(){
+  contactoMpe() {
     this.navCtrl.navigateForward('contacto-mpe');
   }
 
@@ -551,7 +567,7 @@ export class AppComponent {
 
   }
 
-  cerrarSesion(){
+  cerrarSesion() {
     console.log('Cerrar sesion');
    // this.usuarioService.BorrarEmpleado();
    // this.usuarioService.guardarUsuario(null);
