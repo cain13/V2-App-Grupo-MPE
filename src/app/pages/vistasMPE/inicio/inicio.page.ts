@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
-import { MenuController, ModalController, NavController, Platform } from '@ionic/angular';
+import { IonRouterOutlet, MenuController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
 import { Observable } from 'rxjs';
 import { Noticia, RespuestaAPINoticias } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { UsuarioLogin, EmpresaConsultor } from 'src/app/interfaces/usuario-interfaces';
@@ -55,13 +55,17 @@ export class InicioPage implements OnInit {
     URLYoutube:       "",
   };
 
+  @ViewChild(IonRouterOutlet, { static : true }) routerOutlet: IonRouterOutlet;
+  lastBack = Date.now();
+
   constructor(  private usuarioService: UsuarioService,
                 private notificacionesService: NotificacionesService,
                 private platform: Platform,
                 public menuCtrl: MenuController,
                 public navCtrl: NavController,
                 public modalCtrl: ModalController,
-                private http: HttpClient
+                private http: HttpClient,
+                private popoverController: PopoverController
     ) {
     this.usuario = this.usuarioService.getUsuario();
   }
@@ -104,10 +108,19 @@ export class InicioPage implements OnInit {
   }
 
   ionViewWillEnter() {
+     
     this.usuario = this.usuarioService.getUsuario();
     console.log('Cantidad$ Notificacioens: ', this.Cantidad);
     this.menuCtrl.enable(true);
+    this.CerrarPopoOvr();
+  }
 
+  async CerrarPopoOvr(){
+    const popover = await this.popoverController.getTop();
+        if (popover) {
+            popover.dismiss();
+        }
+       // this.navCtrl.navigateRoot('/tab-inicio');
   }
 
   async notifications() {

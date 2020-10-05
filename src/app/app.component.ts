@@ -1,7 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ɵCodegenComponentFactoryResolver } from '@angular/core';
 // import { Router } from '@angular/router';
 
-import { Platform, MenuController, NavController, IonRouterOutlet, ActionSheetController } from '@ionic/angular';
+import { Platform, MenuController, NavController, IonRouterOutlet, ActionSheetController, PopoverController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -33,7 +33,7 @@ export class AppComponent {
   public appPages: Array<Pages>;
   public appPagesVSAll: Array<Pages>;
   public appPagesTrabajador: Array<Pages>;
-  
+  private HayModal = false;
   public appPagesGuardiaCivil: Array<Pages>;
   private textoCompartirAPP = 'Disfrute de la App de GrupoMPE para la gestión laboral, puede descargarla pinchando en el siguiente enlace!!';
   private urlCompartirAPP = 'http://onelink.to/ept9em';
@@ -52,7 +52,8 @@ export class AppComponent {
     private fcm: FCM,
     private notificacionesService: NotificacionesService,
     public actionSheetController: ActionSheetController,
-    private socialSharing: SocialSharing
+    private socialSharing: SocialSharing,
+    private popoverController: PopoverController
     // public router: Router
   ) {
     this.appPagesTrabajador = [
@@ -438,13 +439,14 @@ export class AppComponent {
 
   }
   backButtonEvent() {
-    this.platform.backButton.subscribeWithPriority(0, () => {
+    this.platform.backButton.subscribeWithPriority(0, async () => {
 
       if (this.routerOutlet.canGoBack()) {
         console.log('Vista Fichar');
           this.navCtrl.navigateRoot('tab-inicio');
       } else {
-        if (Date.now() - this.lastBack > 500) {
+        await this.CerrarPopoOvr();
+        if (this.HayModal === false && Date.now() - this.lastBack > 500) {
           navigator['app'].exitApp();
         }
         this.lastBack = Date.now();
@@ -452,7 +454,16 @@ export class AppComponent {
       this.usuarioService.dismiss();
     });
   }
-
+  async CerrarPopoOvr(){
+    const popover = await this.popoverController.getTop();
+        if (popover) {
+            this.HayModal = true;
+            popover.dismiss();
+        }else{
+          this.HayModal = false;
+        }
+       // this.navCtrl.navigateRoot('/tab-inicio');
+  }
   closeMenu() {
     this.menu.close();
   }
@@ -462,78 +473,84 @@ export class AppComponent {
   }
 
   async compartirAPP() {
-    const actionSheet = await this.actionSheetController.create({
-      header: 'Compartir APP',
-      cssClass: 'my-custom-class',
-      buttons: [{
-        text: 'Facebook',
-        icon: 'logo-facebook',
-        handler: () => {
-          console.log('Lanzamos Facebook');
-          this.socialSharing.shareViaFacebook(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
+    try {
+      const actionSheet = await this.actionSheetController.create({
+        header: 'Compartir APP',
+        cssClass: 'my-custom-class',
+        buttons: [{
+          text: 'Facebook',
+          icon: 'logo-facebook',
+          handler: () => {
+            console.log('Lanzamos Facebook');
+            this.socialSharing.shareViaFacebook(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
-          }).catch( error => {
+            }).catch( error => {
 
 
 
-          });
-        }
-      }, {
-        text: 'Twitter',
-        icon: 'logo-twitter',
-        handler: () => {
-          console.log('Lanzamos Twitter');
-          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
+            });
+          }
+        }, {
+          text: 'Twitter',
+          icon: 'logo-twitter',
+          handler: () => {
+            console.log('Lanzamos Twitter');
+            this.socialSharing.shareViaTwitter(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
-          }).catch( error => {
+            }).catch( error => {
 
 
 
-          });
-        }
-      }, {
-        text: 'Whatsapp',
-        icon: 'logo-whatsapp',
-        handler: () => {
-          console.log('Lanzamos Whatsapp');
-          this.socialSharing.shareViaWhatsApp(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
+            });
+          }
+        }, {
+          text: 'Whatsapp',
+          icon: 'logo-whatsapp',
+          handler: () => {
+            console.log('Lanzamos Whatsapp');
+            this.socialSharing.shareViaWhatsApp(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
-          }).catch( error => {
+            }).catch( error => {
 
-            console.log('Lanzamos Whatsapp error',error);
+              console.log('Lanzamos Whatsapp error',error);
 
-          });
-        }
-      }, {
-        text: 'Email',
-        icon: 'mail-outline',
-        handler: () => {
-          console.log('Lanzamos Email');
-          this.socialSharing.shareViaEmail(this.textoCompartirAPP + ':' + this.urlCompartirAPP, 'my subject', null).then( () => {
-
-
-          }).catch( error => {
+            });
+          }
+        }, {
+          text: 'Email',
+          icon: 'mail-outline',
+          handler: () => {
+            console.log('Lanzamos Email');
+            this.socialSharing.shareViaEmail(this.textoCompartirAPP + ':' + this.urlCompartirAPP, 'my subject', null).then( () => {
 
 
+            }).catch( error => {
 
-          });
-        }
-      }, {
-        text: 'Cancelar',
-        icon: 'close',
-        role: 'cancel',
-        handler: () => {
-          console.log('Cancel clicked');
-        }
-      }]
-    });
-    await actionSheet.present();
+
+
+            });
+          }
+        }, {
+          text: 'Cancelar',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }]
+      });
+
+      await actionSheet.present();
+    } catch (error) {
+        console.log("Fallo al cargar ")
+    }
+    
   }
 
 

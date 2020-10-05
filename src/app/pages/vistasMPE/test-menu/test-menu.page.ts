@@ -64,10 +64,7 @@ export class TestMenuPage implements ViewWillEnter,OnInit {
               public alertCtrl: AlertController,
               private platform: Platform
               ) {
-                this.platform.backButton.subscribeWithPriority(10, () => {
-                  console.log('Handler was called inicio!');
-                  this.CerrarPopoOvr();
-                });
+               
                }
 
   ngOnInit() {
@@ -81,24 +78,7 @@ export class TestMenuPage implements ViewWillEnter,OnInit {
     this.getTest();
   }
 
-  async CerrarPopoOvr(){
-    const popover = await this.popoverController.getTop();
-    if (popover) {
-        popover.dismiss();
-    }
-    if (this.routerOutlet.canGoBack()) {
-      console.log("canGoBack");
-        this.navCtrl.navigateRoot('tab-inicio');
-    } else {
-      console.log("Salir");
-      console.log("Date.now() ",Date.now());
-      console.log("lastBack ",this.lastBack);
-      if (Date.now() - this.lastBack > 500) {
-        navigator['app'].exitApp();
-      }
-      this.lastBack = Date.now();
-    }
-  }
+ 
 
   async seleccionarTest() {
 
