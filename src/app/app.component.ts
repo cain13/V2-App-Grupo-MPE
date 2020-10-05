@@ -57,7 +57,7 @@ export class AppComponent {
     // public router: Router
   ) {
     this.appPagesTrabajador = [
-   
+
       {
         title: 'Reconocimientos Médicos',
         url: '/documentos-trabajador-menu',
@@ -110,7 +110,7 @@ export class AppComponent {
         direct: 'forward',
         icon: 'timer-outline'
       },
-      
+
 
     ];
 
@@ -171,13 +171,13 @@ export class AppComponent {
         url: '/favorites',
         direct: 'forward',
         icon: 'heart'
-      },{
+      }, {
         title: 'Editar Perfil',
         url: '/edit-profile',
         direct: 'forward',
         icon: 'person-outline'
       }
-      
+
     ];
 
 
@@ -454,12 +454,12 @@ export class AppComponent {
       this.usuarioService.dismiss();
     });
   }
-  async CerrarPopoOvr(){
+  async CerrarPopoOvr() {
     const popover = await this.popoverController.getTop();
         if (popover) {
             this.HayModal = true;
             popover.dismiss();
-        }else{
+        } else {
           this.HayModal = false;
         }
        // this.navCtrl.navigateRoot('/tab-inicio');
@@ -474,36 +474,33 @@ export class AppComponent {
 
   async compartirAPP() {
     try {
-      const actionSheet = await this.actionSheetController.create({
-        header: 'Compartir APP',
-        cssClass: 'my-custom-class',
-        buttons: [{
-          text: 'Facebook',
-          icon: 'logo-facebook',
-          handler: () => {
-            console.log('Lanzamos Facebook');
-            this.socialSharing.shareViaFacebook(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
-
-
-
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Compartir APP',
+      cssClass: 'my-custom-class',
+      buttons: [{
+        text: 'Facebook',
+        icon: 'logo-facebook',
+        handler: () => {
+          console.log('Lanzamos Facebook');
+            // Sharing via email is possible
+            this.socialSharing.shareViaFacebook('https://mpeprevencion.com/qr-appmpe.html', null, null).then( () => {
+              console.log('Then Lanzamos Facebook');
             }).catch( error => {
-
-
-
+              console.log('error Facebook', error);
             });
-          }
-        }, {
-          text: 'Twitter',
-          icon: 'logo-twitter',
-          handler: () => {
-            console.log('Lanzamos Twitter');
-            this.socialSharing.shareViaTwitter(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
+        }
+      }, {
+        text: 'Twitter',
+        icon: 'logo-twitter',
+        handler: () => {
+          console.log('Lanzamos Twitter');
+          this.socialSharing.shareViaTwitter(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
-            }).catch( error => {
-
-
+          }).catch( error => {
+            console.log('Lanzamos Twitter error', error);
+            this.usuarioService.presentAlert('Error', 'No tiene la app de Twitter en su móvil', 'Descarguela y pruebe de nuevo, gracias.');
 
             });
           }
@@ -518,16 +515,18 @@ export class AppComponent {
 
             }).catch( error => {
 
-              console.log('Lanzamos Whatsapp error',error);
+            console.log('Lanzamos Whatsapp error', error);
+            this.usuarioService.presentAlert('Error', 'No tiene la app de Whatsapp en su móvil', 'Descarguela y pruebe de nuevo, gracias.');
 
-            });
-          }
-        }, {
-          text: 'Email',
-          icon: 'mail-outline',
-          handler: () => {
-            console.log('Lanzamos Email');
-            this.socialSharing.shareViaEmail(this.textoCompartirAPP + ':' + this.urlCompartirAPP, 'my subject', null).then( () => {
+
+          });
+        }
+      }, {
+        text: 'Email',
+        icon: 'mail-outline',
+        handler: () => {
+          console.log('Lanzamos Email');
+          this.socialSharing.shareViaEmail(this.textoCompartirAPP + ':' + this.urlCompartirAPP, 'Descarga la App de prevención de Grupo MPE', null).then( () => {
 
 
             }).catch( error => {
@@ -548,22 +547,27 @@ export class AppComponent {
 
       await actionSheet.present();
     } catch (error) {
-        console.log("Fallo al cargar ")
+        console.log('Fallo al cargar ');
     }
-    
   }
 
 
 
-  contactoMpe(){
+  contactoMpe() {
     this.navCtrl.navigateForward('contacto-mpe');
   }
 
-  proteccion(){
-    window.open('https:mpeprevencion.com/proteccion-datos.html', '_system');
+  proteccionGuardiaCivil() {
+    window.open('https:mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
   }
 
-  cerrarSesion(){
+  proteccionGenerico() {
+
+    window.open('https:mpeprevencion.com/proteccion_datos_MPE.html', '_system');
+
+  }
+
+  cerrarSesion() {
     console.log('Cerrar sesion');
    // this.usuarioService.BorrarEmpleado();
    // this.usuarioService.guardarUsuario(null);

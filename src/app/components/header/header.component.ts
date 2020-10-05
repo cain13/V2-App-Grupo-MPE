@@ -21,9 +21,9 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
 
   EsGuardiaCivil = false;
 
-  @Input() titulo: string = 'Grupo MPE';
+  @Input() titulo = 'Grupo MPE';
 
-  private textoCompartirAPP = 'Disfrute de la App de GrupoMPE para la gestión laboral, puede descargarla pinchando en el siguiente enlace!!';
+  private textoCompartirAPP = 'Disfrute de la App de Grupo MPE de prevención de riesgos laborales, puede descargarla pinchando en el siguiente enlace. ';
   private urlCompartirAPP = 'http://onelink.to/ept9em';
 
   constructor(  private usuarioService: UsuarioService,
@@ -48,13 +48,13 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
 
       }
     });
-    
+
     this.usuario = this.usuarioService.getUsuario();
     console.log('App Header EsGuardiaCivil ', this.usuario.EsGuardiaCivil);
-    if(this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true'){
+    if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true') {
       this.EsGuardiaCivil = true;
-    }else{
-      this.EsGuardiaCivil =false;
+    } else {
+      this.EsGuardiaCivil = false;
     }
 
   }
@@ -84,15 +84,12 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
         icon: 'logo-facebook',
         handler: () => {
           console.log('Lanzamos Facebook');
-          try {
-            this.socialSharing.shareViaFacebook(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
+            // Sharing via email is possible
+            this.socialSharing.shareViaFacebook('https://mpeprevencion.com/qr-appmpe.html', null, null).then( () => {
               console.log('Then Lanzamos Facebook');
             }).catch( error => {
-              console.log('error Facebook',error);
+              console.log('error Facebook', error);
             });
-          } catch (error) {
-              this.usuarioService.presentAlert("Error","No tiene instalada la app de FaceBook","");
-          }
         }
       }, {
         text: 'Twitter',
@@ -104,8 +101,8 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
 
 
           }).catch( error => {
-
-
+            console.log('Lanzamos Twitter error', error);
+            this.usuarioService.presentAlert('Error', 'No tiene la app de Twitter en su móvil', 'Descarguela y pruebe de nuevo, gracias.');
 
           });
         }
@@ -120,7 +117,9 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
 
           }).catch( error => {
 
-            console.log('Lanzamos Whatsapp error',error);
+            console.log('Lanzamos Whatsapp error', error);
+            this.usuarioService.presentAlert('Error', 'No tiene la app de Whatsapp en su móvil', 'Descarguela y pruebe de nuevo, gracias.');
+
 
           });
         }
@@ -129,7 +128,7 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
         icon: 'mail-outline',
         handler: () => {
           console.log('Lanzamos Email');
-          this.socialSharing.shareViaEmail(this.textoCompartirAPP + ':' + this.urlCompartirAPP, 'my subject', null).then( () => {
+          this.socialSharing.shareViaEmail(this.textoCompartirAPP + ':' + this.urlCompartirAPP, 'Descarga la App de prevención de Grupo MPE', null).then( () => {
 
 
           }).catch( error => {

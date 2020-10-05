@@ -150,7 +150,8 @@ const routes: Routes = [
   {
     path: 'home-location-menu',
     loadChildren: () => import('./pages/vistasMPE/home-location-menu/home-location-menu.module').then( m => m.HomeLocationMenuPageModule)
-  },  {
+  },
+  {
     path: 'certificado-aptitud-menu',
     loadChildren: () => import('./pages/vistasMPE/certificado-aptitud-menu/certificado-aptitud-menu.module').then( m => m.CertificadoAptitudMenuPageModule)
   },
@@ -177,6 +178,10 @@ const routes: Routes = [
   {
     path: 'contacto-mpe',
     loadChildren: () => import('./pages/vistasMPE/contacto-mpe/contacto-mpe.module').then( m => m.ContactoMpePageModule)
+  },
+  {
+    path: 'modal-condiciones',
+    loadChildren: () => import('./pages/vistasMPE/modal-condiciones/modal-condiciones.module').then( m => m.ModalCondicionesPageModule)
   },
 
   
