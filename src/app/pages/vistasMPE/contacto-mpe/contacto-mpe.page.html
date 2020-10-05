@@ -18,21 +18,24 @@
             <label> Por favor indíquenos sus datos para recibir notificaciones por SMS o Email.</label>        
           </ion-col>
         </ion-row>
-        <ion-list class="ion-margin-bottom">
+        <form [formGroup]="contactameForm" class="list-form">
           <ion-item>
             <ion-label color="dark" position="stacked">Nombre:</ion-label>
-            <ion-text> </ion-text>
+            <ion-input color="dark" type="text" formControlName="nombre"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label color="dark" position="stacked">Teléfono:</ion-label>
-            <ion-text> </ion-text>
+            <ion-input color="dark" type="text" formControlName="telefono"></ion-input>
           </ion-item>
           <ion-item>
             <ion-label color="dark" position="stacked">Email:</ion-label>
-            <ion-text> </ion-text>
+            <ion-input color="dark" type="text" formControlName="email"></ion-input>
           </ion-item>
-          
-        </ion-list>
+          <ion-item>
+            <ion-label color="dark" position="stacked">Asunto:</ion-label>
+            <ion-input text="wrap" color="dark" type="text" formControlName="asunto"></ion-input>
+          </ion-item>          
+        </form>
         <ion-row style="background: #FFE294!important; padding:10px !important;">
           <ion-col >
             <label>  Puede contactar con Grupo MPE por el siguiente teléfono o email.</label>        
@@ -47,6 +50,7 @@
             <ion-icon  slot="start" name="mail-outline" item-start></ion-icon>
             <ion-label color="dark" position="stacked">guardiacivil@grupompe.es</ion-label>
           </ion-item>
+
           
         </ion-list>
       </ion-col>
@@ -54,8 +58,8 @@
   </ion-grid>
 </ion-content>
 <ion-footer class="no-padding">
-  <ion-button icon-left size="large" expand="full" color="dark"  tappable>
-    <ion-icon slot="start" name="save-outline"></ion-icon>
-   Guardar Datos
+  <ion-button [disabled]="!contactameForm.valid" icon-left size="large" expand="full" color="dark" (click)="enviarConsulta()" tappable>
+    <ion-icon slot="start" name="arrow-redo-outline"></ion-icon>
+   Enviar consulta
   </ion-button>
 </ion-footer>
