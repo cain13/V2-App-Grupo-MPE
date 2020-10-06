@@ -6,6 +6,7 @@ import { CambiarPasswordPage } from '../vistasMPE/cambiar-password/cambiar-passw
 import { UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatabaseService } from '../../services/database.service';
+import { NotificacionesService } from '../../services/notificaciones.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class EditProfilePage implements OnInit {
   Tipo = '';
   Email = '';
   Telefono = '';
+  Movil = '';
 
   usuario: UsuarioLogin;
   EsGuardiaCivil = false;
@@ -47,20 +49,46 @@ export class EditProfilePage implements OnInit {
       this.EsGuardiaCivil = true;
       this.Email = this.usuario.Email;
       this.Telefono = this.usuario.Telefono;
+      this.Movil = this.usuario.Movil;
     }
+    
+    if(this.EsGuardiaCivil === null) {
+      this.EsGuardiaCivil;
+    }
+    if(this.usuario.Email !== undefined && this.usuario.Email !== null && this.usuario.Email.length > 0) {
+      this.Email = this.usuario.Email;
+    }else{
+      this.Email = '';
+    }
+    if(this.usuario.Telefono !== undefined && this.usuario.Telefono !== null && this.usuario.Telefono.length > 0) {
+      this.Telefono = this.usuario.Telefono;
+    }else{
+      this.Telefono = '';
+    }
+    if(this.usuario.Movil !== undefined && this.usuario.Movil !== null && this.usuario.Movil.length > 0 && this.usuario.Movil.toString() !== '0') {
+      this.Movil = this.usuario.Movil;
+    }else{
+      this.Movil = '';
+    }
+    console.log('Nombre: ', this.Nombre);
+    console.log('Telefono: ', this.Telefono);
+    console.log('movil: ', this.Movil);
+    console.log('email: ', this.Email);
+
+
 
     if(this.EsGuardiaCivil) {
       this.editProfileForm = this.formBuilder.group({
-        nombre: [this.usuario.Nombre.toString(), Validators.compose([
+        nombre: [this.Nombre.toString(), Validators.compose([
           Validators.required
         ])],
-        telefono: [this.usuario.Telefono.toString(), Validators.compose([
+        telefono: [this.Telefono.toString(), Validators.compose([
           Validators.required
         ])],
-        movil: [this.usuario.Movil.toString(), Validators.compose([
+        movil: [this.Movil.toString(), Validators.compose([
           Validators.required
         ])],
-        email: [this.usuario.Email.toString(), Validators.compose([
+        email: [this.Email.toString(), Validators.compose([
           Validators.required
         ])]
       });

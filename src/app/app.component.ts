@@ -551,7 +551,9 @@ export class AppComponent {
     }
   }
 
-
+  editarPerfil(){
+    this.navCtrl.navigateForward('edit-profile');
+  }
 
   contactoMpe() {
     this.navCtrl.navigateForward('contacto-mpe');
@@ -569,9 +571,9 @@ export class AppComponent {
 
   cerrarSesion() {
     console.log('Cerrar sesion');
-   // this.usuarioService.BorrarEmpleado();
-   // this.usuarioService.guardarUsuario(null);
-    this.navCtrl.navigateRoot('login');
+    this.usuarioService.BorrarEmpleado();
+    this.usuarioService.guardarUsuario(null);
+    this.navCtrl.navigateRoot('blanco');
   }
   // goToEditProgile() {
   //   this.router.navigateByUrl('/edit-profile');
