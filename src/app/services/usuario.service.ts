@@ -51,7 +51,6 @@ export class UsuarioService {
     private modalCtrl: ModalController,
     ) { }
 
-
   async login(usuario: UsuarioLogin) {
 
     await this.dataBaseService.addUsuario(usuario);
