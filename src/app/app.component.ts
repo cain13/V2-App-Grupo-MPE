@@ -38,7 +38,7 @@ export class AppComponent {
   private textoCompartirAPP = 'Disfrute de la App de GrupoMPE para la gestión laboral, puede descargarla pinchando en el siguiente enlace!!';
   private urlCompartirAPP = 'http://onelink.to/ept9em';
 
-  public Version = 'Versión 1.0.2';
+  public Version = 'Versión 1.0.3';
   constructor(
     private platform: Platform,
     private menu: MenuController,
