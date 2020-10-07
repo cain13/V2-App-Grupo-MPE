@@ -12,6 +12,7 @@ export interface UsuarioLogin {
     Email: string;
     Movil: string
     Telefono: string;
+    RecordarEditarPerfil: boolean;
 
 }
 

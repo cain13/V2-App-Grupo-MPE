@@ -31,6 +31,7 @@ export class UsuarioService {
   desactivarSegundoPlano: boolean;
   recuentoNotificaciones: number;
   centrosFav: CentroAPI[];
+  terminosOK = false;
 
   vieneDeLogin = false;
 
@@ -142,6 +143,19 @@ export class UsuarioService {
 
   }
 
+  setTerminos(bol: boolean) {
+
+    this.terminosOK = bol;
+    console.log('this.terminosOK: ', this.terminosOK);
+  }
+
+  getTerminos() {
+
+    return this.terminosOK;
+
+  }
+
+
   guardarCertificados(array: Certificado[]) {
     this.certificados = [];
     this.haFiltrado = true;
@@ -198,9 +212,9 @@ export class UsuarioService {
 
   }
 
-  setLogin() {
+  setLogin(bol: boolean) {
 
-    this.vieneDeLogin = true;
+    this.vieneDeLogin = bol;
 
   }
 

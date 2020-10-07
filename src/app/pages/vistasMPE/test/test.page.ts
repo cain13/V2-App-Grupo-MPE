@@ -61,9 +61,8 @@ export class TestPage implements OnInit {
               private camera: Camera,
               public alertCtrl: AlertController,
               private platform: Platform
-              ) 
-  {
-   
+              ){
+
   }
 
   ngOnInit() {
@@ -103,12 +102,12 @@ export class TestPage implements OnInit {
 
   async mostrarPopoverSeleccionarTest() {
     this.testEnviadoCorrectamente = false;
-    let popover = await this.popoverController.create({
+    const popover = await this.popoverController.create({
       component: ElegirTestPage,
       animated: true,
       showBackdrop: true,
       backdropDismiss: true,
-      
+
     });
 
     popover.onDidDismiss().then(() => {
@@ -324,7 +323,7 @@ export class TestPage implements OnInit {
         fechaFoto: moment().locale('es').format('YYYY-MM-DD')
       };
       console.log('GUARDAR this.contador', this.contador);
-      console.log('fotoooo: ', foto)
+      console.log('fotoooo: ', foto);
       this.imagenesRespuesta[this.contador] = foto;
       console.log('GUARDAR FOTO, ARRAY:', this.imagenesRespuesta);
 

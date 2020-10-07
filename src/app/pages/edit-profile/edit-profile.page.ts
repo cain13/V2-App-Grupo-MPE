@@ -201,6 +201,7 @@ export class EditProfilePage implements OnInit {
     return await modal.present();
   }
   cambiarUsuario() {
+    this.usuarioService.setLogin(false);
     this.navCtrl.navigateForward('/login');
   }
 

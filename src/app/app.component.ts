@@ -443,7 +443,9 @@ export class AppComponent {
 
       if (this.routerOutlet.canGoBack()) {
         console.log('Vista Fichar');
+        if (!this.usuarioService.terminosOK) {
           this.navCtrl.navigateRoot('tab-inicio');
+        }
       } else {
         await this.CerrarPopoOvr();
         if (this.HayModal === false && Date.now() - this.lastBack > 500) {

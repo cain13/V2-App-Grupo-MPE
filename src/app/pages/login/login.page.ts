@@ -138,7 +138,7 @@ export class LoginPage implements OnInit {
   async ionViewWillEnter() {
 /*     this.usuarioService.desactivarSegundoPlano = true;
  */    this.menuCtrl.enable(false);
-    this.usuarioService.setLogin(); 
+    this.usuarioService.setLogin(true); 
     console.log('USUARIO: ', this.usuario);
     if (this.usuario !== undefined && this.usuario.FingerID.toString() === 'true') {
       await this.usuarioService.present('Accediendo...');
@@ -342,14 +342,24 @@ export class LoginPage implements OnInit {
                       RequiereMantoux: a.RequiereMantoux,
                       Email: a.Email, 
                       Movil: a.Movil,
-                      Telefono: a.Telefono
+                      Telefono: a.Telefono,
+                      RecordarEditarPerfil: true
                     };
+                    console.log('TERMINOS ACPETADOS API: ', a.TerminosAceptados);
+                    if (a.TerminosAceptados.toString() === 'true') {
 
+                      this.usuarioService.setTerminos(true);
+
+                    } else {
+
+                      this.usuarioService.setTerminos(false);
+
+                    }
                     this.usuarioService.login(usuario);
                     this.usuarioService.guardarUsuario(usuario);
                     this.guardarTokenAPI(usuario.Tipo);
                     console.log('Tipo Empleado ' + usuario.Tipo);
-                    
+
                     if ( usuario.Tipo === 'CLIENTE') {
                       console.log('ACCEDEMOS COMO CLIENTE');
                       this.menuCtrl.enable(false, 'menuTrabajadores');

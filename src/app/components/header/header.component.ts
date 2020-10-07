@@ -53,6 +53,7 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
     console.log('App Header EsGuardiaCivil ', this.usuario.EsGuardiaCivil);
     if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true') {
       this.EsGuardiaCivil = true;
+      this.titulo = 'MPE Sur';
     } else {
       this.EsGuardiaCivil = false;
     }
