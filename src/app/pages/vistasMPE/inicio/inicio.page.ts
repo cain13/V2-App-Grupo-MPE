@@ -93,7 +93,7 @@ export class InicioPage implements OnInit {
     }
 
     // tslint:disable-next-line: max-line-length
-    if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true' && this.usuario.RecordarEditarPerfil.toString() === 'true' && this.hayCondiciones !== true && this.usuario.Telefono !== null) {
+    if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true' && this.usuario.RecordarEditarPerfil.toString() === 'true' && this.hayCondiciones !== true && (this.usuario.Movil === null || this.usuario.Email === null || this.usuario.Telefono === null)) {
 
       await this.recordarEditPerfil();
 

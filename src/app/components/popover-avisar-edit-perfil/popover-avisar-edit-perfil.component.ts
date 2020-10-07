@@ -51,7 +51,7 @@ export class PopoverAvisarEditPerfilComponent implements OnInit {
 
   editarPerfil() {
     this.popoverController.dismiss();
-    this.navCtrl.navigateForward('edit-profile');
+    this.navCtrl.navigateForward('edit-profile'); 
   }
 
   cerrarPopover() {
