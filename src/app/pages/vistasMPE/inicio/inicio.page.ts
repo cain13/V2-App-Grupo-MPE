@@ -83,8 +83,7 @@ export class InicioPage implements OnInit {
   async ngOnInit() {
     console.log('this.usuarioService.getLogin(): ', this.usuarioService.getLogin());
     console.log('!this.usuarioService.terminosOK: ', !this.usuarioService.getTerminos());
-    console.log('this.usuario.EsGuardiaCivil !== undefined: ', this.usuario.EsGuardiaCivil !== undefined);
-    console.log('this.usuario.EsGuardiaCivil.toString()=true: ', this.usuario.EsGuardiaCivil.toString() === 'true');
+    
     if (this.usuarioService.getLogin() && !this.usuarioService.getTerminos()) {
       if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true') {
         this.hayCondiciones = true;

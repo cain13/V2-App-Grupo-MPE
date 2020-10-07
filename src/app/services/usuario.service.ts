@@ -84,6 +84,13 @@ export class UsuarioService {
   guardarUsuario(usuario: UsuarioLogin) {
 
     this.usuario = usuario;
+    if(usuario !== null && usuario !== undefined && usuario.EsGuardiaCivil !== undefined &&  usuario.EsGuardiaCivil !== null){
+      this.usuario.EsGuardiaCivil = usuario.EsGuardiaCivil;
+    }else{
+      if(usuario !== null && usuario !== undefined ){
+        this.usuario.EsGuardiaCivil = false;
+      }
+    }
 
   }
 
