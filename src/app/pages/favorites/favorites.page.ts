@@ -38,7 +38,6 @@ export class FavoritesPage implements OnInit {
 
   constructor(
     public navCtrl: NavController,
-    private service: PropertyService,
     private db: DatabaseService,
     private usuarioService: UsuarioService
   ) {

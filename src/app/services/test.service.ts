@@ -12,7 +12,7 @@ export class TestService {
 
   constructor() { }
 
-  guardarArrayTest(arrayTest: TestInfo[]) {
+  async guardarArrayTest(arrayTest: TestInfo[]) {
     console.log('ARRAY TEST: ', arrayTest);
     this.arrayTest = arrayTest;
   }

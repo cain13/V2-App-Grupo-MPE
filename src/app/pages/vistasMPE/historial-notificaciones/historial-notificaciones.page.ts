@@ -68,6 +68,7 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
 
   ngOnInit() {
     this.pagina = 0;
+    this.usuario = this.usuarioService.getUsuario();
     this.platform.ready().then(() => {
       console.log('Width: ' + this.platform.width());
       console.log('Height: ' + this.platform.height());
@@ -93,6 +94,7 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
   }
 
   getHistorialDocumentos(event?) {
+    let aux: any[] = [];
     if (this.filtros !== undefined && this.filtros !== null) {
       try {
         if (event === undefined || event === null && this.pagina === 0) {
@@ -101,7 +103,6 @@ export class HistorialNotificacionesPage implements OnInit, ViewDidLeave {
           console.log('Numero pagina ', this.pagina);
           this.usuarioService.present('Cargando...');
         }
-        let aux: any[] = [];
         let nifConsultor = '';
         if (this.usuario.Tipo === 'CONSULTOR') {
           if (this.empresaCoonsultor.NombreCliente !== undefined && this.empresaCoonsultor.NombreCliente !== null) {

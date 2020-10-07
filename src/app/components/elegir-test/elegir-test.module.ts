@@ -8,7 +8,12 @@ import { ElegirTestPageRoutingModule } from './elegir-test-routing.module';
 
 import { ElegirTestPage } from './elegir-test.page';
 
+
+
 @NgModule({
+  entryComponents: [
+    
+  ],
   imports: [
     CommonModule,
     FormsModule,

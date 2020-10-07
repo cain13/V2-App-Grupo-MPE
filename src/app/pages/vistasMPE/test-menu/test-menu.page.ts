@@ -10,10 +10,10 @@ import { SubrespuestaModalPage } from '../subrespuesta-modal/subrespuesta-modal.
 import { SubRespuestaInfo, RespuestaSubPreguntas, RespuestaSubPreguntaInfo } from '../../../interfaces/interfaces-grupo-mpe';
 import * as moment from 'moment';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import {  FileTransfer, FileUploadOptions,FileTransferObject } from '@ionic-native/file-transfer/ngx';
 import { Observable } from 'rxjs';
 import { NotificacionesService } from 'src/app/services/notificaciones.service';
 import { NotificacionesPage } from '../notificaciones/notificaciones.page';
+import { PopoverElegirTestV2Component } from 'src/app/components/popover-elegir-test-v2/popover-elegir-test-v2.component';
 
 
 declare var window: any;
@@ -39,7 +39,6 @@ export class TestMenuPage implements ViewWillEnter,OnInit {
   testEnviadoCorrectamente = false;
   isMantoux = false;
   imagenAdjuntada: any;
-  fileTransfer: FileTransferObject;
 
   tituloArchivo: string;
   isImagenAdjuntada: boolean;
@@ -92,17 +91,17 @@ export class TestMenuPage implements ViewWillEnter,OnInit {
 
         } else {
 
-          await this.mostrarPopoverSeleccionarTest();
+          await this.mostrarPopoverSeleccionarTest2();
 
         }
       } else {
 
-        await this.mostrarPopoverSeleccionarTest();
+        await this.mostrarPopoverSeleccionarTest2();
 
       }
     } else {
 
-      await this.mostrarPopoverSeleccionarTest();
+      await this.mostrarPopoverSeleccionarTest2();
 
     }
 
@@ -185,6 +184,83 @@ export class TestMenuPage implements ViewWillEnter,OnInit {
 
     return await popover.present();
 
+  }
+
+  async mostrarPopoverSeleccionarTest2 () {
+    const popover = await this.popoverController.create({
+      component: PopoverElegirTestV2Component,
+      backdropDismiss: false,
+      mode: 'ios'
+    });
+
+    popover.onDidDismiss().then(() => {
+      this.test = this.testServices.getTest();
+      this.contador = 0;
+      this.isMantoux = false;
+
+      console.log('Fin 8');
+      if (this.test.Preguntas !== undefined) {
+
+        for (const pregunta of this.test.Preguntas.PreguntaInfo) {
+
+          for (const respuesta of pregunta.Respuestas.RespuestaInfo) {
+
+            respuesta.ValorCheck = false;
+            if (this.isSubRespuesta(respuesta.SubRespuestas)) {
+              if ( Array.isArray(respuesta.SubRespuestas['SubRespuestaInfo'].RespuestaSubPreguntas.RespuestaSubPreguntaInfo)) {
+                for ( const subrespuesta of respuesta.SubRespuestas['SubRespuestaInfo'].RespuestaSubPreguntas.RespuestaSubPreguntaInfo) {
+
+                  subrespuesta.ValorCheck = false;
+
+                }
+              }
+
+            }
+          }
+        }
+
+        console.log('TEST ELEGIDO: ', this.test , 'NUMERO PREGUNTAS: ', this.test.Preguntas.PreguntaInfo.length);
+        this.numeroPreguntas = this.test.Preguntas.PreguntaInfo.length;
+
+        this.respuestasTest = {
+
+          NombreTest: this.test.Nombre,
+          Permiso: this.test.Permiso,
+          Password: this.usuario.Password,
+          Usuario: this.usuario.Usuario,
+          Respuestas: [],
+          FechaRealizacion: ''
+
+        };
+        this.numeroPreguntasSinResponder = (this.test.Preguntas.PreguntaInfo.length - this.respuestasTest.Respuestas.length);
+
+      } else {
+
+        this.respuestasTest = {
+
+          NombreTest: this.test.Nombre,
+          Permiso: this.test.Permiso,
+          Password: this.usuario.Password,
+          Usuario: this.usuario.Usuario,
+          Respuestas: [],
+          FechaRealizacion: '',
+          ImagenesMantoux: []
+
+        };
+
+        this.isMantoux = true;
+
+      }
+
+
+      this.mostrarTest = true;
+      this.isFinTest = false;
+
+
+    });
+
+
+    return await popover.present();
   }
 
   getTest() {
@@ -589,7 +665,7 @@ export class TestMenuPage implements ViewWillEnter,OnInit {
         }, {
           text: 'Confirmar',
           handler: () => {
-            this.mostrarPopoverSeleccionarTest();
+            this.mostrarPopoverSeleccionarTest2();
           }
         }
       ]

@@ -33,11 +33,9 @@
     <ion-card-content>
       {{noticia.Descripcion}}
       <label> </label>
-      <ion-button *ngIf="noticia.Url !== undefined && noticia.FechaFin !== null && noticia.Url.length > 0" color="primary" expand="block" (click)="vistarWeb()" > 
+      <ion-button *ngIf="noticia.Url !== undefined && noticia.FechaFin !== null" color="primary" expand="block" (click)="vistarWeb()" > 
         <ion-icon slot="start" name="earth-outline"></ion-icon>
         Vistar Web
       </ion-button>
     </ion-card-content>
   </ion-card>
-
-</ion-content>

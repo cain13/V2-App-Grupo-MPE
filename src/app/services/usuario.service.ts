@@ -31,6 +31,8 @@ export class UsuarioService {
   desactivarSegundoPlano: boolean;
   recuentoNotificaciones: number;
   centrosFav: CentroAPI[];
+  terminosOK = false;
+
 
   vieneDeLogin = false;
 
@@ -83,9 +85,15 @@ export class UsuarioService {
   guardarUsuario(usuario: UsuarioLogin) {
 
     this.usuario = usuario;
-
+    if(usuario !== null && usuario !== undefined && usuario.EsGuardiaCivil !== undefined &&  usuario.EsGuardiaCivil !== null){
+      this.usuario.EsGuardiaCivil = usuario.EsGuardiaCivil;
+    }else{
+      if(usuario !== null && usuario !== undefined ){
+        this.usuario.EsGuardiaCivil = false;
+      }
+    }
   }
-
+  
   getUsuario(): UsuarioLogin {
 
     return this.usuario;
@@ -141,7 +149,17 @@ export class UsuarioService {
     return this.notificacion;
 
   }
+  setTerminos(bol: boolean) {
 
+    this.terminosOK = bol;
+    console.log('this.terminosOK: ', this.terminosOK);
+  }
+
+  getTerminos() {
+
+    return this.terminosOK;
+
+  }
   guardarCertificados(array: Certificado[]) {
     this.certificados = [];
     this.haFiltrado = true;
@@ -198,9 +216,10 @@ export class UsuarioService {
 
   }
 
-  setLogin() {
+  setLogin(bol: boolean) {
 
     this.vieneDeLogin = true;
+    this.vieneDeLogin = bol;
 
   }
 

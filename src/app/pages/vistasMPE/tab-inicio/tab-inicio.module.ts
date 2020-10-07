@@ -7,8 +7,14 @@ import { IonicModule } from '@ionic/angular';
 import { TabInicioPageRoutingModule } from './tab-inicio-routing.module';
 
 import { TabInicioPage } from './tab-inicio.page';
+import { SubrespuestaModalPage } from '../subrespuesta-modal/subrespuesta-modal.page';
+import { PopoverElegirTestV2Component } from 'src/app/components/popover-elegir-test-v2/popover-elegir-test-v2.component';
 
 @NgModule({
+  entryComponents: [
+    PopoverElegirTestV2Component,
+    SubrespuestaModalPage
+  ],
   imports: [
     CommonModule,
     FormsModule,

@@ -88,10 +88,10 @@ export class NotificacionesPage implements OnInit {
     this.modalCtrl.dismiss();
     console.log('Usuario Notificaciones ', this.usuario);
     if (this.usuario.Tipo !== 'TRABAJADOR') {
-      this.navController.navigateRoot('/certificado-aptitud');
+      this.navController.navigateRoot('');
 
     } else {
-      this.navController.navigateRoot('/documentos-trabajador');
+      this.navController.navigateRoot('');
     }
     this.notificacionesService.marcarNotificacionesLeidas();
   }

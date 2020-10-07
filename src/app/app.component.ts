@@ -162,16 +162,16 @@ export class AppComponent {
     this.appPages = [
       {
         title: 'Buscar Centro MPE',
-        url: '/home-location',
+        url: '/home-location-menu',
         direct: 'forward',
         icon: 'map-outline'
       },
       {
         title: 'Centros Favoritos',
-        url: '/favorites',
+        url: '/centros-favoritos',
         direct: 'forward',
         icon: 'heart'
-      }, {
+      },{
         title: 'Editar Perfil',
         url: '/edit-profile',
         direct: 'forward',
@@ -189,7 +189,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
 
       setTimeout(() => {
-
+/* 
         this.fcm.getInitialPushPayload().then(data => {
             console.log('data app closed ', data);
             if (data === undefined || data === null) {
@@ -403,6 +403,7 @@ export class AppComponent {
             this.usuarioService.presentAlertNotificaciones('NUEVA NOTIFICACIÓN!!', 'Tiene una notificación nueva!!', '');
           }
         });
+         */
         this.statusBar.styleDefault();
         setTimeout(() => {
           this.splashScreen.hide();
@@ -443,6 +444,9 @@ export class AppComponent {
 
       if (this.routerOutlet.canGoBack()) {
         console.log('Vista Fichar');
+        if (!this.usuarioService.terminosOK) {
+          this.navCtrl.navigateRoot('tab-inicio');
+        }
           this.navCtrl.navigateRoot('tab-inicio');
       } else {
         await this.CerrarPopoOvr();
@@ -567,11 +571,18 @@ export class AppComponent {
 
   }
 
+  editarPerfil() {
+
+    this.navCtrl.navigateForward('edit-profile');
+
+    
+  }
+
   cerrarSesion() {
     console.log('Cerrar sesion');
-   // this.usuarioService.BorrarEmpleado();
-   // this.usuarioService.guardarUsuario(null);
-    this.navCtrl.navigateRoot('login');
+    this.usuarioService.BorrarEmpleado();
+    this.usuarioService.guardarUsuario(null);
+    this.navCtrl.navigateRoot('blanco');
   }
   // goToEditProgile() {
   //   this.router.navigateByUrl('/edit-profile');

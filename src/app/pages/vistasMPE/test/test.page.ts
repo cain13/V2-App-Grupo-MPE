@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
-import { PopoverController, ModalController, IonCheckbox, IonRadio, AlertController, NavController, ActionSheetController, ToastController, Platform } from '@ionic/angular';
+import { PopoverController, ModalController, IonCheckbox, IonRadio, AlertController, NavController, ActionSheetController, ToastController } from '@ionic/angular';
 import { ElegirTestPage } from 'src/app/components/elegir-test/elegir-test.page';
 import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 import { UsuarioService } from '../../../services/usuario.service';
@@ -10,7 +10,7 @@ import { SubrespuestaModalPage } from '../subrespuesta-modal/subrespuesta-modal.
 import { SubRespuestaInfo, RespuestaSubPreguntas, RespuestaSubPreguntaInfo } from '../../../interfaces/interfaces-grupo-mpe';
 import * as moment from 'moment';
 import { Camera, CameraOptions } from '@ionic-native/camera/ngx';
-import { FileTransferObject } from '@ionic-native/file-transfer/ngx';
+import { PopoverElegirTestV2Component } from '../../../components/popover-elegir-test-v2/popover-elegir-test-v2.component';
 
 
 declare var window: any;
@@ -36,12 +36,11 @@ export class TestPage implements OnInit {
   testEnviadoCorrectamente = false;
   isMantoux = false;
   imagenAdjuntada: any;
-  fileTransfer: FileTransferObject;
 
   tituloArchivo: string;
   isImagenAdjuntada: boolean;
   imagenesRespuesta: ImagenTestMantoux[] = [];
-  popover: PopoverController;
+
 
 
 
@@ -60,11 +59,7 @@ export class TestPage implements OnInit {
               private toastController: ToastController,
               private camera: Camera,
               public alertCtrl: AlertController,
-              private platform: Platform
-              ) 
-  {
-   
-  }
+              ) { }
 
   ngOnInit() {
     this.usuario = this.usuarioService.getUsuario();
@@ -73,29 +68,33 @@ export class TestPage implements OnInit {
 
   }
 
+
+
   async seleccionarTest() {
 
+    console.log('Fin 2');
 
     if (this.mostrarTest) {
       if (this.isMantoux !== undefined && !this.isMantoux) {
 
         if (this.testEnviadoCorrectamente === false && this.numeroPreguntasSinResponder !== this.test.Preguntas.PreguntaInfo.length) {
+          console.log('Fin 4');
 
           await this.comprobacionTest('Test Incompleto', '¿Seguro que desea cambiar de test?', 'Perderá todas sus respuestas');
 
         } else {
 
-          await this.mostrarPopoverSeleccionarTest();
+          await this.mostrarPopoverSeleccionarTest2();
 
         }
       } else {
-
-        await this.mostrarPopoverSeleccionarTest();
+        console.log('Fin 3');
+        await this.mostrarPopoverSeleccionarTest2();
 
       }
     } else {
-
-      await this.mostrarPopoverSeleccionarTest();
+      console.log('Fin 5');
+      await this.mostrarPopoverSeleccionarTest2();
 
     }
 
@@ -103,20 +102,23 @@ export class TestPage implements OnInit {
 
   async mostrarPopoverSeleccionarTest() {
     this.testEnviadoCorrectamente = false;
-    let popover = await this.popoverController.create({
+    console.log('Fin 6');
+
+    const popover = await this.popoverController.create({
       component: ElegirTestPage,
       animated: true,
       showBackdrop: true,
-      backdropDismiss: true,
-      
+      backdropDismiss: false
     });
+    console.log('Fin 7');
+
 
     popover.onDidDismiss().then(() => {
       this.test = this.testServices.getTest();
       this.contador = 0;
       this.isMantoux = false;
 
-
+      console.log('Fin 8');
       if (this.test.Preguntas !== undefined) {
 
         for (const pregunta of this.test.Preguntas.PreguntaInfo) {
@@ -181,6 +183,83 @@ export class TestPage implements OnInit {
 
   }
 
+  async mostrarPopoverSeleccionarTest2 () {
+    const popover = await this.popoverController.create({
+      component: PopoverElegirTestV2Component,
+      backdropDismiss: false,
+      mode: 'ios'
+    });
+
+    popover.onDidDismiss().then(() => {
+      this.test = this.testServices.getTest();
+      this.contador = 0;
+      this.isMantoux = false;
+
+      console.log('Fin 8');
+      if (this.test.Preguntas !== undefined) {
+
+        for (const pregunta of this.test.Preguntas.PreguntaInfo) {
+
+          for (const respuesta of pregunta.Respuestas.RespuestaInfo) {
+
+            respuesta.ValorCheck = false;
+            if (this.isSubRespuesta(respuesta.SubRespuestas)) {
+              if ( Array.isArray(respuesta.SubRespuestas['SubRespuestaInfo'].RespuestaSubPreguntas.RespuestaSubPreguntaInfo)) {
+                for ( const subrespuesta of respuesta.SubRespuestas['SubRespuestaInfo'].RespuestaSubPreguntas.RespuestaSubPreguntaInfo) {
+
+                  subrespuesta.ValorCheck = false;
+
+                }
+              }
+
+            }
+          }
+        }
+
+        console.log('TEST ELEGIDO: ', this.test , 'NUMERO PREGUNTAS: ', this.test.Preguntas.PreguntaInfo.length);
+        this.numeroPreguntas = this.test.Preguntas.PreguntaInfo.length;
+
+        this.respuestasTest = {
+
+          NombreTest: this.test.Nombre,
+          Permiso: this.test.Permiso,
+          Password: this.usuario.Password,
+          Usuario: this.usuario.Usuario,
+          Respuestas: [],
+          FechaRealizacion: ''
+
+        };
+        this.numeroPreguntasSinResponder = (this.test.Preguntas.PreguntaInfo.length - this.respuestasTest.Respuestas.length);
+
+      } else {
+
+        this.respuestasTest = {
+
+          NombreTest: this.test.Nombre,
+          Permiso: this.test.Permiso,
+          Password: this.usuario.Password,
+          Usuario: this.usuario.Usuario,
+          Respuestas: [],
+          FechaRealizacion: '',
+          ImagenesMantoux: []
+
+        };
+
+        this.isMantoux = true;
+
+      }
+
+
+      this.mostrarTest = true;
+      this.isFinTest = false;
+
+
+    });
+
+
+    return await popover.present();
+  }
+
   getTest() {
      try {
 
@@ -207,11 +286,13 @@ export class TestPage implements OnInit {
 
          xmlhttp.send(sr);
 
-
+      console.log('PETICION: ', sr);
       xmlhttp.onreadystatechange =  async () => {
+        console.log('Respuesta: ', xmlhttp);
          if (xmlhttp.readyState === 4) {
              if (xmlhttp.status === 500) {
                this.usuarioService.dismiss();
+               this.usuarioService.presentAlert('Error', 'Fallo al cargar los test.', 'Intentelo de nuevo más tarde, gracias.');
              } else if (xmlhttp.status === 200) {
                  const xml = xmlhttp.responseXML;
                  const obj: RespuestaAPITest = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
@@ -251,9 +332,10 @@ export class TestPage implements OnInit {
 /*                   arrayTest = a;
  */
                 }
-                this.testServices.guardarArrayTest(arrayTest);
+                await this.testServices.guardarArrayTest(arrayTest);
 
                 await this.seleccionarTest();
+                console.log('FIIIIIIN');
                 this.usuarioService.dismiss();
               } else {
                 this.usuarioService.dismiss();
@@ -583,7 +665,7 @@ export class TestPage implements OnInit {
         }, {
           text: 'Confirmar',
           handler: () => {
-            this.mostrarPopoverSeleccionarTest();
+            this.mostrarPopoverSeleccionarTest2();
           }
         }
       ]
@@ -875,71 +957,6 @@ export class TestPage implements OnInit {
     toast.present();
   }
 
-  /* async presentTitulo(esImagen: boolean) {
-    console.log('Present TItulo: ', esImagen);
-
-    let optionsUpload: FileUploadOptions;
-    const alert = await this.alertCtrl.create({
-      header: 'Titulo',
-      subHeader: 'Introduzca el titulo del archivo',
-      inputs: [
-        {
-          name: 'txtTitulo',
-          type: 'text',
-          placeholder: 'Nombre'
-        }
-      ],
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel',
-          cssClass: 'secondary',
-          handler: () => {
-            console.log('Confirm Cancel');
-          }
-        }, {
-          text: 'Ok',
-          handler: async ( data ) => {
-            this.usuarioService.present('Subiendo...');
-            this.tituloArchivo = data.txtTitulo;
-            if (esImagen) {
-
-              optionsUpload = {
-                fileName: this.tituloArchivo,
-                chunkedMode: false,
-                params: { title: this.tituloArchivo,
-                          Extension: 'jpg',
-                          }
-                };
-                console.log('Imagen URI: ', this.imageURI);
-                console.log('Url API: ', this.imageURI);
-
-              await this.fileTransfer.upload(this.imageURI, this.urlAPI, optionsUpload).then(resp => {
-                  const respuestaAPI: RespuestaAPIDocumentos = JSON.parse(resp.response);
-                  if (!respuestaAPI.error) {
-                    this.presentToast('Imagen' + this.tituloArchivo + ' subida correctamente!');
-                    this.usuarioService.dismiss();
-                  } else {
-                    this.usuarioService.dismiss();
-                    this.usuarioService.presentAlert('Fallo al subir la imagen.', 'Intentelo de nuevo más tarde', '');
-                  }
-              }).catch(error => {
-
-                this.usuarioService.dismiss();
-                this.usuarioService.presentAlert('Fallo al mandar el archivo', 'Revise se conexión a internet.', '');
-              });
-
-
-            }
-          }
-        }
-      ]
-    });
-    await alert.present();
-
-
-  }
- */
 
 
 

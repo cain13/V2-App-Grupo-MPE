@@ -88,7 +88,7 @@ export class CertificadoAptitudPage implements OnInit, ViewDidLeave, ViewWillEnt
   }
 
   async ngOnInit() {
-
+    this.usuario = this.usuarioService.getUsuario();
     this.platform.ready().then(() => {
       console.log('Width: ' + this.platform.width());
       console.log('Height: ' + this.platform.height());
@@ -140,7 +140,7 @@ export class CertificadoAptitudPage implements OnInit, ViewDidLeave, ViewWillEnt
 
 
   getCertificados(event?) {
-
+    this.listaCertificados = [];
     let aux: Certificado[];
     if (this.filtros !== undefined && this.filtros !== null) {
 

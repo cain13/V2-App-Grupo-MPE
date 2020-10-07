@@ -12,8 +12,7 @@ import { SubrespuestaModalPage } from './subrespuesta-modal.page';
   imports: [
     CommonModule,
     FormsModule,
-    IonicModule,
-    SubrespuestaModalPageRoutingModule
+    IonicModule
   ],
   declarations: [SubrespuestaModalPage]
 })

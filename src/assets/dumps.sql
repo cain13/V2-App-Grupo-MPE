@@ -12,7 +12,9 @@ CREATE TABLE IF NOT EXISTS usuariosTable (
     RequiereMantoux BOOLEAN DEFAULT NULL,
     Email TEXT DEFAULT NULL,
     Movil TEXT DEFAULT NULL,
-    Telefono TEXT DEFAULT NULL
+    Telefono TEXT DEFAULT NULL,
+    RecordarEditarPerfil BOOLEAN DEFAULT NULL
+
 );
 
 CREATE TABLE IF NOT EXISTS notificacion (

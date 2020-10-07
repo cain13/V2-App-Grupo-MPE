@@ -16,9 +16,9 @@
   </ion-list-header>
 </ion-header>
 
-<ion-content class="ion-padding" *ngIf="!isMantoux">
+<ion-content class="ion-padding" *ngIf="!isMantoux" mode="md">
 
-  <ion-card *ngIf="mostrarTest && !isFinTest">
+  <ion-card *ngIf="mostrarTest && !isFinTest" mode="md">
     <ion-card-header>
       <ion-card-subtitle>Pregunta Número {{contador + 1}}</ion-card-subtitle>
       <ion-card-title>{{test.Preguntas.PreguntaInfo[contador].Pregunta}}</ion-card-title>
@@ -62,9 +62,9 @@
 
 </ion-content>
 
-<ion-content class="ion-padding" *ngIf="isMantoux">
+<ion-content class="ion-padding" *ngIf="isMantoux" mode="md">
 
-  <ion-card *ngIf="mostrarTest && this.contador === 0">
+  <ion-card *ngIf="mostrarTest && this.contador === 0" mode="md">
     <ion-card-header>
 <!--       <ion-card-subtitle>Pregunta Número {{contador + 1}}</ion-card-subtitle>
  -->      <ion-card-title>Por favor, inserte una imagen de su rodilla derecha de perfil girada 45 grados.</ion-card-title>

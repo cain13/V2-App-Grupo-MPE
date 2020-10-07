@@ -6,6 +6,7 @@ import { CambiarPasswordPage } from '../vistasMPE/cambiar-password/cambiar-passw
 import { UsuarioLogin } from 'src/app/interfaces/usuario-interfaces';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DatabaseService } from '../../services/database.service';
+import { NotificacionesService } from '../../services/notificaciones.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ export class EditProfilePage implements OnInit {
   Tipo = '';
   Email = '';
   Telefono = '';
+  Movil = '';
 
   usuario: UsuarioLogin;
   EsGuardiaCivil = false;
@@ -37,30 +39,56 @@ export class EditProfilePage implements OnInit {
     ) { }
 
   ngOnInit() {
-    
+
     this.Nombre = this.usuarioService.usuario.Nombre;
     this.Tipo = this.usuarioService.usuario.Tipo;
     this.usuario = this.usuarioService.getUsuario();
-    if(this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true'){
+    if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true'){
       this.Nombre = 'GUARDIA CIVIL';
       this.Tipo = this.usuarioService.usuario.Nombre;
       this.EsGuardiaCivil = true;
       this.Email = this.usuario.Email;
       this.Telefono = this.usuario.Telefono;
+      this.Movil = this.usuario.Movil;
     }
+    
+    if(this.EsGuardiaCivil === null) {
+      this.EsGuardiaCivil;
+    }
+    if(this.usuario.Email !== undefined && this.usuario.Email !== null && this.usuario.Email.length > 0) {
+      this.Email = this.usuario.Email;
+    }else{
+      this.Email = '';
+    }
+    if(this.usuario.Telefono !== undefined && this.usuario.Telefono !== null && this.usuario.Telefono.length > 0) {
+      this.Telefono = this.usuario.Telefono;
+    }else{
+      this.Telefono = '';
+    }
+    if(this.usuario.Movil !== undefined && this.usuario.Movil !== null && this.usuario.Movil.length > 0 && this.usuario.Movil.toString() !== '0') {
+      this.Movil = this.usuario.Movil;
+    }else{
+      this.Movil = '';
+    }
+    console.log('Nombre: ', this.Nombre);
+    console.log('Telefono: ', this.Telefono);
+    console.log('movil: ', this.Movil);
+    console.log('email: ', this.Email);
 
-    if(this.EsGuardiaCivil) {
+
+
+    if (this.EsGuardiaCivil) {
       this.editProfileForm = this.formBuilder.group({
-        nombre: [this.usuario.Nombre.toString(), Validators.compose([
+        nombre: [this.Nombre.toString(), Validators.compose([
           Validators.required
         ])],
-        telefono: [this.usuario.Telefono.toString(), Validators.compose([
+        telefono: [this.Telefono.toString(), Validators.compose([
           Validators.required
         ])],
-        movil: [this.usuario.Movil.toString(), Validators.compose([
+        movil: [this.Movil.toString(), Validators.compose([
           Validators.required
         ])],
-        email: [this.usuario.Email.toString(), Validators.compose([
+        email: [this.Email.toString(), Validators.compose([
           Validators.required
         ])]
       });
@@ -132,7 +160,7 @@ export class EditProfilePage implements OnInit {
           '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
             '<soap:Header>' +
               '<AuthHeader xmlns="http://tempuri.org/">' +
-                '<Usuario>' +this.usuario.Usuario+ '</Usuario>' +
+                '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
                 '<Password>' + this.usuario.Password + '</Password>' +
               '</AuthHeader>' +
             '</soap:Header>' +
@@ -140,7 +168,7 @@ export class EditProfilePage implements OnInit {
               '<InsertarDatosTrabajador xmlns="http://tempuri.org/">' +
                 '<Datos>' +
                   '<Nombre>' + this.editProfileForm.value.nombre + '</Nombre>' +
-                  '<Movil>' + this.editProfileForm.value.movil+ '</Movil>' +
+                  '<Movil>' + this.editProfileForm.value.movil + '</Movil>' +
                   '<Telefono>' + this.editProfileForm.value.telefono + '</Telefono>' +
                   '<Email>' + this.editProfileForm.value.email + '</Email>' +
                 '</Datos>' +
@@ -160,27 +188,27 @@ export class EditProfilePage implements OnInit {
                 aux.Telefono = this.editProfileForm.value.telefono;
                 aux.Movil = this.editProfileForm.value.movil;
 
-                if(aux.Email === null) {
-                  aux.Email='';
+                if (aux.Email === null) {
+                  aux.Email = '';
                 }
-                if(aux.Nombre === null) {
-                  aux.Nombre='';
+                if (aux.Nombre === null) {
+                  aux.Nombre = '';
                 }
-                if(aux.Telefono === null) {
-                  aux.Telefono='';
+                if (aux.Telefono === null) {
+                  aux.Telefono = '';
                 }
-                if(aux.Movil === null) {
-                  aux.Movil='';
+                if (aux.Movil === null) {
+                  aux.Movil = '';
                 }
 
 
                 if (xmlhttp.status === 200) {
-                   
+
                   this.usuarioService.actualizarPerfil(aux);
                   this.usuarioService.presentToast('Datos actualizados correctamente');
-                    
+
                 } else if (xmlhttp.status === 500 ) {
-                  this.usuarioService.presentAlert('Error', 'Fallo al actualizar datos','Intentelo de nuevo más tarde');
+                  this.usuarioService.presentAlert('Error', 'Fallo al actualizar datos', 'Intentelo de nuevo más tarde');
                 }
             }
             this.usuarioService.dismiss();
@@ -201,6 +229,7 @@ export class EditProfilePage implements OnInit {
     return await modal.present();
   }
   cambiarUsuario() {
+    this.usuarioService.setLogin(false);
     this.navCtrl.navigateForward('/login');
   }
 

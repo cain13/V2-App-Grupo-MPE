@@ -8,7 +8,12 @@
           <ion-text color="tertiary" class="fw700"> {{titulo}} </ion-text>
         </ion-text>
     </ion-title >
-    <ion-title *ngIf="usuario !== undefined && usuario.Nombre !== undefined" style="margin-top: 0cm;  margin-bottom: 1mm;" >
+    <ion-title *ngIf="usuario !== undefined && usuario.Nombre !== undefined && EsGuardiaCivil" style="margin-top: 0cm;  margin-bottom: 1mm;" >
+      <ion-text color="light" style="font-size: x-small; margin-top: 0cm; margin-bottom: 3mm;">
+        {{usuario.Usuario}}
+      </ion-text>
+    </ion-title>
+    <ion-title *ngIf="usuario !== undefined && usuario.Nombre !== undefined && !EsGuardiaCivil" style="margin-top: 0cm;  margin-bottom: 1mm;" >
       <ion-text color="light" style="font-size: x-small; margin-top: 0cm; margin-bottom: 3mm;">
         {{usuario.Nombre}}
       </ion-text>
@@ -33,9 +38,7 @@
       <ion-menu-button color="tertiary"></ion-menu-button>
     </ion-buttons>
     <ion-title style="text-align: start !important;">
-        <ion-text color="light">
-          {{ 'app.name' | translate }} <ion-text color="tertiary" class="fw700"> {{ 'app.version' | translate }}  </ion-text>
-        </ion-text>
+        <ion-text color="tertiary" class="fw700"> {{titulo}} </ion-text>
     </ion-title>
 
     <ion-buttons slot="end">

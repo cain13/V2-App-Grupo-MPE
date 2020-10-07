@@ -17,8 +17,9 @@
   <ion-card class="ion-no-margin">
     <ion-card-content class="bg-profile">
       <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar">
-      <h1 class="fw500">{{Nombre}}</h1>
-      <h1 color="light" class="ion-margin-bottom">{{Tipo}}</h1>
+      <h1 *ngIf="EsGuardiaCivil !== undefined && !EsGuardiaCivil" class="fw500">{{Nombre}}</h1>
+       <h1 color="light" class="ion-margin-bottom">{{Tipo}}</h1>
+       <h1 *ngIf="EsGuardiaCivil !== undefined && EsGuardiaCivil" class="fw500">{{usuario.Usuario}}</h1>
     </ion-card-content>
   
     <!-- <ion-grid fixed class="ion-no-padding">

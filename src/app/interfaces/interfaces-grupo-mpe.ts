@@ -43,7 +43,9 @@ export interface ObtenerDatosConsultorResult {
   Email: string;
   Movil: string
   Telefono: string;
-  Tests?: Tests
+  Tests?: Tests;
+  TerminosAceptados?: boolean;
+
 
 }
 

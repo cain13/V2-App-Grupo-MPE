@@ -1,16 +1,15 @@
-<ion-header>
-  <app-header></app-header>
-  <ion-toolbar color="dark">
-      <ion-searchbar [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar..."></ion-searchbar>
-      <!-- <ion-buttons slot="end">
-        <ion-button size="small" shape="round" color="medium" (click)="searchFilter()">
-          <ion-icon name="options"></ion-icon>
-        </ion-button>
-      </ion-buttons> -->
-    </ion-toolbar>
-</ion-header>
+<app-header></app-header>
+  
 
 <ion-content>
+  <ion-toolbar color="dark">
+    <ion-searchbar style="margin-top: 3mm; margin-bottom: 0mm;" [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar..."></ion-searchbar>
+    <!-- <ion-buttons slot="end">
+      <ion-button size="small" shape="round" color="medium" (click)="searchFilter()">
+        <ion-icon name="options"></ion-icon>
+      </ion-button>
+    </ion-buttons> -->
+  </ion-toolbar>
   <ion-list class="ion-no-padding" [@staggerIn]="listaCitas">
     <ion-item class="bg-white"  *ngFor="let certificado of listaCitas"  tappable>
       <ion-label>

@@ -64,7 +64,6 @@ import { ComponentsModule } from './components/components.module';
 
 
 //Subir Imagenes
-import { FileTransfer } from '@ionic-native/file-transfer/ngx';
 
 
 
@@ -114,7 +113,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     File,
     FingerprintAIO,
     FCM,
-    FileTransfer,
     FileChooser,
     FilePath,
     File,

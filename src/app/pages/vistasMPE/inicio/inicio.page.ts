@@ -19,6 +19,7 @@ import {
   stagger
 } from '@angular/animations';
 import { ModalCondicionesPage } from '../modal-condiciones/modal-condiciones.page';
+import { PopoverAvisarEditPerfilComponent } from '../../../components/popover-avisar-edit-perfil/popover-avisar-edit-perfil.component';
 
 @Component({
   selector: 'app-inicio',
@@ -63,13 +64,12 @@ export class InicioPage implements OnInit {
   checkRemember: any;
   botonRecordarme: any;
   onLoginForm: any;
+  hayCondiciones = false;
 
   @ViewChild(IonRouterOutlet, { static : true }) routerOutlet: IonRouterOutlet;
   lastBack = Date.now();
 
   constructor(  private usuarioService: UsuarioService,
-                private notificacionesService: NotificacionesService,
-                private platform: Platform,
                 public menuCtrl: MenuController,
                 public navCtrl: NavController,
                 public modalCtrl: ModalController,
@@ -81,10 +81,19 @@ export class InicioPage implements OnInit {
   }
 
   async ngOnInit() {
-    if (this.usuarioService.getLogin()) {
+
+    if (this.usuarioService.getLogin() && !this.usuarioService.getTerminos()) {
       if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true') {
+        this.hayCondiciones = true;
         await this.condiciones();
       }
+    }
+
+    // tslint:disable-next-line: max-line-length
+    if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true' && this.usuario.RecordarEditarPerfil.toString() === 'true' && this.hayCondiciones !== true && (this.usuario.Telefono === null || this.usuario.Movil === null || this.usuario.Email === null)) {
+
+      await this.recordarEditPerfil();
+
     }
 
     await this.usuarioService.present('Cargando datos...');
@@ -116,22 +125,20 @@ export class InicioPage implements OnInit {
       console.log(error);
       this.usuarioService.presentAlert('ERROR', 'Fallo al cargar la información de inico', 'Intentelo de nuevo más tarde');
       this.usuarioService.dismiss();
-
-
     });
 
 
   }
 
   ionViewWillEnter() {
-     
+
     this.usuario = this.usuarioService.getUsuario();
     console.log('Cantidad$ Notificacioens: ', this.Cantidad);
     this.menuCtrl.enable(true);
     this.CerrarPopoOvr();
   }
 
-  async CerrarPopoOvr(){
+  async CerrarPopoOvr() {
     const popover = await this.popoverController.getTop();
         if (popover) {
             popover.dismiss();
@@ -150,7 +157,28 @@ export class InicioPage implements OnInit {
     const modal = await this.modalCtrl.create({
       component: ModalCondicionesPage
         });
+
+    modal.onDidDismiss().then( async () => {
+      await this.recordarEditPerfil();
+
+    })
     return await modal.present();
+
+  }
+
+
+  async recordarEditPerfil() {
+    const popover = await this.popoverController.create({
+      component: PopoverAvisarEditPerfilComponent,
+      animated: true,
+      showBackdrop: true,
+      backdropDismiss: true,
+      mode: 'md'
+    });
+
+    return await popover.present();
+
+
   }
 
   async getNoticias(): Promise <RespuestaAPINoticias> {
@@ -227,16 +255,17 @@ export class InicioPage implements OnInit {
                     const usuario: UsuarioLogin = {
                       Usuario: this.usuario.Usuario,
                       Password: this.usuario.Password,
-                      FingerID: this.checkFinger,
+                      FingerID: this.usuario.FingerID,
                       Nombre: a.Nombre,
                       Tipo: a.Tipo,
-                      Recordarme:  this.checkRemember,
+                      Recordarme:  this.usuario.Recordarme,
                       EsBuzo: a.EsBuzo,
                       EsGuardiaCivil: a.EsGuardiaCivil,
                       RequiereMantoux: a.RequiereMantoux,
                       Email: a.Email,
                       Movil: a.Movil,
-                      Telefono: a.Telefono
+                      Telefono: a.Telefono,
+                      RecordarEditarPerfil: this.usuario.RecordarEditarPerfil
                     };
 
                     this.usuarioService.login(usuario);
@@ -264,5 +293,4 @@ export class InicioPage implements OnInit {
   presentAlert(arg0: string, arg1: string) {
     throw new Error('Method not implemented.');
   }
-
 }

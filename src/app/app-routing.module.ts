@@ -183,6 +183,10 @@ const routes: Routes = [
     path: 'modal-condiciones',
     loadChildren: () => import('./pages/vistasMPE/modal-condiciones/modal-condiciones.module').then( m => m.ModalCondicionesPageModule)
   },
+  {
+    path: 'centros-favoritos',
+    loadChildren: () => import('./pages/vistasMPE/centros-favoritos/centros-favoritos.module').then( m => m.CentrosFavoritosPageModule)
+  },
 
   
 
