@@ -275,7 +275,7 @@ export class InicioPage implements OnInit {
 
                         if ( test.HacerTest.toString() === 'true' ) {
 
-                          this.usuarioService.presentAlert('Recuerde', 'Tiene test por rellenar', 'Vaya a la pestaña de Formularios para realizarlos, gracias.');
+                          this.usuarioService.presentAlertTest('Recuerde', 'Tiene test por rellenar', 'Vaya a la pestaña de Formularios para realizarlos, gracias.');
 
                         }
 
