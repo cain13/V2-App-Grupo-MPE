@@ -22,9 +22,7 @@ export class ContactoMpePage implements OnInit {
   ngOnInit() {
     this.usuario = this.usuarioService.getUsuario();
     this.contactameForm = this.formBuilder.group({
-      nombre: [null, Validators.compose([
-        Validators.required
-      ])],
+
       telefono: [null, Validators.compose([
         Validators.required
       ])],
@@ -38,7 +36,7 @@ export class ContactoMpePage implements OnInit {
   }
 
   enviarConsulta() {
-    console.log('NOMBRE: ', this.contactameForm.value.nombre);
+    console.log('NOMBRE: ', this.usuario.Usuario);
     console.log('TELEFONO: ', this.contactameForm.value.telefono);
     console.log('EMAIL: ', this.contactameForm.value.email);
     console.log('ASUNTO: ', this.contactameForm.value.asunto);

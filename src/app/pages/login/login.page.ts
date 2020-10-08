@@ -34,7 +34,7 @@ export class LoginPage implements OnInit {
   checkTermino = true;
   usuario: UsuarioLogin;
   recordarme = true;
-  terminos = true;
+  terminos = false;
   loginFinger: boolean;
   tokenAPI: string;
   mostrarContra = false;

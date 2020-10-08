@@ -50,6 +50,7 @@ export class UsuarioService {
     private alertCtrl: AlertController,
     private http: HttpClient,
     private modalCtrl: ModalController,
+    private navController: NavController
     ) { }
 
   async login(usuario: UsuarioLogin) {
@@ -299,6 +300,30 @@ export class UsuarioService {
       subHeader: subtitulo,
       message: mensaje,
       buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
+  async presentAlertTest(titulo: string, subtitulo: string, mensaje: string) {
+    console.log('presentAlert');
+    const alert = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      buttons: [
+        {
+          text: 'Ver más tarde',
+          handler: (blah) => {
+            console.log('Lanzamos ver mas tarde');
+          }
+        }, {
+          text: 'Ver ahora',
+          handler: async () => {
+            this.navController.navigateForward('/test-menu');
+          }
+        }
+      ]
     });
 
     await alert.present();

@@ -83,7 +83,7 @@ export class InicioPage implements OnInit {
   async ngOnInit() {
     console.log('this.usuarioService.getLogin(): ', this.usuarioService.getLogin());
     console.log('!this.usuarioService.terminosOK: ', !this.usuarioService.getTerminos());
-    
+
     if (this.usuarioService.getLogin() && !this.usuarioService.getTerminos()) {
       if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true') {
         this.hayCondiciones = true;
@@ -269,6 +269,20 @@ export class InicioPage implements OnInit {
                       RecordarEditarPerfil: this.usuario.RecordarEditarPerfil
                     };
 
+                    if (a.Tests !== null && a.Tests !== undefined) {
+
+                      for ( let test of a.Tests.EstadoTestInfo ) {
+
+                        if ( test.HacerTest.toString() === 'true' ) {
+
+                          this.usuarioService.presentAlert('Recuerde', 'Tiene test por rellenar', 'Vaya a la pestaña de Formularios para realizarlos, gracias.');
+
+                        }
+
+                      }
+
+                    }
+
                     this.usuarioService.login(usuario);
                     this.usuarioService.guardarUsuario(usuario);
 
@@ -294,5 +308,7 @@ export class InicioPage implements OnInit {
   presentAlert(arg0: string, arg1: string) {
     throw new Error('Method not implemented.');
   }
+
+
 
 }

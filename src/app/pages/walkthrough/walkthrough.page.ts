@@ -16,6 +16,7 @@ export class WalkthroughPage implements OnInit {
     speed: 1000
   };
   dir: String = 'ltr';
+  contadorVistas = 0;
 
   slideList: Array<any> = [
     {
@@ -25,7 +26,7 @@ export class WalkthroughPage implements OnInit {
     },
     {
       title: ' <strong>¿A que nos dedicamos?</strong>',
-      description: 'MPE tiene su mayor actividad como servicio de prevención de riesgos laborales, así como formación a empresas y privados, consultoría, sistemas de gestión de calidad y otros muchos productos enfocados a su empresa.',
+      description: 'MPE tiene su mayor actividad como servicio de prevención de riesgos laborales, así como formación a empresas y particulares en todas sus modalidades, consultoría sistemas de gestión de calidad y otros muchos productos enfocados a su empresa.',
       image: 'assets/img/business01.png',
     },
     {
@@ -50,10 +51,17 @@ export class WalkthroughPage implements OnInit {
   }
 
   onSlideNext() {
+    this.contadorVistas++;
+    if (this.contadorVistas === 3) {
+
+      this.openLoginPage();
+
+    }
     this.slides.slideNext(1000, false);
   }
 
-	onSlidePrev() {
+  onSlidePrev() {
+    this.contadorVistas--;
     this.slides.slidePrev(300);
   }
 

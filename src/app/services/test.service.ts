@@ -9,6 +9,8 @@ export class TestService {
   arrayTest: TestInfo[];
   testSelec: TestInfo;
   subRespuesta: SubRespuestaInfo;
+  respuestasMarcadas = 0;
+
 
   constructor() { }
 
@@ -44,6 +46,12 @@ export class TestService {
   getSubRespuesta(): SubRespuestaInfo {
 
     return this.subRespuesta;
+
+  }
+
+  guardarRespuestaMarcada() {
+
+    this.respuestasMarcadas++;
 
   }
 

@@ -36,8 +36,9 @@ export class AppComponent {
   private HayModal = false;
   public appPagesGuardiaCivil: Array<Pages>;
   private textoCompartirAPP = 'Disfrute de la App de GrupoMPE para la gestión laboral, puede descargarla pinchando en el siguiente enlace!!';
-  private urlCompartirAPP = 'http://onelink.to/ept9em';
-
+/*   private urlCompartirAPP = 'http://onelink.to/ept9em';
+ */
+  private urlCompartirAPP = 'https://mpeprevencion.com/qr-appmpe.html';
   public Version = 'Versión 1.0.3';
   constructor(
     private platform: Platform,
@@ -71,7 +72,7 @@ export class AppComponent {
         icon: 'clipboard-outline'
       },
       {
-        title: 'Citas Penditenes',
+        title: 'Citas Pendientes',
         url: '/citas-pendientes-trabajador-menu',
         direct: 'forward',
         icon: 'timer-outline'
@@ -172,7 +173,7 @@ export class AppComponent {
         direct: 'forward',
         icon: 'heart'
       }, {
-        title: 'Editar Perfil',
+        title: 'Configuración',
         url: '/edit-profile',
         direct: 'forward',
         icon: 'person-outline'
@@ -467,8 +468,11 @@ export class AppComponent {
        // this.navCtrl.navigateRoot('/tab-inicio');
   }
   closeMenu() {
-    this.menu.close();
-  }
+/*     this.menu.close();
+ */  
+  navigator['app'].exitApp();
+
+}
 
   inicioMenu() {
     this.navCtrl.navigateRoot('tab-inicio');

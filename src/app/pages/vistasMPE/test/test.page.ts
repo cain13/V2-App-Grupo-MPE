@@ -106,7 +106,7 @@ export class TestPage implements OnInit {
       component: ElegirTestPage,
       animated: true,
       showBackdrop: true,
-      backdropDismiss: true,
+      backdropDismiss: false,
 
     });
 
@@ -271,6 +271,7 @@ export class TestPage implements OnInit {
 
   async guardarRespuesta(idPregunta: string, valorRespuesta: string, subRespuesta: SubRespuestaInfo, id: number, imagen?: string) {
       const respuestaMarcada = this.test.Preguntas.PreguntaInfo[this.contador].Respuestas.RespuestaInfo[id];
+      this.testServices.guardarRespuestaMarcada();
       for (const respuesta of this.test.Preguntas.PreguntaInfo[this.contador].Respuestas.RespuestaInfo ) {
 
         if (respuesta !== respuestaMarcada && respuesta.ValorCheck === true) {
@@ -316,6 +317,7 @@ export class TestPage implements OnInit {
   }
 
   async guardarRespuestaMantoux() {
+    this.testServices.guardarRespuestaMarcada();
 
       const foto: ImagenTestMantoux = {
         numeroPregunta: this.contador,
