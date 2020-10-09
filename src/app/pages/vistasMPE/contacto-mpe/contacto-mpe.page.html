@@ -4,7 +4,8 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>
-        <ion-text color="light"> Grupo MPE</ion-text>
+      <ion-text *ngIf="usuario.EsGuardiaCivil === null || usuario.EsGuardiaCivil === undefined || usuario.EsGuardiaCivil !== true" color="light"> Grupo MPE</ion-text>
+      <ion-text *ngIf="usuario.EsGuardiaCivil !== null && usuario.EsGuardiaCivil !== undefined && usuario.EsGuardiaCivil" color="light"> MPE Sur</ion-text>
     </ion-title>
   </ion-toolbar>
 </ion-header>

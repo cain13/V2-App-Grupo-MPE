@@ -9,6 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DocumentosTrabajadorPageRoutingModule } from './documentos-trabajador-routing.module';
 
 import { DocumentosTrabajadorPage } from './documentos-trabajador.page';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,7 @@ import { DocumentosTrabajadorPage } from './documentos-trabajador.page';
     IonicModule,
     DocumentosTrabajadorPageRoutingModule,
     TranslateModule.forChild(),
-
+    ComponentsModule
   ],
   declarations: [DocumentosTrabajadorPage]
 })

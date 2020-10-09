@@ -8,6 +8,7 @@ import { DocumentosCOVIDPageRoutingModule } from './documentos-covid-routing.mod
 
 import { DocumentosCOVIDPage } from './documentos-covid.page';
 import { TranslateModule } from '@ngx-translate/core';
+import { ComponentsModule } from 'src/app/components/components.module';
 
 @NgModule({
   imports: [
@@ -16,7 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
     IonicModule,
     DocumentosCOVIDPageRoutingModule,
     TranslateModule.forChild(),
-
+    ComponentsModule
   ],
   declarations: [DocumentosCOVIDPage]
 })
