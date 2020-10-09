@@ -20,7 +20,7 @@
 </ion-header>
 
 <ion-content>
-
+  <h4 style="padding: 20px !important;" *ngIf="listaCertificados === null || listaCertificados === undefined || listaCertificados.length < 1">No tiene documentos.</h4>
   <ion-list class="ion-no-padding" [@staggerIn]="listaCertificados">
     <ion-item class="bg-white" *ngFor="let certificado of listaCertificados" tappable > <!--(click)="goCheckout(invoice.id)">-->
        <ion-icon slot="start" name="information-circle-outline" color="primary" (click)="masInfo(certificado)"></ion-icon>

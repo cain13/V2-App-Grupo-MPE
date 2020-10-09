@@ -81,16 +81,17 @@ export class InicioPage implements OnInit {
   }
 
   async ngOnInit() {
-    console.log('this.usuarioService.getLogin(): ', this.usuarioService.getLogin());
-    console.log('!this.usuarioService.terminosOK: ', !this.usuarioService.getTerminos());
-
+   // console.log('this.usuarioService.getLogin(): ', this.usuarioService.getLogin());
+   // console.log('!this.usuarioService.terminosOK: ', !this.usuarioService.getTerminos());
+    /*
     if (this.usuarioService.getLogin() && !this.usuarioService.getTerminos()) {
       if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true') {
         this.hayCondiciones = true;
         await this.condiciones();
       }
     }
-
+    */
+   this.CerrarPopoOvr();
     // tslint:disable-next-line: max-line-length
     if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true' && this.usuario.RecordarEditarPerfil.toString() === 'true' && this.hayCondiciones !== true && (this.usuario.Movil === null || this.usuario.Email === null || this.usuario.Telefono === null)) {
 
@@ -133,11 +134,11 @@ export class InicioPage implements OnInit {
   }
 
   ionViewWillEnter() {
-
+    this.CerrarPopoOvr();
     this.usuario = this.usuarioService.getUsuario();
     console.log('Cantidad$ Notificacioens: ', this.Cantidad);
     this.menuCtrl.enable(true);
-    this.CerrarPopoOvr();
+  
   }
 
   async CerrarPopoOvr() {
@@ -275,7 +276,7 @@ export class InicioPage implements OnInit {
 
                         if ( test.HacerTest.toString() === 'true' ) {
 
-                          this.usuarioService.presentAlertTest('Recuerde', 'Tiene test por rellenar', 'Vaya a la pestaña de Formularios para realizarlos, gracias.');
+                          this.usuarioService.presentAlertTest('Aviso', '', 'Por favor rellene el formulario personalizado previo a la realización de su reconocimiento médico.');
 
                         }
 

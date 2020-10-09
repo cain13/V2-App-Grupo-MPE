@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { LoadingController, Platform, ToastController, AlertController, NavController, ModalController } from '@ionic/angular';
 import { UsuarioLogin, CambiarPassword, EmpresaConsultor } from '../interfaces/usuario-interfaces';
 import { DatabaseService } from './database.service';
@@ -50,7 +50,8 @@ export class UsuarioService {
     private alertCtrl: AlertController,
     private http: HttpClient,
     private modalCtrl: ModalController,
-    private navController: NavController
+    private navController: NavController,
+    private zone: NgZone
     ) { }
 
   async login(usuario: UsuarioLogin) {
@@ -305,29 +306,75 @@ export class UsuarioService {
     await alert.present();
   }
 
-  async presentAlertTest(titulo: string, subtitulo: string, mensaje: string) {
+  async presentAlertTest(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
     console.log('presentAlert');
-    const alert = await this.alertCtrl.create({
+    let cerrar = false;
+    const alerta = await this.alertCtrl.create({
       header: titulo,
       subHeader: subtitulo,
       message: mensaje,
+      backdropDismiss: false,
       buttons: [
         {
           text: 'Ver más tarde',
           handler: (blah) => {
             console.log('Lanzamos ver mas tarde');
+            
           }
         }, {
           text: 'Ver ahora',
-          handler: async () => {
-            this.navController.navigateForward('/test-menu');
+          handler: () => {
+            let navTransition = alerta.dismiss();
+
+            this.someAsyncOperation().then(() => {
+              console.log("someAsyncOperation");
+              navTransition.then(() => {
+                console.log("navTransition.then");
+                this.navController.navigateForward("/test");
+              });
+            });
+            return false;
           }
         }
       ]
     });
 
-    await alert.present();
+    await alerta.present();
+    
+    return null;
   }
+
+  async someAsyncOperation(){
+    //await this.navController.navigateForward("/test");
+  }
+
+  async presentAlertSalir(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'No',
+          handler: (blah) => {
+            console.log('Lanzamos NO');
+            
+          }
+        }, {
+          text: 'Si',
+          handler: () => {
+            navigator['app'].exitApp();
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+    return null;
+  }
+
 
   async presentAlertNotificaciones(titulo: string, subtitulo: string, mensaje: string) {
     console.log('presentAlert');
@@ -349,7 +396,6 @@ export class UsuarioService {
         }
       ]
     });
-
     await alert.present();
   }
 

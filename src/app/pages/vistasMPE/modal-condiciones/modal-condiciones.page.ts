@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalController } from '@ionic/angular';
+import { ModalController, NavController } from '@ionic/angular';
 import { UsuarioService } from '../../../services/usuario.service';
 import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 
@@ -10,14 +10,18 @@ import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 })
 export class ModalCondicionesPage implements OnInit {
   usuario: UsuarioLogin;
+  EsGuardiaCivil = false;
   constructor(public modalCtrl: ModalController,
-              private usuarioService: UsuarioService
+              private usuarioService: UsuarioService,
+              public navCtrl: NavController
     ) { }
 
   ngOnInit() {
 
     this.usuario = this.usuarioService.getUsuario();
-
+    if(this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil){
+      this.EsGuardiaCivil = this.usuario.EsGuardiaCivil;
+    }
   }
 
   aceptarTerminos() {
@@ -64,6 +68,7 @@ export class ModalCondicionesPage implements OnInit {
     } catch (error) {
       console.log('Error: ', error);
     }
+    this.navCtrl.navigateRoot('tab-inicio');
     this.modalCtrl.dismiss();
 
   }

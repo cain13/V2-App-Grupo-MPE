@@ -23,10 +23,10 @@ export class ContactoMpePage implements OnInit {
     this.usuario = this.usuarioService.getUsuario();
     this.contactameForm = this.formBuilder.group({
 
-      telefono: [null, Validators.compose([
+      telefono: [this.usuario.Movil, Validators.compose([
         Validators.required
       ])],
-      email: [null, Validators.compose([
+      email: [this.usuario.Email, Validators.compose([
         Validators.required
       ])],
       asunto: [null, Validators.compose([
