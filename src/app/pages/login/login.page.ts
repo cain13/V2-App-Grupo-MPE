@@ -486,11 +486,11 @@ export class LoginPage implements OnInit {
   }
 
   async presentAlert(subtitulo: string, mensaje: string) {
-    let error = 'Error'
-    if(mensaje.length > 0){
+    let error = 'Error';
+    if (mensaje.length > 0) {
       error = mensaje;
-    }else{
-      mensaje = 'Error'
+    } else {
+      mensaje = 'Error';
     }
     const alert = await this.alertCtrl.create({
       header: mensaje,

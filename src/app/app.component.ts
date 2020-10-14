@@ -450,8 +450,9 @@ export class AppComponent {
       } else {
         await this.CerrarPopoOvr();
         if (this.HayModal === false && Date.now() - this.lastBack > 500) {
-          navigator['app'].exitApp();
-        }
+            this.closeMenu();
+/*          navigator['app'].exitApp();
+ */        }
         this.lastBack = Date.now();
       }
       this.usuarioService.dismiss();
