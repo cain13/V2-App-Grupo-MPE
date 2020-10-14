@@ -41,7 +41,7 @@ export class AppComponent {
 /*   private urlCompartirAPP = 'http://onelink.to/ept9em';
  */
   private urlCompartirAPP = 'https://mpeprevencion.com/qr-appmpe.html';
-  public Version = 'Versión 1.0.3';
+  public Version = 'Versión 1.0.4';
   constructor(
     private platform: Platform,
     private menu: MenuController,
@@ -471,7 +471,8 @@ export class AppComponent {
           }
         }
         else if (this.HayModal === false && Date.now() - this.lastBack > 500) {
-          navigator['app'].exitApp();
+          this.closeMenu();
+          //navigator['app'].exitApp();
         }else{
           this.navCtrl.navigateRoot('tab-inicio');
         }

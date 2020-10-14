@@ -14,7 +14,7 @@ import { CentroAPI } from '../interfaces/centros-interfaces';
 })
 export class UsuarioService {
 
-  version = 'Versión 1.0.1';
+  version = 'Versión 1.0.4';
   usuario: UsuarioLogin;
   empresaConsultor: EmpresaConsultor;
   cambiarPassword: CambiarPassword;
