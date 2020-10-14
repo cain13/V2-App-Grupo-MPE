@@ -182,7 +182,11 @@ const routes: Routes = [
   {
     path: 'modal-condiciones',
     loadChildren: () => import('./pages/vistasMPE/modal-condiciones/modal-condiciones.module').then( m => m.ModalCondicionesPageModule)
+  },  {
+    path: 'construccion',
+    loadChildren: () => import('./pages/vistasMPE/construccion/construccion.module').then( m => m.ConstruccionPageModule)
   },
+
 
   
 

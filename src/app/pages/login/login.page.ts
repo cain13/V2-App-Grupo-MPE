@@ -41,7 +41,7 @@ export class LoginPage implements OnInit {
   passwordIcon = 'eye-outline';
   passwordIcon2 = 'eye-off-outline';
   plataforma: string;
-
+  EsGuardiaCivil = false;
   constructor(
     public navCtrl: NavController,
     public menuCtrl: MenuController,
@@ -279,7 +279,7 @@ export class LoginPage implements OnInit {
     this.navCtrl.navigateRoot('/register');
   }
 
-  getDatosLogin() {
+  async getDatosLogin() {
     try {
       this.usuarioService.present('Accediendo...');
       const xmlhttp = new XMLHttpRequest();
@@ -314,7 +314,7 @@ export class LoginPage implements OnInit {
       console.log('USUARIO: ', this.onLoginForm.value.usuario);
       console.log('CONTRASEÑA: ', this.onLoginForm.value.password);
       console.log('MENSAJE MANDADO A LA API:', sr);
-      xmlhttp.onreadystatechange = () => {
+      xmlhttp.onreadystatechange = async () => {
             if (xmlhttp.readyState === 4) {
                 if (xmlhttp.status === 200) {
                     const xml = xmlhttp.responseXML;
@@ -365,7 +365,7 @@ export class LoginPage implements OnInit {
                       this.menuCtrl.enable(false, 'menuTrabajadores');
                       this.menuCtrl.enable(true, 'menuCompleto');
                       this.getCentros();
-                      this.navCtrl.navigateRoot('tab-inicio');
+                      //this.navCtrl.navigateRoot('tab-inicio');
 
                     } else if ( usuario.Tipo === 'CONSULTOR') {
                       console.log('ACCEDEMOS COMO CONSULTOR');
@@ -379,7 +379,7 @@ export class LoginPage implements OnInit {
                         this.menuCtrl.enable(false, 'menuTrabajadores');
                         this.menuCtrl.enable(true, 'menuGuardiaCivil');
                         this.menuCtrl.enable(false, 'menuCompleto');
-                        this.navCtrl.navigateRoot('tab-inicio');
+                      //  this.navCtrl.navigateRoot('tab-inicio');
 
                       } else {
 
@@ -387,10 +387,16 @@ export class LoginPage implements OnInit {
                         this.menuCtrl.enable(true, 'menuTrabajadores');
                         this.menuCtrl.enable(false, 'menuGuardiaCivil');
                         this.menuCtrl.enable(false, 'menuCompleto');
-                        this.navCtrl.navigateRoot('tab-inicio');
+                      //  this.navCtrl.navigateRoot('tab-inicio');
 
                       }
                     }
+                  if(!this.usuarioService.getTerminos()){
+                    await this.condiciones();
+                  }else{
+                    this.navCtrl.navigateRoot('tab-inicio');
+                  }
+
                 } else if (xmlhttp.status === 500 ) {
                   this.presentAlert('Usuario o contraseña incorrectos', '');
                 }
@@ -402,6 +408,20 @@ export class LoginPage implements OnInit {
       this.usuarioService.dismiss();
     }
   }
+
+  async condiciones() {
+    const modal = await this.modalCtrl.create({
+      component: ModalCondicionesPage
+        });
+    /*
+    modal.onDidDismiss().then( async () => {
+      this.navCtrl.navigateRoot('tab-inicio');
+    });
+    */
+    return await modal.present();
+
+  }
+
   async searchFilter () {
     const modal = await this.modalCtrl.create({
       component: SeleccionarClientePage

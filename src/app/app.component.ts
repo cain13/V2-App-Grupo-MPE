@@ -1,7 +1,7 @@
 import { Component, ViewChild, ɵCodegenComponentFactoryResolver } from '@angular/core';
 // import { Router } from '@angular/router';
 
-import { Platform, MenuController, NavController, IonRouterOutlet, ActionSheetController, PopoverController } from '@ionic/angular';
+import { Platform, MenuController, NavController, IonRouterOutlet, ActionSheetController, PopoverController, ViewDidLeave, AlertController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -16,6 +16,8 @@ import { DatabaseService } from './services/database.service';
 import { Notificacion } from './interfaces/usuario-interfaces';
 import { NotificacionesService } from './services/notificaciones.service';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { Tests } from './interfaces/interfaces-grupo-mpe';
+import { TestService } from './services/test.service';
 
 
 
@@ -54,7 +56,9 @@ export class AppComponent {
     private notificacionesService: NotificacionesService,
     public actionSheetController: ActionSheetController,
     private socialSharing: SocialSharing,
-    private popoverController: PopoverController
+    private popoverController: PopoverController,
+    private testService: TestService,
+    private alertCtrl: AlertController
     // public router: Router
   ) {
     this.appPagesTrabajador = [
@@ -95,7 +99,7 @@ export class AppComponent {
       },
       {
         title: 'Pruebas de Tuberculina',
-        url: '/documentos-covid-menu',
+        url: '/construccion',
         direct: 'forward',
         icon: 'document-text-outline'
       },
@@ -106,7 +110,7 @@ export class AppComponent {
         icon: 'clipboard-outline'
       },
       {
-        title: 'Citas Penditenes',
+        title: 'Citas Pendientes',
         url: '/citas-pendientes-trabajador-menu',
         direct: 'forward',
         icon: 'timer-outline'
@@ -124,19 +128,19 @@ export class AppComponent {
       },
       {
         title: 'Planificación VS',
-        url: '/planficacion-vs',
+        url: '/construccion',
         direct: 'forward',
         icon: 'calendar-outline'
       },
       {
         title: 'Memoria Anual',
-        url: '/memoria-anual',
+        url: '/construccion',
         direct: 'forward',
         icon: 'folder-outline'
       },
       {
         title: 'Estudio Epidemiológico',
-        url: '/estudio-epidemiologico',
+        url: '/construccion',
         direct: 'forward',
         icon: 'flask-outline'
       },
@@ -441,12 +445,21 @@ export class AppComponent {
   }
   backButtonEvent() {
     this.platform.backButton.subscribeWithPriority(0, async () => {
-
+      await this.CerrarPopoOvr();
       if (this.routerOutlet.canGoBack()) {
         console.log('Vista Fichar');
-        if (!this.usuarioService.terminosOK) {
+        if (this.testService.getTest() !== null && this.testService.getTest() !== undefined && this.testService.getTest().Preguntas !== null && this.testService.getTest().Preguntas !== undefined) {
+          console.log('this.testService.respuestasMarcadas out ', this.testService.respuestasMarcadas);
+          console.log('this.testService.getTest().Preguntas.PreguntaInfo.length out ', this.testService.getTest().Preguntas.PreguntaInfo.length);
+          if (this.testService.respuestasMarcadas < this.testService.getTest().Preguntas.PreguntaInfo.length) {
+            console.log('this.testService.respuestasMarcadas in ', this.testService.respuestasMarcadas);
+            console.log('this.testService.getTest().Preguntas.PreguntaInfo.length in ', this.testService.getTest().Preguntas.PreguntaInfo.length);
+            this.presentAlertSalirTest('Atención!', '', 'Si sale perdera las respuesta del test');
+          }
+        } else {
           this.navCtrl.navigateRoot('tab-inicio');
         }
+
       } else {
         await this.CerrarPopoOvr();
         if (this.HayModal === false && Date.now() - this.lastBack > 500) {
@@ -469,14 +482,92 @@ export class AppComponent {
        // this.navCtrl.navigateRoot('/tab-inicio');
   }
   closeMenu() {
-/*     this.menu.close();
- */  
-  navigator['app'].exitApp();
-
-}
+    this.usuarioService.presentAlertSalir('Información', '', '¿Quieres usted salir de la aplicación?');
+    // this.menu.close();
+    // navigator['app'].exitApp();
+  }
 
   inicioMenu() {
     this.navCtrl.navigateRoot('tab-inicio');
+  }
+
+  async presentAlertSalirAppTest(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Continuar',
+          handler: (blah) => {
+            console.log('Lanzamos NO');
+
+          }
+        }, {
+          text: 'Salir',
+          handler: () => {
+            const navTransition = alerta.dismiss();
+
+            this.someAsyncOperation().then(() => {
+              console.log('someAsyncOperation');
+              navTransition.then(() => {
+                console.log('navTransition.then');
+                this.testService.testSelec = null;
+                this.testService.respuestasMarcadas = 0;
+                this.navCtrl.navigateRoot('tab-inicio');
+              });
+            });
+            return false;
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+    return null;
+  }
+
+  async presentAlertSalirTest(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Continuar',
+          handler: (blah) => {
+            console.log('Lanzamos NO');
+
+          }
+        }, {
+          text: 'Salir',
+          handler: () => {
+            const navTransition = alerta.dismiss();
+
+            this.someAsyncOperation().then(() => {
+              console.log('someAsyncOperation');
+              navTransition.then(() => {
+                console.log('navTransition.then');
+                this.testService.testSelec = null;
+                this.testService.respuestasMarcadas = 0;
+                this.navCtrl.navigateRoot('tab-inicio');
+              });
+            });
+            return false;
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+    return null;
+  }
+  async someAsyncOperation() {
+    // await this.navController.navigateForward("/test");
   }
 
   async compartirAPP() {
@@ -558,7 +649,7 @@ export class AppComponent {
     }
   }
 
-  editarPerfil(){
+  editarPerfil() {
     this.navCtrl.navigateForward('edit-profile');
   }
 
@@ -567,12 +658,17 @@ export class AppComponent {
   }
 
   proteccionGuardiaCivil() {
-    window.open('https:mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
+    window.open('https://mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
   }
 
   proteccionGenerico() {
 
     window.open('https:mpeprevencion.com/proteccion_datos_MPE.html', '_system');
+
+  }
+  terminosCondiciones() {
+
+    window.open('https://mpeprevencion.com/terminos-condiciones.html', '_system');
 
   }
 

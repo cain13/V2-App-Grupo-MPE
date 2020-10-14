@@ -116,7 +116,7 @@ export class TestPage implements OnInit {
       this.isMantoux = false;
 
 
-      if (this.test.Preguntas !== undefined) {
+      if (this.test !== undefined && this.test.Preguntas !== undefined) {
 
         for (const pregunta of this.test.Preguntas.PreguntaInfo) {
 
