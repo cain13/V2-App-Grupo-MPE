@@ -19,7 +19,7 @@ export class ModalCondicionesPage implements OnInit {
   ngOnInit() {
 
     this.usuario = this.usuarioService.getUsuario();
-    if(this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil){
+    if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil) {
       this.EsGuardiaCivil = this.usuario.EsGuardiaCivil;
     }
   }

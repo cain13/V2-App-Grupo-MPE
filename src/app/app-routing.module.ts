@@ -186,6 +186,10 @@ const routes: Routes = [
     path: 'construccion',
     loadChildren: () => import('./pages/vistasMPE/construccion/construccion.module').then( m => m.ConstruccionPageModule)
   },
+  {
+    path: 'modal-terminos',
+    loadChildren: () => import('./pages/vistasMPE/modal-terminos/modal-terminos.module').then( m => m.ModalTerminosPageModule)
+  },
 
 
   

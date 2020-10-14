@@ -43,7 +43,7 @@ export class EditProfilePage implements OnInit {
     this.Nombre = this.usuarioService.usuario.Nombre;
     this.Tipo = this.usuarioService.usuario.Tipo;
     this.usuario = this.usuarioService.getUsuario();
-    if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true'){
+    if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true') {
       this.Nombre = 'GUARDIA CIVIL';
       this.Tipo = this.usuarioService.usuario.Nombre;
       this.EsGuardiaCivil = true;
@@ -51,23 +51,23 @@ export class EditProfilePage implements OnInit {
       this.Telefono = this.usuario.Telefono;
       this.Movil = this.usuario.Movil;
     }
-    
-    if(this.EsGuardiaCivil === null) {
+
+    /* if (this.EsGuardiaCivil === null) {
       this.EsGuardiaCivil;
-    }
-    if(this.usuario.Email !== undefined && this.usuario.Email !== null && this.usuario.Email.length > 0) {
+    } */
+    if (this.usuario.Email !== undefined && this.usuario.Email !== null && this.usuario.Email.length > 0) {
       this.Email = this.usuario.Email;
-    }else{
+    } else {
       this.Email = '';
     }
-    if(this.usuario.Telefono !== undefined && this.usuario.Telefono !== null && this.usuario.Telefono.length > 0) {
+    if (this.usuario.Telefono !== undefined && this.usuario.Telefono !== null && this.usuario.Telefono.length > 0) {
       this.Telefono = this.usuario.Telefono;
-    }else{
+    } else {
       this.Telefono = '';
     }
-    if(this.usuario.Movil !== undefined && this.usuario.Movil !== null && this.usuario.Movil.length > 0 && this.usuario.Movil.toString() !== '0') {
+    if (this.usuario.Movil !== undefined && this.usuario.Movil !== null && this.usuario.Movil.length > 0 && this.usuario.Movil.toString() !== '0') {
       this.Movil = this.usuario.Movil;
-    }else{
+    } else {
       this.Movil = '';
     }
     console.log('Nombre: ', this.Nombre);
