@@ -272,7 +272,7 @@ export class InicioPage implements OnInit {
 
                     if (a.Tests !== null && a.Tests !== undefined) {
 
-                      for ( let test of a.Tests.EstadoTestInfo ) {
+                      for ( const test of a.Tests.EstadoTestInfo ) {
 
                         if ( test.HacerTest.toString() === 'true' ) {
 

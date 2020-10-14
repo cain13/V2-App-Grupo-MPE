@@ -99,7 +99,7 @@ export class AppComponent {
       },
       {
         title: 'Pruebas de Tuberculina',
-        url: '/construccion',
+        url: '/vista-tubirculina',
         direct: 'forward',
         icon: 'document-text-outline'
       },
@@ -237,6 +237,11 @@ export class AppComponent {
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
+                case 'MANTOUX':
+                    notificacion.Icono = 'medkit-outline';
+                    notificacion.Ruta = '/vista-tubirculina';
+                    this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+                    break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -256,6 +261,12 @@ export class AppComponent {
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
+                  break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -311,6 +322,11 @@ export class AppComponent {
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+                  break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -330,6 +346,11 @@ export class AppComponent {
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
+                  break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -377,6 +398,11 @@ export class AppComponent {
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+                  break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -396,6 +422,11 @@ export class AppComponent {
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
+                  break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -568,6 +599,46 @@ export class AppComponent {
   }
   async someAsyncOperation() {
     // await this.navController.navigateForward("/test");
+  }
+
+
+  
+  async presentAlertTestMantoux(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const cerrar = false;
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ver más tarde',
+          handler: (blah) => {
+            console.log('Lanzamos ver mas tarde');
+
+          }
+        }, {
+          text: 'Ver ahora',
+          handler: () => {
+            const navTransition = alerta.dismiss();
+
+            this.someAsyncOperation().then(() => {
+              console.log('someAsyncOperation');
+              navTransition.then(() => {
+                console.log('navTransition.then');
+                this.navCtrl.navigateForward('/vista-tubirculina');
+              });
+            });
+            return false;
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+
+    return null;
   }
 
   async compartirAPP() {
