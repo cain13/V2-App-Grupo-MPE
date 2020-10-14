@@ -164,7 +164,7 @@ export class InicioPage implements OnInit {
     modal.onDidDismiss().then( async () => {
       await this.recordarEditPerfil();
 
-    })
+    });
     return await modal.present();
 
   }
@@ -248,7 +248,7 @@ export class InicioPage implements OnInit {
                     console.log('xml... ', xml);
       
                     const obj: RespuestaAPIGetDatos = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
-                    console.log('obj: ', obj)
+                    console.log('obj: ', obj);
                     // tslint:disable-next-line: max-line-length
                     const a: ObtenerDatosConsultorResult = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerDatosConsultorResponse']['ObtenerDatosConsultorResult']));
 
@@ -272,7 +272,7 @@ export class InicioPage implements OnInit {
 
                     if (a.Tests !== null && a.Tests !== undefined) {
 
-                      for ( let test of a.Tests.EstadoTestInfo ) {
+                      for ( const test of a.Tests.EstadoTestInfo ) {
 
                         if ( test.HacerTest.toString() === 'true' ) {
 
@@ -294,7 +294,7 @@ export class InicioPage implements OnInit {
         };
       xmlhttp.send(sr);
     } catch (error) {
-      console.log('Error: ', error)
+      console.log('Error: ', error);
     }
   }
   guardarTokenAPI(Tipo: string) {

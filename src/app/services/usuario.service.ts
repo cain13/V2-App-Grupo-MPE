@@ -360,7 +360,7 @@ export class UsuarioService {
           text: 'No',
           handler: (blah) => {
             console.log('Lanzamos NO');
-            
+
           }
         }, {
           text: 'Si',

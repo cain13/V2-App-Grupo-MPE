@@ -12,6 +12,7 @@ import { EmpresaConsultor } from '../../interfaces/usuario-interfaces';
 import { Token } from '@angular/compiler/src/ml_parser/lexer';
 import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 import { ModalCondicionesPage } from '../vistasMPE/modal-condiciones/modal-condiciones.page';
+import { ModalTerminosPage } from '../vistasMPE/modal-terminos/modal-terminos.page';
 
 
 
@@ -42,6 +43,8 @@ export class LoginPage implements OnInit {
   passwordIcon2 = 'eye-off-outline';
   plataforma: string;
   EsGuardiaCivil = false;
+  mostrarTerminosModal = false;
+
   constructor(
     public navCtrl: NavController,
     public menuCtrl: MenuController,
@@ -138,7 +141,7 @@ export class LoginPage implements OnInit {
   async ionViewWillEnter() {
 /*     this.usuarioService.desactivarSegundoPlano = true;
  */    this.menuCtrl.enable(false);
-    this.usuarioService.setLogin(true); 
+    this.usuarioService.setLogin(true);
     console.log('USUARIO: ', this.usuario);
     if (this.usuario !== undefined && this.usuario.FingerID.toString() === 'true') {
       await this.usuarioService.present('Accediendo...');
@@ -212,9 +215,9 @@ export class LoginPage implements OnInit {
 
   }
 
-  Terminos() {
+  /* Terminos() {
     window.open('https:mpeprevencion.com/terminos-condiciones.html', '_system');
-  }
+  } */
 
 
   async forgotPass() {
@@ -274,6 +277,11 @@ export class LoginPage implements OnInit {
     await alert.present(); */
   }
 
+  salirAPP() {
+
+    navigator['app'].exitApp();
+  }
+
   // // //
   goToRegister() {
     this.navCtrl.navigateRoot('/register');
@@ -281,13 +289,15 @@ export class LoginPage implements OnInit {
 
   async getDatosLogin() {
     try {
-      this.usuarioService.present('Accediendo...');
+      await this.usuarioService.present('Accediendo...');
       const xmlhttp = new XMLHttpRequest();
       this.checkTermino = this.botonTerminos.checked;
-      if(!this.checkTermino){
+      console.log('THIS.CHECKTERMINO: ', this.checkTermino);
+      if (!this.checkTermino) {
         this.usuarioService.dismiss();
-        this.presentAlert('Debe aceptar los terminos y condiciones', 'Advertencia');
-        return;
+        await this.presentAlert('Debe aceptar los terminos y condiciones', 'Advertencia');
+/*      await this.mostrarTerminos();
+ */     return;
       }
 
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
@@ -340,7 +350,7 @@ export class LoginPage implements OnInit {
                       EsBuzo: a.EsBuzo,
                       EsGuardiaCivil: a.EsGuardiaCivil,
                       RequiereMantoux: a.RequiereMantoux,
-                      Email: a.Email, 
+                      Email: a.Email,
                       Movil: a.Movil,
                       Telefono: a.Telefono,
                       RecordarEditarPerfil: true
@@ -365,7 +375,7 @@ export class LoginPage implements OnInit {
                       this.menuCtrl.enable(false, 'menuTrabajadores');
                       this.menuCtrl.enable(true, 'menuCompleto');
                       this.getCentros();
-                      //this.navCtrl.navigateRoot('tab-inicio');
+                      // this.navCtrl.navigateRoot('tab-inicio');
 
                     } else if ( usuario.Tipo === 'CONSULTOR') {
                       console.log('ACCEDEMOS COMO CONSULTOR');
@@ -391,9 +401,9 @@ export class LoginPage implements OnInit {
 
                       }
                     }
-                  if(!this.usuarioService.getTerminos()){
+                  if (!this.usuarioService.getTerminos()) {
                     await this.condiciones();
-                  }else{
+                  } else {
                     this.navCtrl.navigateRoot('tab-inicio');
                   }
 
@@ -506,20 +516,76 @@ export class LoginPage implements OnInit {
   }
 
   async presentAlert(subtitulo: string, mensaje: string) {
-    let error = 'Error'
-    if(mensaje.length > 0){
+    let error = 'Error';
+    if (mensaje.length > 0) {
       error = mensaje;
-    }else{
-      mensaje = 'Error'
+    } else {
+      mensaje = 'Error';
     }
+    console.log('PRESENT ALERT');
     const alert = await this.alertCtrl.create({
       header: mensaje,
       subHeader: subtitulo,
       message: '',
-      buttons: ['OK']
+      buttons: [
+        {
+          text: 'OK',
+          handler: () => {
+            console.log('PRESENT ALERT: OKKKKK');
+            console.log('Lanzamos ver mas tarde');
+
+          }
+        }, {
+          text: 'Ver Terminos',
+          handler: async () => {
+
+            await this.mostrarTerminos();
+            /* const navTransition = alert.dismiss();
+
+            await this.someAsyncOperation().then(async () => {
+              console.log('someAsyncOperation');
+              await navTransition.then(async () => {
+                await this.mostrarTerminos();
+              });
+            });
+            console.log('PRESENT ALERT: VER TERMINOOOOS'); */
+/*          await this.mostrarTerminos();
+            return false;
+ */
+          }
+        }
+      ]
     });
 
     await alert.present();
+  }
+
+  async someAsyncOperation() {
+    // await this.navController.navigateForward("/test");
+  }
+
+  async mostrarTerminos() {
+    console.log('PRESENT ALERT: TERMINOS');
+
+    const modal = await this.modalCtrl.create({
+      component: ModalTerminosPage
+    });
+
+    await modal.present();
+    const { data } = await modal.onWillDismiss();
+    console.log('DATA: ', data);
+
+    const aceptarDatos = data.aceptarDatos;
+
+    if (aceptarDatos === true) {
+      console.log('PRESENT ALERT: TERMINOS 20');
+
+      this.botonTerminos.checked = true;
+
+    }
+
+
+
   }
 
 

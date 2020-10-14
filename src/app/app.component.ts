@@ -99,7 +99,7 @@ export class AppComponent {
       },
       {
         title: 'Pruebas de Tuberculina',
-        url: '/construccion',
+        url: '/vista-tubirculina',
         direct: 'forward',
         icon: 'document-text-outline'
       },
@@ -237,6 +237,11 @@ export class AppComponent {
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
+                case 'MANTOUX':
+                    notificacion.Icono = 'medkit-outline';
+                    notificacion.Ruta = '/vista-tubirculina';
+                    this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+                    break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -256,6 +261,12 @@ export class AppComponent {
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
+                  break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -311,6 +322,11 @@ export class AppComponent {
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+                  break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -330,6 +346,11 @@ export class AppComponent {
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
+                  break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -377,6 +398,11 @@ export class AppComponent {
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+                  break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -396,6 +422,11 @@ export class AppComponent {
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
+                  break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -448,34 +479,24 @@ export class AppComponent {
       await this.CerrarPopoOvr();
       if (this.routerOutlet.canGoBack()) {
         console.log('Vista Fichar');
-        if(this.testService.getTest() !== null && this.testService.getTest() !== undefined && this.testService.getTest().Preguntas !== null && this.testService.getTest().Preguntas !== undefined){
-          console.log("this.testService.respuestasMarcadas out ", this.testService.respuestasMarcadas);
-          console.log("this.testService.getTest().Preguntas.PreguntaInfo.length out ", this.testService.getTest().Preguntas.PreguntaInfo.length);
-          if(this.testService.respuestasMarcadas < this.testService.getTest().Preguntas.PreguntaInfo.length)
-          {
-            console.log("this.testService.respuestasMarcadas in ", this.testService.respuestasMarcadas);
-            console.log("this.testService.getTest().Preguntas.PreguntaInfo.length in ", this.testService.getTest().Preguntas.PreguntaInfo.length);
-            this.presentAlertSalirTest("Atención!","","Si sale perdera las respuesta del test");
+        if (this.testService.getTest() !== null && this.testService.getTest() !== undefined && this.testService.getTest().Preguntas !== null && this.testService.getTest().Preguntas !== undefined) {
+          console.log('this.testService.respuestasMarcadas out ', this.testService.respuestasMarcadas);
+          console.log('this.testService.getTest().Preguntas.PreguntaInfo.length out ', this.testService.getTest().Preguntas.PreguntaInfo.length);
+          if (this.testService.respuestasMarcadas < this.testService.getTest().Preguntas.PreguntaInfo.length) {
+            console.log('this.testService.respuestasMarcadas in ', this.testService.respuestasMarcadas);
+            console.log('this.testService.getTest().Preguntas.PreguntaInfo.length in ', this.testService.getTest().Preguntas.PreguntaInfo.length);
+            this.presentAlertSalirTest('Atención!', '', 'Si sale perdera las respuesta del test');
           }
-        }else{
+        } else {
           this.navCtrl.navigateRoot('tab-inicio');
         }
-         
+
       } else {
-        if(this.testService.getTest() !== null && this.testService.getTest() !== undefined && this.testService.getTest().Preguntas !== null && this.testService.getTest().Preguntas !== undefined){
-          if(this.testService.respuestasMarcadas < this.testService.getTest().Preguntas.PreguntaInfo.length)
-          {
-            console.log("this.testService.respuestasMarcadas in ", this.testService.respuestasMarcadas);
-            console.log("this.testService.getTest().Preguntas.PreguntaInfo.length in ", this.testService.getTest().Preguntas.PreguntaInfo.length);
-            this.presentAlertSalirAppTest("Atención!","","Si sale perdera las respuesta del test");
-          }
-        }
-        else if (this.HayModal === false && Date.now() - this.lastBack > 500) {
-          this.closeMenu();
-          //navigator['app'].exitApp();
-        }else{
-          this.navCtrl.navigateRoot('tab-inicio');
-        }
+        await this.CerrarPopoOvr();
+        if (this.HayModal === false && Date.now() - this.lastBack > 500) {
+            this.closeMenu();
+/*          navigator['app'].exitApp();
+ */        }
         this.lastBack = Date.now();
       }
       this.usuarioService.dismiss();
@@ -492,9 +513,9 @@ export class AppComponent {
        // this.navCtrl.navigateRoot('/tab-inicio');
   }
   closeMenu() {
-    this.usuarioService.presentAlertSalir("Información","","¿Quieres usted salir de la aplicación?");
-    //this.menu.close();
-    //navigator['app'].exitApp();
+    this.usuarioService.presentAlertSalir('Información', '', '¿Quieres usted salir de la aplicación?');
+    // this.menu.close();
+    // navigator['app'].exitApp();
   }
 
   inicioMenu() {
@@ -513,17 +534,17 @@ export class AppComponent {
           text: 'Continuar',
           handler: (blah) => {
             console.log('Lanzamos NO');
-            
+
           }
         }, {
           text: 'Salir',
           handler: () => {
-            let navTransition = alerta.dismiss();
+            const navTransition = alerta.dismiss();
 
             this.someAsyncOperation().then(() => {
-              console.log("someAsyncOperation");
+              console.log('someAsyncOperation');
               navTransition.then(() => {
-                console.log("navTransition.then");
+                console.log('navTransition.then');
                 this.testService.testSelec = null;
                 this.testService.respuestasMarcadas = 0;
                 this.navCtrl.navigateRoot('tab-inicio');
@@ -551,17 +572,17 @@ export class AppComponent {
           text: 'Continuar',
           handler: (blah) => {
             console.log('Lanzamos NO');
-            
+
           }
         }, {
           text: 'Salir',
           handler: () => {
-            let navTransition = alerta.dismiss();
+            const navTransition = alerta.dismiss();
 
             this.someAsyncOperation().then(() => {
-              console.log("someAsyncOperation");
+              console.log('someAsyncOperation');
               navTransition.then(() => {
-                console.log("navTransition.then");
+                console.log('navTransition.then');
                 this.testService.testSelec = null;
                 this.testService.respuestasMarcadas = 0;
                 this.navCtrl.navigateRoot('tab-inicio');
@@ -576,8 +597,48 @@ export class AppComponent {
     await alerta.present();
     return null;
   }
-  async someAsyncOperation(){
-    //await this.navController.navigateForward("/test");
+  async someAsyncOperation() {
+    // await this.navController.navigateForward("/test");
+  }
+
+
+  
+  async presentAlertTestMantoux(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const cerrar = false;
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ver más tarde',
+          handler: (blah) => {
+            console.log('Lanzamos ver mas tarde');
+
+          }
+        }, {
+          text: 'Ver ahora',
+          handler: () => {
+            const navTransition = alerta.dismiss();
+
+            this.someAsyncOperation().then(() => {
+              console.log('someAsyncOperation');
+              navTransition.then(() => {
+                console.log('navTransition.then');
+                this.navCtrl.navigateForward('/vista-tubirculina');
+              });
+            });
+            return false;
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+
+    return null;
   }
 
   async compartirAPP() {
@@ -659,7 +720,7 @@ export class AppComponent {
     }
   }
 
-  editarPerfil(){
+  editarPerfil() {
     this.navCtrl.navigateForward('edit-profile');
   }
 
