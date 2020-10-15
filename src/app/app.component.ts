@@ -13,7 +13,7 @@ import { Pages } from './interfaces/pages';
 import { UsuarioService } from './services/usuario.service';
 import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 import { DatabaseService } from './services/database.service';
-import { Notificacion } from './interfaces/usuario-interfaces';
+import { Notificacion, UsuarioLogin } from './interfaces/usuario-interfaces';
 import { NotificacionesService } from './services/notificaciones.service';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { Tests } from './interfaces/interfaces-grupo-mpe';
@@ -31,7 +31,7 @@ export class AppComponent {
 
   @ViewChild(IonRouterOutlet, { static : true }) routerOutlet: IonRouterOutlet;
   lastBack = Date.now();
-
+  public usuario: UsuarioLogin;
   public appPages: Array<Pages>;
   public appPagesVSAll: Array<Pages>;
   public appPagesTrabajador: Array<Pages>;
@@ -61,6 +61,7 @@ export class AppComponent {
     private alertCtrl: AlertController
     // public router: Router
   ) {
+    
     this.appPagesTrabajador = [
 
       {
@@ -192,7 +193,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-
+      
       setTimeout(() => {
 
         this.fcm.getInitialPushPayload().then(data => {
@@ -436,7 +437,9 @@ export class AppComponent {
             }
             this.db.addNotificacion(notificacion);
             this.notificacionesService.SumaUnaNotificaciones();
-            this.usuarioService.presentAlertNotificaciones('NUEVA NOTIFICACIÓN!!', 'Tiene una notificación nueva!!', '');
+            if(tipoDocumento.toUpperCase() !== 'MANTOUX'){
+              this.usuarioService.presentAlertNotificaciones('NUEVA NOTIFICACIÓN!!', 'Tiene una notificación nueva!!', '');
+            }
           }
         });
         this.statusBar.styleDefault();
@@ -622,7 +625,16 @@ export class AppComponent {
           text: 'Ver ahora',
           handler: () => {
             const navTransition = alerta.dismiss();
-
+            if(this.usuario !== undefined && this.usuario != null && this.usuario.RequiereMantoux !== undefined && this.usuario.RequiereMantoux != null ){
+              this.usuario.RequiereMantoux = true;
+              this.usuarioService.actualizarPerfil(this.usuario);
+              this.usuarioService.guardarUsuario(this.usuario);
+            }else{
+              this.usuario = this.usuarioService.getUsuario();
+              this.usuario.RequiereMantoux = true;
+              this.usuarioService.actualizarPerfil(this.usuario);
+              this.usuarioService.guardarUsuario(this.usuario);
+            }
             this.someAsyncOperation().then(() => {
               console.log('someAsyncOperation');
               navTransition.then(() => {

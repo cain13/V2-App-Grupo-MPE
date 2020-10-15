@@ -31,8 +31,11 @@ export class VistaTubirculinaPage implements OnInit {
 
   ngOnInit() {
     this.usuario = this.usuarioService.getUsuario();
-
-
+console.log('usuario ngonit ',this.usuario);
+    if(this.usuario !== undefined && this.usuario !== null  && this.usuario.RequiereMantoux !== undefined && this.usuario.RequiereMantoux !== null && this.usuario.RequiereMantoux.toString() !== 'true'){
+      console.log('usuario ngonit2 ',this.usuario);
+      this.presentAlertNoTestMontoux('INFORMACIÓN','En estos momentos no tiene pendiente de realizar la prueba MONTOUX','');
+    }
   }
 
   async presentActionSheet() {
@@ -148,9 +151,38 @@ export class VistaTubirculinaPage implements OnInit {
     toast.present();
   }
 
+  async presentAlertNoTestMontoux(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const alerta = await this.alertController.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Cerrar',
+          handler: () => {
+            const navTransition = alerta.dismiss();
 
+            this.someAsyncOperation().then(() => {
+              console.log('someAsyncOperation');
+              navTransition.then(() => {
+                this.navCtrl.navigateRoot('tab-inicio');
+              });
+            });
+            return false;
+          }
+        }
+      ]
+    });
+    
+    await alerta.present();
+    return null;
+  }
 
-
+  async someAsyncOperation(){
+    //await this.navController.navigateForward("/test");
+  }
 
   enviarRespuestasMantoux() {
 
@@ -201,6 +233,8 @@ export class VistaTubirculinaPage implements OnInit {
               console.log('Codigo 200: ', xml);
               this.usuarioService.dismiss();
               this.usuarioService.presentAlert('Enhorabuena!!', 'Su test ha sido enviado con éxito !!', '');
+              this.usuario.RequiereMantoux = false;
+              this.usuarioService.actualizarPerfil(this.usuario);
               this.navCtrl.navigateRoot('/tab-inicio');
             } else {
               this.usuarioService.dismiss();
