@@ -31,7 +31,7 @@ export class ContactoMpePage implements OnInit {
     } else {
       this.Email = '';
     }
-    if (this.usuario.Movil !== undefined && this.usuario.Movil !== null && this.usuario.Movil.length > 0 && this.usuario.Movil.toString() !== '0') {
+    if (this.usuario.Movil !== undefined && this.usuario.Movil !== null && this.usuario.Movil.length > 0 && this.usuario.Movil.toString() !== '') {
       this.Movil = this.usuario.Movil;
     } else {
       this.Movil = '';

@@ -31,39 +31,15 @@ export class ElegirTestPage implements OnInit {
     const aux = this.testService.getArrayTest();
 
 
-    if ( this.usuario.EsBuzo.toString() === 'true' && this.usuario.RequiereMantoux.toString() === 'true') {
+    if ( this.usuario.EsBuzo.toString() === 'true' ) {
 
       this.arrayTest = aux;
-
-    } else if (this.usuario.EsBuzo.toString() === 'true' && this.usuario.RequiereMantoux.toString() === 'false') {
-
-      for (const test of aux) {
-
-        if (test.Permiso !== 'MANTOUX') {
-
-          this.arrayTest.push(test);
-
-        }
-
-      }
-
-    } else if (this.usuario.EsBuzo.toString() === 'false' && this.usuario.RequiereMantoux.toString() === 'true') {
-
-      for (const test of aux) {
-
-        if (test.Permiso !== 'BUCEO') {
-
-          this.arrayTest.push(test);
-
-        }
-
-      }
 
     } else {
 
       for (const test of aux) {
 
-        if (test.Permiso !== 'BUCEO' && test.Permiso !== 'MANTOUX') {
+        if (test.Permiso !== 'BUCEO') {
 
           this.arrayTest.push(test);
 

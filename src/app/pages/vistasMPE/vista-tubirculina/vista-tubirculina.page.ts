@@ -31,10 +31,68 @@ export class VistaTubirculinaPage implements OnInit {
 
   ngOnInit() {
     this.usuario = this.usuarioService.getUsuario();
-console.log('usuario ngonit ',this.usuario);
-    if(this.usuario !== undefined && this.usuario !== null  && this.usuario.RequiereMantoux !== undefined && this.usuario.RequiereMantoux !== null && this.usuario.RequiereMantoux.toString() !== 'true'){
-      console.log('usuario ngonit2 ',this.usuario);
-      this.presentAlertNoTestMontoux('INFORMACIÓN','En estos momentos no tiene pendiente de realizar la prueba MONTOUX','');
+    console.log('usuario ngonit ', this.usuario);
+    if (this.usuario !== undefined && this.usuario !== null  && this.usuario.HacerMantoux !== undefined && this.usuario.HacerMantoux !== null && this.usuario.HacerMantoux.toString() !== 'true') {
+      console.log('usuario ngonit2 ', this.usuario);
+      this.presentAlertNoTestMontoux('INFORMACIÓN', 'En estos momentos no tiene pendiente de realizar la prueba MANTOUX', '');
+    } else {
+
+      const fechaPrueba = moment(this.usuario.FechaMantoux);
+      const fecha48h = moment(this.usuario.FechaMantoux).add(2, 'days');
+      const fecha48hAux = moment(this.usuario.FechaMantoux).add(2, 'days');
+      const fecha60h = moment(fecha48h.add(720, 'minutes'));
+      const aux = moment();
+
+      console.log('fecha60h ', fecha60h);
+      let hora1: string;
+      let hora2: string;
+
+      
+
+
+      if (!fecha48h.format('LTS').includes('AM')) {
+
+        hora1 = fecha48h.format('hh:mm');
+
+      } else {
+
+        hora1 = fecha48h.format('HH:mm');
+
+      }
+
+      console.log(fecha60h.format('LTS'));
+
+      if (fecha60h.format('LTS').includes('AM')) {
+
+        hora2 = fecha60h.format('hh:mm');
+
+      } else {
+
+        hora2 = fecha60h.format('HH:mm');
+
+      }
+
+
+
+
+      const mensajeAlert = 'Su plazo para realizar la prueba era del dia ' + fecha48h.format('DD/MM/YYYY') +
+      ' a las ' + hora1 + ' al dia ' + fecha48h.add(720, 'minutes').format('DD/MM/YYYY') + ' a las ' + hora2;
+      console.log('aux ', aux);
+      console.log('fe ', fecha48hAux);
+      console.log('dee ', fecha60h);
+
+      console.log(!((fecha48hAux <= aux) && (aux <= fecha60h)));
+      console.log(fecha48hAux < aux);
+      console.log(aux <= fecha60h);
+
+      if ( !((fecha48hAux <= aux) && (aux <= fecha60h))) {
+
+        /* const mensajeAlert = 'Su plazo para realizar la prueba era del dia ' + fecha48h.format('DD/MM/YYYY') +
+                            ' a las ' + fecha48h.format('LT') + ' al dia ' + fecha60h + ' a las ' + fecha60h; */
+        this.presentAlertNoTestMontoux('Alerta', 'Vd. No puede realizar la prueba ya que se encuentra fuera de plazo' , mensajeAlert);
+
+      }
+
     }
   }
 
@@ -175,13 +233,13 @@ console.log('usuario ngonit ',this.usuario);
         }
       ]
     });
-    
+
     await alerta.present();
     return null;
   }
 
-  async someAsyncOperation(){
-    //await this.navController.navigateForward("/test");
+  async someAsyncOperation() {
+    // await this.navController.navigateForward("/test");
   }
 
   enviarRespuestasMantoux() {
@@ -233,7 +291,8 @@ console.log('usuario ngonit ',this.usuario);
               console.log('Codigo 200: ', xml);
               this.usuarioService.dismiss();
               this.usuarioService.presentAlert('Enhorabuena!!', 'Su test ha sido enviado con éxito !!', '');
-              this.usuario.RequiereMantoux = false;
+              this.usuario.HacerMantoux = false;
+              console.log('This usuario al actualizar usuario: ', this.usuario);
               this.usuarioService.actualizarPerfil(this.usuario);
               this.navCtrl.navigateRoot('/tab-inicio');
             } else {

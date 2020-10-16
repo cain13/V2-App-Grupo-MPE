@@ -353,7 +353,9 @@ export class LoginPage implements OnInit {
                       Email: a.Email,
                       Movil: a.Movil,
                       Telefono: a.Telefono,
-                      RecordarEditarPerfil: true
+                      RecordarEditarPerfil: true,
+                      HacerMantoux: null,
+                      FechaMantoux: null
                     };
                     console.log('TERMINOS ACPETADOS API: ', a.TerminosAceptados);
                     if (a.TerminosAceptados.toString() === 'true') {

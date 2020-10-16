@@ -13,7 +13,10 @@ CREATE TABLE IF NOT EXISTS usuariosTable (
     Email TEXT DEFAULT NULL,
     Movil TEXT DEFAULT NULL,
     Telefono TEXT DEFAULT NULL,
-    RecordarEditarPerfil BOOLEAN DEFAULT NULL
+    RecordarEditarPerfil BOOLEAN DEFAULT NULL,
+    HacerMantoux BOOLEAN DEFAULT NULL,
+    FechaMantoux TEXT DEFAULT NULL
+
 
 );
 

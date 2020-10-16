@@ -266,6 +266,7 @@ export class TestPage implements OnInit {
       } catch (error) {
         console.log('error ', error);
         this.usuarioService.dismiss();
+        this.usuarioService.presentAlert('ERROR', 'Fallo al cargar la información de inico', 'Compruebe su conexión a internet');
       }
   }
 

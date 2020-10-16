@@ -126,7 +126,7 @@ export class InicioPage implements OnInit {
 
     }).catch( error => {
       console.log(error);
-      this.usuarioService.presentAlert('ERROR', 'Fallo al cargar la información de inico', 'Intentelo de nuevo más tarde');
+      this.usuarioService.presentAlert('ERROR', 'Fallo al cargar la información de inico', 'Compruebe su conexión a internet');
       this.usuarioService.dismiss();
     });
 
@@ -138,7 +138,7 @@ export class InicioPage implements OnInit {
     this.usuario = this.usuarioService.getUsuario();
     console.log('Cantidad$ Notificacioens: ', this.Cantidad);
     this.menuCtrl.enable(true);
-  
+
   }
 
   async CerrarPopoOvr() {
@@ -246,7 +246,7 @@ export class InicioPage implements OnInit {
                 if (xmlhttp.status === 200) {
                     const xml = xmlhttp.responseXML;
                     console.log('xml... ', xml);
-      
+
                     const obj: RespuestaAPIGetDatos = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                     console.log('obj: ', obj);
                     // tslint:disable-next-line: max-line-length
@@ -267,7 +267,9 @@ export class InicioPage implements OnInit {
                       Email: a.Email,
                       Movil: a.Movil,
                       Telefono: a.Telefono,
-                      RecordarEditarPerfil: this.usuario.RecordarEditarPerfil
+                      RecordarEditarPerfil: this.usuario.RecordarEditarPerfil,
+                      HacerMantoux: this.usuario.HacerMantoux,
+                      FechaMantoux: this.usuario.FechaMantoux
                     };
 
                     if (a.Tests !== null && a.Tests !== undefined) {

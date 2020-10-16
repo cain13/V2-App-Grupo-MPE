@@ -18,6 +18,7 @@ import { NotificacionesService } from './services/notificaciones.service';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { Tests } from './interfaces/interfaces-grupo-mpe';
 import { TestService } from './services/test.service';
+import * as moment from 'moment';
 
 
 
@@ -42,6 +43,9 @@ export class AppComponent {
  */
   private urlCompartirAPP = 'https://mpeprevencion.com/qr-appmpe.html';
   public Version = 'Versión 1.0.4';
+
+  private notificacion: Notificacion;
+
   constructor(
     private platform: Platform,
     private menu: MenuController,
@@ -61,7 +65,7 @@ export class AppComponent {
     private alertCtrl: AlertController
     // public router: Router
   ) {
-    
+
     this.appPagesTrabajador = [
 
       {
@@ -193,7 +197,7 @@ export class AppComponent {
 
   initializeApp() {
     this.platform.ready().then(() => {
-      
+
       setTimeout(() => {
 
         this.fcm.getInitialPushPayload().then(data => {
@@ -223,6 +227,8 @@ export class AppComponent {
             notificacion.Fecha = data['FechaNotificacion'];
             notificacion.TipoDocumento = data['TipoDocumento'];
 
+            this.notificacion = notificacion;
+
             if (data['TipoUsuario'] !== 'TRABAJADOR') {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
@@ -241,8 +247,15 @@ export class AppComponent {
                 case 'MANTOUX':
                     notificacion.Icono = 'medkit-outline';
                     notificacion.Ruta = '/vista-tubirculina';
-                    this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
-                    break;
+
+                    const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                    const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+
+                    this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
+                  break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -266,8 +279,12 @@ export class AppComponent {
                 case 'MANTOUX':
                   notificacion.Icono = 'medkit-outline';
                   notificacion.Ruta = '/vista-tubirculina';
-                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
 
+                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -308,6 +325,9 @@ export class AppComponent {
             notificacion.Mensaje = data['Mensaje'];
             notificacion.Fecha = data['FechaNotificacion'];
             notificacion.TipoDocumento = data['TipoDocumento'];
+
+            this.notificacion = notificacion;
+
             if (data['TipoUsuario'] !== 'TRABAJADOR') {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
@@ -326,7 +346,12 @@ export class AppComponent {
                 case 'MANTOUX':
                   notificacion.Icono = 'medkit-outline';
                   notificacion.Ruta = '/vista-tubirculina';
-                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -351,7 +376,12 @@ export class AppComponent {
                 case 'MANTOUX':
                   notificacion.Icono = 'medkit-outline';
                   notificacion.Ruta = '/vista-tubirculina';
-                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -381,9 +411,12 @@ export class AppComponent {
 
             notificacion.Titulo = titulo;
             notificacion.Leido = 0;
-            notificacion.Mensaje = data['body'];
+            notificacion.Mensaje = data['Mensaje'];
             notificacion.Fecha = data['FechaNotificacion'];
             notificacion.TipoDocumento = data['TipoDocumento'];
+
+            this.notificacion = notificacion;
+
             if (data['TipoUsuario'] !== 'TRABAJADOR') {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
@@ -402,7 +435,13 @@ export class AppComponent {
                 case 'MANTOUX':
                   notificacion.Icono = 'medkit-outline';
                   notificacion.Ruta = '/vista-tubirculina';
-                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+
+                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -427,7 +466,13 @@ export class AppComponent {
                 case 'MANTOUX':
                   notificacion.Icono = 'medkit-outline';
                   notificacion.Ruta = '/vista-tubirculina';
-                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
+                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+
+                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -437,7 +482,7 @@ export class AppComponent {
             }
             this.db.addNotificacion(notificacion);
             this.notificacionesService.SumaUnaNotificaciones();
-            if(tipoDocumento.toUpperCase() !== 'MANTOUX'){
+            if (tipoDocumento.toUpperCase() !== 'MANTOUX') {
               this.usuarioService.presentAlertNotificaciones('NUEVA NOTIFICACIÓN!!', 'Tiene una notificación nueva!!', '');
             }
           }
@@ -605,7 +650,7 @@ export class AppComponent {
   }
 
 
-  
+
   async presentAlertTestMantoux(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
     console.log('presentAlert');
     const cerrar = false;
@@ -625,13 +670,19 @@ export class AppComponent {
           text: 'Ver ahora',
           handler: () => {
             const navTransition = alerta.dismiss();
-            if(this.usuario !== undefined && this.usuario != null && this.usuario.RequiereMantoux !== undefined && this.usuario.RequiereMantoux != null ){
-              this.usuario.RequiereMantoux = true;
+            if (this.usuario !== undefined && this.usuario != null && this.usuario.RequiereMantoux !== undefined && this.usuario.RequiereMantoux != null ) {
+              this.usuario.HacerMantoux = true;
+              this.usuario.FechaMantoux = moment(this.notificacion.Fecha).locale('es').format().toString();
+              console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+              console.log('Fecha fecha: ' , moment().locale('es').format().toString());
               this.usuarioService.actualizarPerfil(this.usuario);
               this.usuarioService.guardarUsuario(this.usuario);
-            }else{
+            } else {
               this.usuario = this.usuarioService.getUsuario();
-              this.usuario.RequiereMantoux = true;
+              this.usuario.HacerMantoux = true;
+              this.usuario.FechaMantoux = moment(this.notificacion.Fecha).locale('es').format().toString();
+              console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+              console.log('Fecha fecha: ' , moment().locale('es').format().toString());
               this.usuarioService.actualizarPerfil(this.usuario);
               this.usuarioService.guardarUsuario(this.usuario);
             }
@@ -744,8 +795,9 @@ export class AppComponent {
     window.open('https://mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
   }
 
-  proteccionGenerico() {
 
+
+  proteccionGenerico() {
     window.open('https:mpeprevencion.com/proteccion_datos_MPE.html', '_system');
 
   }
@@ -756,10 +808,7 @@ export class AppComponent {
   }
 
   cerrarSesion() {
-    console.log('Cerrar sesion');
-    this.usuarioService.BorrarEmpleado();
-    this.usuarioService.guardarUsuario(null);
-    this.navCtrl.navigateRoot('blanco');
+    this.usuarioService.presentAlertCerrarSesion('Información', '', '¿Quieres usted salir de la aplicación?');
   }
   // goToEditProgile() {
   //   this.router.navigateByUrl('/edit-profile');

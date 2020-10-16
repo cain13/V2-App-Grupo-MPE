@@ -86,10 +86,10 @@ export class UsuarioService {
   guardarUsuario(usuario: UsuarioLogin) {
 
     this.usuario = usuario;
-    if(usuario !== null && usuario !== undefined && usuario.EsGuardiaCivil !== undefined &&  usuario.EsGuardiaCivil !== null){
+    if (usuario !== null && usuario !== undefined && usuario.EsGuardiaCivil !== undefined &&  usuario.EsGuardiaCivil !== null) {
       this.usuario.EsGuardiaCivil = usuario.EsGuardiaCivil;
-    }else{
-      if(usuario !== null && usuario !== undefined ){
+    } else {
+      if (usuario !== null && usuario !== undefined ) {
         this.usuario.EsGuardiaCivil = false;
       }
     }
@@ -258,7 +258,7 @@ export class UsuarioService {
     });
 
   }
- 
+
 
 
 
@@ -308,7 +308,7 @@ export class UsuarioService {
 
   async presentAlertTest(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
     console.log('presentAlert');
-    let cerrar = false;
+    const cerrar = false;
     const alerta = await this.alertCtrl.create({
       header: titulo,
       subHeader: subtitulo,
@@ -319,18 +319,18 @@ export class UsuarioService {
           text: 'Ver más tarde',
           handler: (blah) => {
             console.log('Lanzamos ver mas tarde');
-            
+
           }
         }, {
           text: 'Ver ahora',
           handler: () => {
-            let navTransition = alerta.dismiss();
+            const navTransition = alerta.dismiss();
 
             this.someAsyncOperation().then(() => {
-              console.log("someAsyncOperation");
+              console.log('someAsyncOperation');
               navTransition.then(() => {
-                console.log("navTransition.then");
-                this.navController.navigateForward("/test");
+                console.log('navTransition.then');
+                this.navController.navigateForward('/test');
               });
             });
             return false;
@@ -340,12 +340,12 @@ export class UsuarioService {
     });
 
     await alerta.present();
-    
+
     return null;
   }
 
-  async someAsyncOperation(){
-    //await this.navController.navigateForward("/test");
+  async someAsyncOperation() {
+    // await this.navController.navigateForward("/test");
   }
 
   async presentAlertSalir(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
@@ -366,6 +366,36 @@ export class UsuarioService {
           text: 'Si',
           handler: () => {
             navigator['app'].exitApp();
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+    return null;
+  }
+
+  async presentAlertCerrarSesion(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'No',
+          handler: (blah) => {
+            console.log('Lanzamos NO');
+
+          }
+        }, {
+          text: 'Si',
+          handler: () => {
+            console.log('Cerrar sesion');
+            this.BorrarEmpleado();
+            this.guardarUsuario(null);
+            this.navController.navigateRoot('blanco');
           }
         }
       ]
@@ -419,8 +449,9 @@ export class UsuarioService {
               });
       })
       .catch((error) => {
-          console.error('Error writing pdf file',error);
+          console.error('Error writing pdf file', error);
           console.log('patherror ' + this.file.externalDataDirectory + filename);
+          // tslint:disable-next-line: no-shadowed-variable
           const writeDirectory = this.platform.is('ios') ? this.file.dataDirectory :  this.file.dataDirectory;
           console.log('writeDirectory ' + writeDirectory + filename);
           this.file.writeFile(writeDirectory, filename, this.convertBase64ToBlob(pdf, 'data:application/pdf;base64', 512), {replace: true})
@@ -430,8 +461,9 @@ export class UsuarioService {
                         console.log('Error opening pdf file');
                     });
             })
+            // tslint:disable-next-line: no-shadowed-variable
             .catch((error) => {
-                console.error('Error writing pdf file',error);
+                console.error('Error writing pdf file', error);
             });
       });
   }

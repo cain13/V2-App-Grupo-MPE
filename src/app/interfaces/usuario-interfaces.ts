@@ -10,9 +10,11 @@ export interface UsuarioLogin {
     EsGuardiaCivil: boolean;
     RequiereMantoux: boolean;
     Email: string;
-    Movil: string
+    Movil: string;
     Telefono: string;
     RecordarEditarPerfil: boolean;
+    HacerMantoux: boolean;
+    FechaMantoux: string;
 
 }
 
@@ -75,7 +77,7 @@ export interface CentrosMPEFiltros {
     localidad?: string;
 }
 
-export interface UsuarioPost{
+export interface UsuarioPost {
 
     tipoUsuario: string;
 

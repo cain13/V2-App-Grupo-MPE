@@ -42,7 +42,9 @@ export class PopoverAvisarEditPerfilComponent implements OnInit {
       Email: this.usuario.Email,
       Movil: this.usuario.Movil,
       Telefono: this.usuario.Telefono,
-      RecordarEditarPerfil: this.botonCheck.checked
+      RecordarEditarPerfil: this.botonCheck.checked,
+      HacerMantoux: this.usuario.HacerMantoux,
+      FechaMantoux: this.usuario.FechaMantoux
     };
 
     await this.usuarioService.login(usuario);
@@ -51,7 +53,7 @@ export class PopoverAvisarEditPerfilComponent implements OnInit {
 
   editarPerfil() {
     this.popoverController.dismiss();
-    this.navCtrl.navigateForward('edit-profile'); 
+    this.navCtrl.navigateForward('edit-profile');
   }
 
   cerrarPopover() {

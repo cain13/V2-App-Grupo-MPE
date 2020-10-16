@@ -54,9 +54,9 @@ export class BlancoPage implements OnInit {
             Email: ultimoUsuario.Email,
             Movil: ultimoUsuario.Movil,
             Telefono: ultimoUsuario.Telefono,
-            RecordarEditarPerfil: ultimoUsuario.RecordarEditarPerfil
-
-
+            RecordarEditarPerfil: ultimoUsuario.RecordarEditarPerfil,
+            HacerMantoux: ultimoUsuario.HacerMantoux,
+            FechaMantoux: ultimoUsuario.FechaMantoux
           };
 
          this.usuarioService.guardarUsuario(this.usuario);

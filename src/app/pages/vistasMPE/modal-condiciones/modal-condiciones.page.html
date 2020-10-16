@@ -15,8 +15,9 @@
       <h4  class="lead">Política de Protección de Datos</h4>
       <h4>1. RESPONSABLE</h4>
         <strong>A. Datos de contacto del Responsable</strong>
-                <p>El responsable de los datos recabados mediante esta web es MEDIOS DE PREVENCION EXTERNOS, S.L. con dirección C/ CAMINOS N6, 41020, SEVILLA Y CIF B41776360. Usted podrá contactar con el responsable mediante el siguiente Email <a href="mailto:rgpd@grupompe.es">rgpd@grupompe.es</a> o en el teléfono 954402585</p>
-                      <strong>B. Identidad y datos de contacto del responsable</strong>
+                <p *ngIf="!EsGuardiaCivil">El responsable de los datos recabados mediante esta web es MEDIOS DE PREVENCION EXTERNOS, S.L. con dirección C/ CAMINOS N6, 41020, SEVILLA Y CIF B41776360. Usted podrá contactar con el responsable mediante el siguiente Email <a href="mailto:rgpd@grupompe.es">rgpd@grupompe.es</a> o en el teléfono 954402585</p>
+                <p *ngIf="EsGuardiaCivil">El responsable de los datos recabados mediante esta web es MEDIOS DE PREVENCION EXTERNOS SUR, S.L. con dirección C/ CAMINOS N6, 41020, SEVILLA Y CIF B90037649. Usted podrá contactar con el responsable mediante el siguiente Email <a href="mailto:rgpd@grupompe.es">rgpd@grupompe.es</a> o en el teléfono 954402585</p>      
+                <strong>B. Identidad y datos de contacto del responsable</strong>
                       <p>FÁTIMA GARCÍA VÁZQUEZ</p>
         <strong>C. Datos de contacto del Delegado de Protección de Datos </strong>
                       <p>INGADE CONNECT, S.L.<br />
