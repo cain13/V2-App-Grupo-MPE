@@ -360,11 +360,11 @@ export class LoginPage implements OnInit {
                     console.log('TERMINOS ACPETADOS API: ', a.TerminosAceptados);
                     if (a.TerminosAceptados.toString() === 'true') {
 
-                      this.usuarioService.setTerminos(true);
+                      this.usuarioService.setTerminos(usuario, true);
 
                     } else {
 
-                      this.usuarioService.setTerminos(false);
+                      this.usuarioService.setTerminos(usuario, false);
 
                     }
                     this.usuarioService.login(usuario);
@@ -588,6 +588,54 @@ export class LoginPage implements OnInit {
 
 
 
+  }
+
+  aceptarTerminos() {
+    try {
+      const xmlhttp = new XMLHttpRequest();
+      console.log('ACTUALIZAMOS DATOS BD 1... ');
+
+      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+      xmlhttp.setRequestHeader('content-type', 'text/xml');
+
+      xmlhttp.responseType = 'document';
+        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+      const sr =
+          '<?xml version="1.0" encoding="utf-8"?>' +
+          '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+            '<soap:Header>' +
+              '<AuthHeader xmlns="http://tempuri.org/">' +
+                '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
+                '<Password>' + this.usuario.Password + '</Password>' +
+              '</AuthHeader>' +
+            '</soap:Header>' +
+            '<soap:Body>' +
+              '<AceptarTerminos xmlns="http://tempuri.org/">' +
+                '<Aceptado>' + true + '</Aceptado>' +
+              '</AceptarTerminos>' +
+            '</soap:Body>' +
+          '</soap:Envelope>';
+
+     xmlhttp.onreadystatechange = () => {
+
+      console.log('XMLHTTP: ', xmlhttp);
+
+            if (xmlhttp.readyState === 4) {
+                if (xmlhttp.status === 200) {
+                    const xml = xmlhttp.responseXML;
+                    console.log('Guardado en la API correctamente');
+
+
+                } else if (xmlhttp.status === 500 ) {
+                  console.log('Error al guardar en la API');
+                }
+            }
+        };
+      xmlhttp.send(sr);
+    } catch (error) {
+      console.log('Error: ', error);
+
+    }
   }
 
 

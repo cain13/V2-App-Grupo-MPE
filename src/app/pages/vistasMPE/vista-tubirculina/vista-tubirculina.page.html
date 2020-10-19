@@ -9,20 +9,28 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content class="ion-padding">
+<ion-content class="ion-padding" >
+  <ion-row *ngIf="noTieneMantoux" style="background: #FFE294!important; padding:10px !important;">
+    <ion-col >
+      <label> No tiene que realizar esta prueba.</label>        
+    </ion-col>
+  </ion-row>
 
-  <ion-card>
+  <ion-card *ngIf="!noTieneMantoux">
     <ion-card-header>
 <!--       <ion-card-subtitle>Pregunta Número {{contador + 1}}</ion-card-subtitle>
  -->      <ion-card-title>Instrucciones para la realización de la fotografía</ion-card-title>
     </ion-card-header>
+    <ion-row style="align-content: center !important; align-self: center !important; align-items: center !important;">
+      <img  src="https://mpecronos.com/Documentos/imagenesMPE/mantoux.jpg" />
+    </ion-row>
     <ion-card-content>
       <ion-label class="ion-text-wrap">
         Para la correcta realización de la fotografía es necesario disponer de una herramienta como referencia, 
         lo ideal sería poner una regla con la que  podamos medir únicamente  la induración, que es la parte endurecida que se forma en la piel,
          sin tener en cuenta el enrojecimiento que se haya podido producir alrededor, como se muestra en la siguiente fotografía. <br /><br />
 
-         En caso de no disponer de dicha regla, otra alternativa sería poner una moneda junto a la induración, siendo lo más conveniente, si es posible, 
+         En caso de no disponer de dicha regla, otra alternativa sería poner una moneda junto a la induración y mostrando la cara con el valor de dicha moneda, siendo lo más conveniente, si es posible, 
          que el tamaño de la moneda sea lo más aproximado al tamaño de la induración.  <br />
 
       </ion-label>   
@@ -45,7 +53,7 @@
   </ion-card> --> 
 
 
-  <ion-grid>
+  <ion-grid *ngIf="!noTieneMantoux">
 
     <ion-row *ngIf="isImagenAdjuntada" style="background: #FFE294!important; padding:10px !important;">
       <ion-col >
@@ -81,3 +89,4 @@
 
 
 </ion-content>
+

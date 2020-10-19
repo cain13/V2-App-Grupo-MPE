@@ -44,9 +44,9 @@ export class ModalCondicionesPage implements OnInit {
               '</AuthHeader>' +
             '</soap:Header>' +
             '<soap:Body>' +
-              '<AceptarTerminos xmlns="http://tempuri.org/">' +
+              '<AceptarPoliticaProteccionDatos xmlns="http://tempuri.org/">' +
                 '<Aceptado>' + true + '</Aceptado>' +
-              '</AceptarTerminos>' +
+              '</AceptarPoliticaProteccionDatos>' +
             '</soap:Body>' +
           '</soap:Envelope>';
 

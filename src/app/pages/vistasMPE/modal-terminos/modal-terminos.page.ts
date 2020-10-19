@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
+import { UsuarioService } from '../../../services/usuario.service';
+import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 
 @Component({
   selector: 'app-modal-terminos',
@@ -7,10 +9,19 @@ import { ModalController, AlertController } from '@ionic/angular';
   styleUrls: ['./modal-terminos.page.scss'],
 })
 export class ModalTerminosPage implements OnInit {
+  
+  private usuario: UsuarioLogin;
+  EsGuardiaCivil: boolean;
 
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController) { }
+  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private usuarioService: UsuarioService) { }
 
   ngOnInit() {
+
+    /* this.usuario = this.usuarioService.getUsuario();
+    console.log('USUARIO MODAL TERMINOS: ', this.usuario);
+    if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil) {
+      this.EsGuardiaCivil = this.usuario.EsGuardiaCivil;
+    } */
 
 /*     this.presentAlert('Para poder acceder, debe aceptar los términos de la aplicación.', 'Por favor');
  */
@@ -21,6 +32,7 @@ export class ModalTerminosPage implements OnInit {
       'aceptarDatos': true
     });
   }
+
 
   async presentAlert(subtitulo: string, mensaje: string) {
     let error = 'Error';

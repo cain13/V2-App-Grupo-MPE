@@ -103,7 +103,7 @@ export class AppComponent {
         icon: 'document-outline'
       },
       {
-        title: 'Pruebas de Tuberculina',
+        title: 'Pruebas de Mantoux',
         url: '/vista-tubirculina',
         direct: 'forward',
         icon: 'document-text-outline'
@@ -247,14 +247,16 @@ export class AppComponent {
                 case 'MANTOUX':
                     notificacion.Icono = 'medkit-outline';
                     notificacion.Ruta = '/vista-tubirculina';
+                    this.db.addNotificacion(notificacion);
+                    //  this.db.ModificarRutaNotificacion();
+                    this.notificacionesService.SumaUnaNotificaciones();
 
                     const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                     const fecha48h = moment(notificacion.Fecha).add(2, 'days');
 
-
                     this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
-                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
-                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
+                    ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                    ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -281,10 +283,13 @@ export class AppComponent {
                   notificacion.Ruta = '/vista-tubirculina';
                   const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                   const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+                  this.db.addNotificacion(notificacion);
+                  //  this.db.ModificarRutaNotificacion();
+                  this.notificacionesService.SumaUnaNotificaciones();
 
                   this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
-                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
-                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
+                  ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -348,10 +353,13 @@ export class AppComponent {
                   notificacion.Ruta = '/vista-tubirculina';
                   const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                   const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+                  this.db.addNotificacion(notificacion);
+                  //  this.db.ModificarRutaNotificacion();
+                  this.notificacionesService.SumaUnaNotificaciones();
 
                   this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
-                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
-                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
+                  ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -378,10 +386,13 @@ export class AppComponent {
                   notificacion.Ruta = '/vista-tubirculina';
                   const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                   const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+                  this.db.addNotificacion(notificacion);
+                  //  this.db.ModificarRutaNotificacion();
+                  this.notificacionesService.SumaUnaNotificaciones();
 
                   this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
-                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
-                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
+                  ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el  ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -437,11 +448,13 @@ export class AppComponent {
                   notificacion.Ruta = '/vista-tubirculina';
                   const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                   const fecha48h = moment(notificacion.Fecha).add(2, 'days');
-
+                  this.db.addNotificacion(notificacion);
+                  //  this.db.ModificarRutaNotificacion();
+                  this.notificacionesService.SumaUnaNotificaciones();
 
                   this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
-                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
-                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
+                  ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -468,11 +481,13 @@ export class AppComponent {
                   notificacion.Ruta = '/vista-tubirculina';
                   const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                   const fecha48h = moment(notificacion.Fecha).add(2, 'days');
-
+                  this.db.addNotificacion(notificacion);
+                  //  this.db.ModificarRutaNotificacion();
+                  this.notificacionesService.SumaUnaNotificaciones();
 
                   this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
-                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
-                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
+                  ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';

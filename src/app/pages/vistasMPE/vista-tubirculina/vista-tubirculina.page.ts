@@ -19,6 +19,7 @@ export class VistaTubirculinaPage implements OnInit {
   imagenAdjuntada: any;
   usuario: UsuarioLogin;
   fechaImagen: string;
+  noTieneMantoux = false;
 
 
   constructor(private actionSheetCtrl: ActionSheetController,
@@ -34,66 +35,78 @@ export class VistaTubirculinaPage implements OnInit {
     console.log('usuario ngonit ', this.usuario);
     if (this.usuario !== undefined && this.usuario !== null  && this.usuario.HacerMantoux !== undefined && this.usuario.HacerMantoux !== null && this.usuario.HacerMantoux.toString() !== 'true') {
       console.log('usuario ngonit2 ', this.usuario);
-      this.presentAlertNoTestMontoux('INFORMACIÓN', 'En estos momentos no tiene pendiente de realizar la prueba MANTOUX', '');
-    } else {
+      this.noTieneMantoux = true;
+    } else if (this.usuario !== undefined && this.usuario !== null  && this.usuario.HacerMantoux !== undefined && (this.usuario.HacerMantoux === null || this.usuario.HacerMantoux.toString() === 'false')) {
 
-      const fechaPrueba = moment(this.usuario.FechaMantoux);
-      const fecha48h = moment(this.usuario.FechaMantoux).add(2, 'days');
-      const fecha48hAux = moment(this.usuario.FechaMantoux).add(2, 'days');
-      const fecha60h = moment(fecha48h.add(720, 'minutes'));
-      const aux = moment();
-
-      console.log('fecha60h ', fecha60h);
-      let hora1: string;
-      let hora2: string;
-
-      
-
-
-      if (!fecha48h.format('LTS').includes('AM')) {
-
-        hora1 = fecha48h.format('hh:mm');
+      this.noTieneMantoux = true;
 
       } else {
 
-        hora1 = fecha48h.format('HH:mm');
+        const fechaPrueba = moment(this.usuario.FechaMantoux);
+        const fecha48h = moment(this.usuario.FechaMantoux).add(2, 'days');
+        const fecha48hAux = moment(this.usuario.FechaMantoux).add(2, 'days');
+        const fecha60h = moment(fecha48h).add(1440, 'minutes');
+        const aux = moment();
+
+        console.log('fecha60h ', fecha60h);
+        let hora1: string;
+        let hora2: string;
+
+
+
+
+        if (!fecha48h.format('LTS').includes('AM')) {
+
+          hora1 = fecha48h.format('hh:mm');
+
+        } else {
+
+          hora1 = fecha48h.format('HH:mm');
+
+        }
+
+        console.log(fecha60h.format('LTS'));
+
+        if (fecha60h.format('LTS').includes('AM')) {
+
+          hora2 = fecha60h.format('hh:mm');
+
+        } else {
+
+          hora2 = fecha60h.format('HH:mm');
+
+        }
+
+
+
+
+        const mensajeAlert = 'Su plazo para realizar la prueba era entre el dia ' + fecha48h.format('DD/MM/YYYY') +
+        ' y el dia ' + fecha48h.add(720, 'minutes').format('DD/MM/YYYY');
+        console.log('aux ', aux);
+        console.log('fe ', fecha48hAux);
+        console.log('dee ', fecha60h);
+
+        console.log(!((fecha48hAux <= aux) && (aux <= fecha60h)));
+        console.log(fecha48hAux < aux);
+        console.log(aux <= fecha60h);
+
+        if ( !((fecha48hAux <= aux) && (aux <= fecha60h))) {
+          if ((fecha48hAux <= aux)) {
+
+            this.presentAlertNoTestMontoux('Alerta', 'Vd. No puede realizar la prueba ya que se encuentra fuera de plazo' , mensajeAlert);
+
+          } else {
+
+            this.presentAlertNoTestMontoux('Alerta', 'Vd. No puede realizar la prueba ya que se encuentra fuera de plazo' ,
+            'Su plazo ha expirado ya que han pasado mas de 72h y no ha procedido a la realización de la fotografía para su diagnóstico, dicha prueba se considera invalida sin ninguna responsabilidad para Grupo MPE');
+
+          }
+          /* const mensajeAlert = 'Su plazo para realizar la prueba era del dia ' + fecha48h.format('DD/MM/YYYY') +
+                              ' a las ' + fecha48h.format('LT') + ' al dia ' + fecha60h + ' a las ' + fecha60h; */
+
+        }
 
       }
-
-      console.log(fecha60h.format('LTS'));
-
-      if (fecha60h.format('LTS').includes('AM')) {
-
-        hora2 = fecha60h.format('hh:mm');
-
-      } else {
-
-        hora2 = fecha60h.format('HH:mm');
-
-      }
-
-
-
-
-      const mensajeAlert = 'Su plazo para realizar la prueba era del dia ' + fecha48h.format('DD/MM/YYYY') +
-      ' a las ' + hora1 + ' al dia ' + fecha48h.add(720, 'minutes').format('DD/MM/YYYY') + ' a las ' + hora2;
-      console.log('aux ', aux);
-      console.log('fe ', fecha48hAux);
-      console.log('dee ', fecha60h);
-
-      console.log(!((fecha48hAux <= aux) && (aux <= fecha60h)));
-      console.log(fecha48hAux < aux);
-      console.log(aux <= fecha60h);
-
-      if ( !((fecha48hAux <= aux) && (aux <= fecha60h))) {
-
-        /* const mensajeAlert = 'Su plazo para realizar la prueba era del dia ' + fecha48h.format('DD/MM/YYYY') +
-                            ' a las ' + fecha48h.format('LT') + ' al dia ' + fecha60h + ' a las ' + fecha60h; */
-        this.presentAlertNoTestMontoux('Alerta', 'Vd. No puede realizar la prueba ya que se encuentra fuera de plazo' , mensajeAlert);
-
-      }
-
-    }
   }
 
   async presentActionSheet() {
@@ -167,7 +180,7 @@ export class VistaTubirculinaPage implements OnInit {
 
   finalizarTestMantoux() {
     if (this.isImagenAdjuntada) {
-        this.finTestMantoux('Test terminado', '¿Desea enviarlo?', '');
+        this.finTestMantoux('Prueba terminada', '¿Desea enviarlo?', '');
     } else {
         this.usuarioService.presentAlert('Por favor', 'Inserter la segunda imagen.' , 'Gracias');
     }
@@ -290,7 +303,7 @@ export class VistaTubirculinaPage implements OnInit {
               const xml = xmlhttp.responseXML;
               console.log('Codigo 200: ', xml);
               this.usuarioService.dismiss();
-              this.usuarioService.presentAlert('Enhorabuena!!', 'Su test ha sido enviado con éxito !!', '');
+              this.usuarioService.presentAlert('Enhorabuena!!', 'Su prueba ha sido enviada con éxito !!', '');
               this.usuario.HacerMantoux = false;
               console.log('This usuario al actualizar usuario: ', this.usuario);
               this.usuarioService.actualizarPerfil(this.usuario);

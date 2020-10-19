@@ -26,6 +26,16 @@ export class ContactoMpePage implements OnInit {
   ngOnInit() {
     this.usuario = this.usuarioService.getUsuario();
 
+    if (this.usuario.Usuario !== undefined && this.usuario.Usuario !== null) {
+
+      this.Nombre = this.usuario.Nombre;
+
+    } else {
+
+      this.Nombre = '';
+
+    }
+
     if (this.usuario.Email !== undefined && this.usuario.Email !== null && this.usuario.Email.length > 0) {
       this.Email = this.usuario.Email;
     } else {
@@ -38,10 +48,10 @@ export class ContactoMpePage implements OnInit {
     }
     this.contactameForm = this.formBuilder.group({
 
-      movil: [this.usuario.Movil, Validators.compose([
+      movil: [this.Movil, Validators.compose([
         Validators.required
       ])],
-      email: [this.usuario.Email, Validators.compose([
+      email: [this.Email, Validators.compose([
         Validators.required
       ])],
       asunto: [null, Validators.compose([
