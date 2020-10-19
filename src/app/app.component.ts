@@ -1,7 +1,7 @@
 import { Component, ViewChild, ɵCodegenComponentFactoryResolver } from '@angular/core';
 // import { Router } from '@angular/router';
 
-import { Platform, MenuController, NavController, IonRouterOutlet, ActionSheetController, PopoverController } from '@ionic/angular';
+import { Platform, MenuController, NavController, IonRouterOutlet, ActionSheetController, PopoverController, ViewDidLeave, AlertController } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 
@@ -13,9 +13,15 @@ import { Pages } from './interfaces/pages';
 import { UsuarioService } from './services/usuario.service';
 import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 import { DatabaseService } from './services/database.service';
-import { Notificacion } from './interfaces/usuario-interfaces';
+import { Notificacion, UsuarioLogin } from './interfaces/usuario-interfaces';
 import { NotificacionesService } from './services/notificaciones.service';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { Tests } from './interfaces/interfaces-grupo-mpe';
+import { TestService } from './services/test.service';
+
+import * as moment from 'moment';
+
+
 
 
 
@@ -30,15 +36,19 @@ export class AppComponent {
   @ViewChild(IonRouterOutlet, { static : true }) routerOutlet: IonRouterOutlet;
   lastBack = Date.now();
 
+  public usuario: UsuarioLogin;
   public appPages: Array<Pages>;
   public appPagesVSAll: Array<Pages>;
   public appPagesTrabajador: Array<Pages>;
   private HayModal = false;
   public appPagesGuardiaCivil: Array<Pages>;
   private textoCompartirAPP = 'Disfrute de la App de GrupoMPE para la gestión laboral, puede descargarla pinchando en el siguiente enlace!!';
-  private urlCompartirAPP = 'http://onelink.to/ept9em';
+  private urlCompartirAPP = 'https://mpeprevencion.com/qr-appmpe.html';
 
-  public Version = 'Versión 1.0.2';
+  public Version = 'Versión 1.0.8';
+
+  private notificacion: Notificacion;
+
   constructor(
     private platform: Platform,
     private menu: MenuController,
@@ -53,7 +63,9 @@ export class AppComponent {
     private notificacionesService: NotificacionesService,
     public actionSheetController: ActionSheetController,
     private socialSharing: SocialSharing,
-    private popoverController: PopoverController
+    private popoverController: PopoverController,
+    private testService: TestService,
+    private alertCtrl: AlertController
     // public router: Router
   ) {
     this.appPagesTrabajador = [
@@ -71,7 +83,7 @@ export class AppComponent {
         icon: 'clipboard-outline'
       },
       {
-        title: 'Citas Penditenes',
+        title: 'Citas Pendientes',
         url: '/citas-pendientes-trabajador-menu',
         direct: 'forward',
         icon: 'timer-outline'
@@ -94,7 +106,7 @@ export class AppComponent {
       },
       {
         title: 'Pruebas de Tuberculina',
-        url: '/documentos-covid-menu',
+        url: '/construccion',
         direct: 'forward',
         icon: 'document-text-outline'
       },
@@ -105,7 +117,7 @@ export class AppComponent {
         icon: 'clipboard-outline'
       },
       {
-        title: 'Citas Penditenes',
+        title: 'Citas Pendientes',
         url: '/citas-pendientes-trabajador-menu',
         direct: 'forward',
         icon: 'timer-outline'
@@ -123,19 +135,19 @@ export class AppComponent {
       },
       {
         title: 'Planificación VS',
-        url: '/planficacion-vs',
+        url: '/construccion',
         direct: 'forward',
         icon: 'calendar-outline'
       },
       {
         title: 'Memoria Anual',
-        url: '/memoria-anual',
+        url: '/construccion',
         direct: 'forward',
         icon: 'folder-outline'
       },
       {
         title: 'Estudio Epidemiológico',
-        url: '/estudio-epidemiologico',
+        url: '/construccion',
         direct: 'forward',
         icon: 'flask-outline'
       },
@@ -172,7 +184,7 @@ export class AppComponent {
         direct: 'forward',
         icon: 'heart'
       },{
-        title: 'Editar Perfil',
+        title: 'Configuración',
         url: '/edit-profile',
         direct: 'forward',
         icon: 'person-outline'
@@ -189,7 +201,7 @@ export class AppComponent {
     this.platform.ready().then(() => {
 
       setTimeout(() => {
-/* 
+
         this.fcm.getInitialPushPayload().then(data => {
             console.log('data app closed ', data);
             if (data === undefined || data === null) {
@@ -217,6 +229,9 @@ export class AppComponent {
             notificacion.Fecha = data['FechaNotificacion'];
             notificacion.TipoDocumento = data['TipoDocumento'];
 
+            this.notificacion = notificacion;
+
+
             if (data['TipoUsuario'] !== 'TRABAJADOR') {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
@@ -232,6 +247,17 @@ export class AppComponent {
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
+                case 'MANTOUX':
+                    notificacion.Icono = 'medkit-outline';
+                    notificacion.Ruta = '/vista-tubirculina';
+                    const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                     const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+
+                     this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                   ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                   ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
+                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -251,6 +277,16 @@ export class AppComponent {
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
+                  break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -291,6 +327,10 @@ export class AppComponent {
             notificacion.Mensaje = data['Mensaje'];
             notificacion.Fecha = data['FechaNotificacion'];
             notificacion.TipoDocumento = data['TipoDocumento'];
+
+            this.notificacion = notificacion;
+
+
             if (data['TipoUsuario'] !== 'TRABAJADOR') {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
@@ -305,6 +345,16 @@ export class AppComponent {
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
+                  break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -325,6 +375,11 @@ export class AppComponent {
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
+                  break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
@@ -354,9 +409,13 @@ export class AppComponent {
 
             notificacion.Titulo = titulo;
             notificacion.Leido = 0;
-            notificacion.Mensaje = data['body'];
+            notificacion.Mensaje = data['Mensaje'];
             notificacion.Fecha = data['FechaNotificacion'];
             notificacion.TipoDocumento = data['TipoDocumento'];
+
+            this.notificacion = notificacion;
+
+
             if (data['TipoUsuario'] !== 'TRABAJADOR') {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
@@ -372,6 +431,17 @@ export class AppComponent {
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+
+                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                   ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                   ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
+                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
                   notificacion.Ruta = '/certificado-aptitud';
@@ -392,6 +462,17 @@ export class AppComponent {
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
+                case 'MANTOUX':
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/vista-tubirculina';
+                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+
+                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                   ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                   ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
+                  break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
                   notificacion.Ruta = '/documentos-trabajador';
@@ -400,10 +481,10 @@ export class AppComponent {
             }
             this.db.addNotificacion(notificacion);
             this.notificacionesService.SumaUnaNotificaciones();
-            this.usuarioService.presentAlertNotificaciones('NUEVA NOTIFICACIÓN!!', 'Tiene una notificación nueva!!', '');
-          }
+            if(tipoDocumento.toUpperCase() !== 'MANTOUX'){
+               this.usuarioService.presentAlertNotificaciones('NUEVA NOTIFICACIÓN!!', 'Tiene una notificación nueva!!', '');
+             }          }
         });
-         */
         this.statusBar.styleDefault();
         setTimeout(() => {
           this.splashScreen.hide();
@@ -427,12 +508,10 @@ export class AppComponent {
     });
 
     /* this.platform.pause.subscribe(() => {
-
       if (!this.usuarioService.desactivarSegundoPlano) {
         console.log('PASAMOS A SEGUNDO PLANO');
         this.navCtrl.navigateRoot('');
       }
-
     });
     this.platform.resume.subscribe(() => {
       console.log('VUELVE A PRIMER PLANO');
@@ -441,23 +520,33 @@ export class AppComponent {
   }
   backButtonEvent() {
     this.platform.backButton.subscribeWithPriority(0, async () => {
-
+      await this.CerrarPopoOvr();
       if (this.routerOutlet.canGoBack()) {
         console.log('Vista Fichar');
-        if (!this.usuarioService.terminosOK) {
+        if (this.testService.getTest() !== null && this.testService.getTest() !== undefined && this.testService.getTest().Preguntas !== null && this.testService.getTest().Preguntas !== undefined) {
+          console.log('this.testService.respuestasMarcadas out ', this.testService.respuestasMarcadas);
+          console.log('this.testService.getTest().Preguntas.PreguntaInfo.length out ', this.testService.getTest().Preguntas.PreguntaInfo.length);
+          if (this.testService.respuestasMarcadas < this.testService.getTest().Preguntas.PreguntaInfo.length) {
+            console.log('this.testService.respuestasMarcadas in ', this.testService.respuestasMarcadas);
+            console.log('this.testService.getTest().Preguntas.PreguntaInfo.length in ', this.testService.getTest().Preguntas.PreguntaInfo.length);
+            this.presentAlertSalirTest('Atención!', '', 'Si sale perdera las respuesta del test');
+          }
+        } else {
           this.navCtrl.navigateRoot('tab-inicio');
         }
-          this.navCtrl.navigateRoot('tab-inicio');
+
       } else {
         await this.CerrarPopoOvr();
         if (this.HayModal === false && Date.now() - this.lastBack > 500) {
-          navigator['app'].exitApp();
-        }
+            this.closeMenu();
+/*          navigator['app'].exitApp();
+ */        }
         this.lastBack = Date.now();
       }
       this.usuarioService.dismiss();
     });
   }
+
   async CerrarPopoOvr() {
     const popover = await this.popoverController.getTop();
         if (popover) {
@@ -469,11 +558,148 @@ export class AppComponent {
        // this.navCtrl.navigateRoot('/tab-inicio');
   }
   closeMenu() {
-    this.menu.close();
+    this.usuarioService.presentAlertSalir('Información', '', '¿Quieres usted salir de la aplicación?');
+    //this.menu.close();
+    //navigator['app'].exitApp();
   }
+
+  async presentAlertSalirAppTest(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Continuar',
+          handler: (blah) => {
+            console.log('Lanzamos NO');
+
+          }
+        }, {
+          text: 'Salir',
+          handler: () => {
+            let navTransition = alerta.dismiss();
+
+            this.someAsyncOperation().then(() => {
+              console.log("someAsyncOperation");
+              navTransition.then(() => {
+                console.log("navTransition.then");
+                this.testService.testSelec = null;
+                this.testService.respuestasMarcadas = 0;
+                this.navCtrl.navigateRoot('tab-inicio');
+              });
+            });
+            return false;
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+    return null;
+  }
+
+  async presentAlertSalirTest(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Continuar',
+          handler: (blah) => {
+            console.log('Lanzamos NO');
+
+          }
+        }, {
+          text: 'Salir',
+          handler: () => {
+            let navTransition = alerta.dismiss();
+
+            this.someAsyncOperation().then(() => {
+              console.log("someAsyncOperation");
+              navTransition.then(() => {
+                console.log("navTransition.then");
+                this.testService.testSelec = null;
+                this.testService.respuestasMarcadas = 0;
+                this.navCtrl.navigateRoot('tab-inicio');
+              });
+            });
+            return false;
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+    return null;
+  }
+
+  async someAsyncOperation() {
+    // await this.navController.navigateForward("/test");
+  }
+
 
   inicioMenu() {
     this.navCtrl.navigateRoot('tab-inicio');
+  }
+
+
+  async presentAlertTestMantoux(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const cerrar = false;
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ver más tarde',
+          handler: (blah) => {
+            console.log('Lanzamos ver mas tarde');
+
+          }
+        }, {
+          text: 'Ver ahora',
+          handler: () => {
+            const navTransition = alerta.dismiss();
+            if (this.usuario !== undefined && this.usuario != null && this.usuario.RequiereMantoux !== undefined && this.usuario.RequiereMantoux != null ) {
+              this.usuario.HacerMantoux = true;
+              this.usuario.FechaMantoux = moment(this.notificacion.Fecha).locale('es').format().toString();
+              console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+              console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+              this.usuarioService.actualizarPerfil(this.usuario);
+              this.usuarioService.guardarUsuario(this.usuario);
+            } else {
+              this.usuario = this.usuarioService.getUsuario();
+              this.usuario.HacerMantoux = true;
+              this.usuario.FechaMantoux = moment(this.notificacion.Fecha).locale('es').format().toString();
+              console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+              console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+              this.usuarioService.actualizarPerfil(this.usuario);
+              this.usuarioService.guardarUsuario(this.usuario);
+            }
+            this.someAsyncOperation().then(() => {
+              console.log('someAsyncOperation');
+              navTransition.then(() => {
+                console.log('navTransition.then');
+                this.navCtrl.navigateForward('/vista-tubirculina');
+              });
+            });
+            return false;
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+
+    return null;
   }
 
   async compartirAPP() {
@@ -562,7 +788,7 @@ export class AppComponent {
   }
 
   proteccionGuardiaCivil() {
-    window.open('https:mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
+    window.open('https://mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
   }
 
   proteccionGenerico() {
@@ -570,7 +796,11 @@ export class AppComponent {
     window.open('https:mpeprevencion.com/proteccion_datos_MPE.html', '_system');
 
   }
+  terminosCondiciones() {
 
+    window.open('https://mpeprevencion.com/terminos-condiciones.html', '_system');
+
+  }
   editarPerfil() {
 
     this.navCtrl.navigateForward('edit-profile');

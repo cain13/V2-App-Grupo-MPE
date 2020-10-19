@@ -187,10 +187,18 @@ const routes: Routes = [
     path: 'centros-favoritos',
     loadChildren: () => import('./pages/vistasMPE/centros-favoritos/centros-favoritos.module').then( m => m.CentrosFavoritosPageModule)
   },
-
-  
-
-
+  {
+    path: 'construccion',
+    loadChildren: () => import('./pages/vistasMPE/construccion/construccion.module').then( m => m.ConstruccionPageModule)
+  },
+  {
+    path: 'vista-tubirculina',
+    loadChildren: () => import('./pages/vistasMPE/vista-tubirculina/vista-tubirculina.module').then( m => m.VistaTubirculinaPageModule)
+  },
+  {
+    path: 'modal-terminos',
+    loadChildren: () => import('./pages/vistasMPE/modal-terminos/modal-terminos.module').then( m => m.ModalTerminosPageModule)
+  }
 
 
 ];

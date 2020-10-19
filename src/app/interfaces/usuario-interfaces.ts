@@ -10,9 +10,11 @@ export interface UsuarioLogin {
     EsGuardiaCivil: boolean;
     RequiereMantoux: boolean;
     Email: string;
-    Movil: string
+    Movil: string;
     Telefono: string;
     RecordarEditarPerfil: boolean;
+    HacerMantoux: boolean;
+    FechaMantoux: string;
 
 
 }

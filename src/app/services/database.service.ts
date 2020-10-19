@@ -81,15 +81,13 @@ export class DatabaseService {
           console.log('DB: Tabla USUARIOS vacia'); }).catch(error => { console.log('DB: ERROR AL BORRAR TABLAS USUARIO'); });
 
         // tslint:disable-next-line: max-line-length
-        const data = [usuario.Usuario, usuario.Password, usuario.FingerID, usuario.Tipo, usuario.Nombre, usuario.Recordarme, usuario.EsBuzo, usuario.EsGuardiaCivil, usuario.RequiereMantoux, usuario.Email, usuario.Movil, usuario.Telefono, usuario.RecordarEditarPerfil];
+        const data = [usuario.Usuario, usuario.Password, usuario.FingerID, usuario.Tipo, usuario.Nombre, usuario.Recordarme, usuario.EsBuzo, usuario.EsGuardiaCivil, usuario.RequiereMantoux, usuario.Email, usuario.Movil, usuario.Telefono, usuario.RecordarEditarPerfil, usuario.HacerMantoux, usuario.FechaMantoux];
         // tslint:disable-next-line: max-line-length
-        const respuesta = await this.storage.executeSql('INSERT INTO usuariosTable (Usuario, Password_, FingerID, Tipo, Nombre, Recordarme, EsBuzo, EsGuardiaCivil, RequiereMantoux, Email, Movil, Telefono, RecordarEditarPerfil) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', data).then(() => {
+        const respuesta = await this.storage.executeSql('INSERT INTO usuariosTable (Usuario, Password_, FingerID, Tipo, Nombre, Recordarme, EsBuzo, EsGuardiaCivil, RequiereMantoux, Email, Movil, Telefono, RecordarEditarPerfil, HacerMantoux, FechaMantoux) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', data).then(() => {
           console.log('DB: Usuario añadido a la BD');
-
         });
     });
   }
-
 
 
   BorrarUsuario() {
@@ -119,11 +117,14 @@ export class DatabaseService {
         Email: res.rows.item(0).Email,
         Movil: res.rows.item(0).Movil,
         Telefono: res.rows.item(0).Telefono,
-        RecordarEditarPerfil: res.rows.item(0).RecordarEditarPerfil
+        RecordarEditarPerfil: res.rows.item(0).RecordarEditarPerfil,
+        HacerMantoux: res.rows.item(0).HacerMantoux,
+        FechaMantoux: res.rows.item(0).FechaMantoux
       };
     } else { return null; }
 
   }
+
 
   addNotificacion(notificacion: Notificacion) {
 

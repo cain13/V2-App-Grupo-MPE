@@ -74,7 +74,18 @@ export class TestMenuPage implements ViewWillEnter,OnInit {
   
   ionViewWillEnter() {
     //this.usuario = this.usuarioService.getUsuario();
-    this.getTest();
+    this.usuario = this.usuarioService.getUsuario();
+    this.test = this.testServices.getTest();
+    if(this.test !== null && this.test !== undefined && this.test.Preguntas !== null && this.test.Preguntas !== undefined)
+    {
+      console.log("ionViewWillEnter hay test", this.test !== null);
+//      this.getTest();      
+    }else{
+      console.log("ionViewWillEnter NO hay test");
+      this.mostrarTest = false;
+      this.isFinTest = false;
+      this.getTest();
+    }
   }
 
  

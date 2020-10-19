@@ -119,7 +119,7 @@ export class TestPage implements OnInit {
       this.isMantoux = false;
 
       console.log('Fin 8');
-      if (this.test.Preguntas !== undefined) {
+      if (this.test !== undefined && this.test.Preguntas !== undefined) {
 
         for (const pregunta of this.test.Preguntas.PreguntaInfo) {
 
@@ -349,11 +349,14 @@ export class TestPage implements OnInit {
       } catch (error) {
         console.log('error ', error);
         this.usuarioService.dismiss();
+        this.usuarioService.presentAlert('ERROR', 'Fallo al cargar la información de inico', 'Compruebe su conexión a internet');
+
       }
   }
 
   async guardarRespuesta(idPregunta: string, valorRespuesta: string, subRespuesta: SubRespuestaInfo, id: number, imagen?: string) {
       const respuestaMarcada = this.test.Preguntas.PreguntaInfo[this.contador].Respuestas.RespuestaInfo[id];
+      this.testServices.guardarRespuestaMarcada();
       for (const respuesta of this.test.Preguntas.PreguntaInfo[this.contador].Respuestas.RespuestaInfo ) {
 
         if (respuesta !== respuestaMarcada && respuesta.ValorCheck === true) {
@@ -399,6 +402,7 @@ export class TestPage implements OnInit {
   }
 
   async guardarRespuestaMantoux() {
+    this.testServices.guardarRespuestaMarcada();
 
       const foto: ImagenTestMantoux = {
         numeroPregunta: this.contador,

@@ -13,6 +13,10 @@ export class ContactoMpePage implements OnInit {
   public contactameForm: FormGroup;
   usuario: UsuarioLogin;
 
+  Nombre = '';
+  Email = '';
+  Movil = '';
+
 
   constructor(    private formBuilder: FormBuilder,
                   private usuarioService: UsuarioService,
@@ -21,14 +25,25 @@ export class ContactoMpePage implements OnInit {
 
   ngOnInit() {
     this.usuario = this.usuarioService.getUsuario();
+    if (this.usuario.Email !== undefined && this.usuario.Email !== null && this.usuario.Email.length > 0) {
+      this.Email = this.usuario.Email;
+    } else {
+      this.Email = '';
+    }
+    if (this.usuario.Movil !== undefined && this.usuario.Movil !== null && this.usuario.Movil.length > 0 && this.usuario.Movil.toString() !== '') {
+      this.Movil = this.usuario.Movil;
+    } else {
+      this.Movil = '';
+    }
+
     this.contactameForm = this.formBuilder.group({
       nombre: [null, Validators.compose([
         Validators.required
       ])],
-      telefono: [null, Validators.compose([
+      movil: [this.usuario.Movil, Validators.compose([
         Validators.required
       ])],
-      email: [null, Validators.compose([
+      email: [this.usuario.Email, Validators.compose([
         Validators.required
       ])],
       asunto: [null, Validators.compose([

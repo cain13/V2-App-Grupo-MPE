@@ -52,7 +52,7 @@
 
       <ion-row></ion-row>
       <ion-item lines="none">
-        <a style="text-decoration: none;" href="https:mpeprevencion.com/terminos-condiciones.html"><ion-label>Terminos y Condiciones</ion-label></a>
+        <a style="text-decoration: none;" (click)="mostrarTerminos()"><ion-label><strong><small>Aceptar Terminos y Condiciones</small></strong></ion-label></a>
         <ion-checkbox #botonTerminos mode="ios" slot="end" color="light" checked={{terminos}} ></ion-checkbox>
       </ion-item>
 
@@ -78,6 +78,10 @@
       <ion-button icon-left size="medium" expand="full" shape="round" color="dark" (click)="getDatosLogin()" [disabled]="!onLoginForm.valid" tappable>
         <ion-icon slot="start" name="log-in"></ion-icon>
         {{ 'app.button.signin' | translate }}
+      </ion-button>
+      <ion-button icon-left size="medium" expand="full" shape="round" color="danger" (click)="salirAPP()"tappable>
+        <ion-icon slot="start" name="chevron-back-circle-outline"></ion-icon>
+        Salir App
       </ion-button>
 <!-- 
     <ion-grid class="btn-group">

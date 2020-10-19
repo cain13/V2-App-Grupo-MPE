@@ -3,6 +3,7 @@
   <ion-toolbar color="dark">
     <ion-searchbar style="margin-top: 3mm; margin-bottom: 0mm;" [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar Documento"></ion-searchbar>
   </ion-toolbar>
+  <h4 style="padding: 20px !important;" *ngIf="listaDocumentos === null || listaDocumentos === undefined || listaDocumentos.length < 1">No tiene documentos.</h4>
 
   <ion-list class="ion-no-padding" [@staggerIn]="listaDocumentos">
     <ion-item class="bg-white"  *ngFor="let certificado of listaDocumentos"  tappable (click)="downloadDocumento(certificado.Id)"> <!--(click)="goCheckout(invoice.id)">-->

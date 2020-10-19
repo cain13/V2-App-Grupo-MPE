@@ -52,9 +52,9 @@ export class EditProfilePage implements OnInit {
       this.Movil = this.usuario.Movil;
     }
     
-    if(this.EsGuardiaCivil === null) {
+    /* if(this.EsGuardiaCivil === null) {
       this.EsGuardiaCivil;
-    }
+    } */
     if(this.usuario.Email !== undefined && this.usuario.Email !== null && this.usuario.Email.length > 0) {
       this.Email = this.usuario.Email;
     }else{

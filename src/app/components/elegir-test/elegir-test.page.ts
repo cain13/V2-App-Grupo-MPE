@@ -28,56 +28,32 @@ export class ElegirTestPage implements OnInit {
     ) {     this.aux = this.testService.getArrayTest();
     }
 
-  ngOnInit() {
-    this.usuario = this.usuarioService.getUsuario();
-    console.log('TESTSSSSSS: ',this.aux);
-
-
-    if ( this.usuario.EsBuzo.toString() === 'true' && this.usuario.RequiereMantoux.toString() === 'true') {
-
-      this.arrayTest = this.aux;
-
-    } else if (this.usuario.EsBuzo.toString() === 'true' && this.usuario.RequiereMantoux.toString() === 'false') {
-
-      for (const test of this.aux) {
-
-        if (test.Permiso !== 'MANTOUX') {
-
-          this.arrayTest.push(test);
-
+    ngOnInit() {
+      this.usuario = this.usuarioService.getUsuario();
+      const aux = this.testService.getArrayTest();
+  
+  
+      if ( this.usuario.EsBuzo.toString() === 'true' ) {
+  
+        this.arrayTest = aux;
+  
+      } else {
+  
+        for (const test of aux) {
+  
+          if (test.Permiso !== 'BUCEO') {
+  
+            this.arrayTest.push(test);
+  
+          }
+  
         }
-
+  
       }
-
-    } else if (this.usuario.EsBuzo.toString() === 'false' && this.usuario.RequiereMantoux.toString() === 'true') {
-
-      for (const test of this.aux) {
-
-        if (test.Permiso !== 'BUCEO') {
-
-          this.arrayTest.push(test);
-
-        }
-
-      }
-
-    } else {
-
-      for (const test of this.aux) {
-
-        if (test.Permiso !== 'BUCEO' && test.Permiso !== 'MANTOUX') {
-
-          this.arrayTest.push(test);
-
-        }
-
-      }
-
+      console.log('TIPO DE DATO: ', typeof this.arrayTest[0].HacerTest);
+      console.log('TIPO DE DATO 2: ', this.arrayTest[0].HacerTest.toString() === 'false');
+      console.log(this.arrayTest);
     }
-    console.log('TIPO DE DATO: ', typeof this.arrayTest[0].HacerTest);
-    console.log('TIPO DE DATO 2: ', this.arrayTest[0].HacerTest.toString() === 'false');
-    console.log('asdfasdfasdfasdfasdf:',this.arrayTest);
-  }
 
 
   elegirTest(test: TestInfo) {

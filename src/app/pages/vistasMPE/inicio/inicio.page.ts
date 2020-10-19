@@ -81,16 +81,19 @@ export class InicioPage implements OnInit {
   }
 
   async ngOnInit() {
-
+   // console.log('this.usuarioService.getLogin(): ', this.usuarioService.getLogin());
+   // console.log('!this.usuarioService.terminosOK: ', !this.usuarioService.getTerminos());
+    /*
     if (this.usuarioService.getLogin() && !this.usuarioService.getTerminos()) {
       if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true') {
         this.hayCondiciones = true;
         await this.condiciones();
       }
     }
-
+    */
+   this.CerrarPopoOvr();
     // tslint:disable-next-line: max-line-length
-    if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true' && this.usuario.RecordarEditarPerfil.toString() === 'true' && this.hayCondiciones !== true && (this.usuario.Telefono === null || this.usuario.Movil === null || this.usuario.Email === null)) {
+    if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true' && this.usuario.RecordarEditarPerfil.toString() === 'true' && this.hayCondiciones !== true && (this.usuario.Movil === null || this.usuario.Email === null || this.usuario.Telefono === null)) {
 
       await this.recordarEditPerfil();
 
@@ -123,7 +126,7 @@ export class InicioPage implements OnInit {
 
     }).catch( error => {
       console.log(error);
-      this.usuarioService.presentAlert('ERROR', 'Fallo al cargar la información de inico', 'Intentelo de nuevo más tarde');
+      this.usuarioService.presentAlert('ERROR', 'Fallo al cargar la información de inico', 'Compruebe su conexión a internet');
       this.usuarioService.dismiss();
     });
 
@@ -131,11 +134,11 @@ export class InicioPage implements OnInit {
   }
 
   ionViewWillEnter() {
-
+    this.CerrarPopoOvr();
     this.usuario = this.usuarioService.getUsuario();
     console.log('Cantidad$ Notificacioens: ', this.Cantidad);
     this.menuCtrl.enable(true);
-    this.CerrarPopoOvr();
+  
   }
 
   async CerrarPopoOvr() {
@@ -173,7 +176,6 @@ export class InicioPage implements OnInit {
       animated: true,
       showBackdrop: true,
       backdropDismiss: true,
-      mode: 'md'
     });
 
     return await popover.present();
@@ -265,8 +267,23 @@ export class InicioPage implements OnInit {
                       Email: a.Email,
                       Movil: a.Movil,
                       Telefono: a.Telefono,
-                      RecordarEditarPerfil: this.usuario.RecordarEditarPerfil
-                    };
+                      RecordarEditarPerfil: this.usuario.RecordarEditarPerfil,
+                      HacerMantoux: this.usuario.HacerMantoux,
+                      FechaMantoux: this.usuario.FechaMantoux                    };
+
+                    if (a.Tests !== null && a.Tests !== undefined) {
+
+                      for ( const test of a.Tests.EstadoTestInfo ) {
+
+                        if ( test.HacerTest.toString() === 'true' ) {
+
+                          this.usuarioService.presentAlertTest('Aviso', '', 'Por favor rellene el formulario personalizado previo a la realización de su reconocimiento médico.');
+
+                        }
+
+                      }
+
+                    }
 
                     this.usuarioService.login(usuario);
                     this.usuarioService.guardarUsuario(usuario);
@@ -293,4 +310,7 @@ export class InicioPage implements OnInit {
   presentAlert(arg0: string, arg1: string) {
     throw new Error('Method not implemented.');
   }
+
+
+
 }
