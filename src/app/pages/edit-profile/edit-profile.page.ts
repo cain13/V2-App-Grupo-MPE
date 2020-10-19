@@ -44,8 +44,6 @@ export class EditProfilePage implements OnInit {
     this.Tipo = this.usuarioService.usuario.Tipo;
     this.usuario = this.usuarioService.getUsuario();
     if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true') {
-      this.Nombre = 'GUARDIA CIVIL';
-      this.Tipo = this.usuarioService.usuario.Nombre;
       this.EsGuardiaCivil = true;
       this.Email = this.usuario.Email;
       this.Telefono = this.usuario.Telefono;
