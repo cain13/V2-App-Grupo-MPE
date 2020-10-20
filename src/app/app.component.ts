@@ -247,9 +247,9 @@ export class AppComponent {
                 case 'MANTOUX':
                     notificacion.Icono = 'medkit-outline';
                     notificacion.Ruta = '/vista-tubirculina';
-                    this.db.addNotificacion(notificacion);
+                    /* this.db.addNotificacion(notificacion);
                     //  this.db.ModificarRutaNotificacion();
-                    this.notificacionesService.SumaUnaNotificaciones();
+                    this.notificacionesService.SumaUnaNotificaciones(); */
 
                     const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                     const fecha48h = moment(notificacion.Fecha).add(2, 'days');
@@ -268,11 +268,11 @@ export class AppComponent {
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
                 case 'DOCUMENTO-COVID':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-covid';
+                  notificacion.Ruta = '/documentos-covid-menu';
                   break;
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
@@ -283,9 +283,9 @@ export class AppComponent {
                   notificacion.Ruta = '/vista-tubirculina';
                   const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                   const fecha48h = moment(notificacion.Fecha).add(2, 'days');
-                  this.db.addNotificacion(notificacion);
+                 /*  this.db.addNotificacion(notificacion);
                   //  this.db.ModificarRutaNotificacion();
-                  this.notificacionesService.SumaUnaNotificaciones();
+                  this.notificacionesService.SumaUnaNotificaciones(); */
 
                   this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
                   ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
@@ -293,7 +293,7 @@ export class AppComponent {
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
               }
             }
@@ -353,9 +353,9 @@ export class AppComponent {
                   notificacion.Ruta = '/vista-tubirculina';
                   const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                   const fecha48h = moment(notificacion.Fecha).add(2, 'days');
-                  this.db.addNotificacion(notificacion);
+                  /* this.db.addNotificacion(notificacion);
                   //  this.db.ModificarRutaNotificacion();
-                  this.notificacionesService.SumaUnaNotificaciones();
+                  this.notificacionesService.SumaUnaNotificaciones(); */
 
                   this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
                   ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
@@ -371,11 +371,11 @@ export class AppComponent {
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
                 case 'DOCUMENTO-COVID':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-covid';
+                  notificacion.Ruta = '/documentos-covid-menu';
                   break;
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
@@ -386,17 +386,17 @@ export class AppComponent {
                   notificacion.Ruta = '/vista-tubirculina';
                   const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                   const fecha48h = moment(notificacion.Fecha).add(2, 'days');
-                  this.db.addNotificacion(notificacion);
+                  /* this.db.addNotificacion(notificacion);
                   //  this.db.ModificarRutaNotificacion();
                   this.notificacionesService.SumaUnaNotificaciones();
-
+ */
                   this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
                   ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el  ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
                   ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
               }
             }
@@ -448,9 +448,9 @@ export class AppComponent {
                   notificacion.Ruta = '/vista-tubirculina';
                   const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                   const fecha48h = moment(notificacion.Fecha).add(2, 'days');
-                  this.db.addNotificacion(notificacion);
+/*                   this.db.addNotificacion(notificacion);
                   //  this.db.ModificarRutaNotificacion();
-                  this.notificacionesService.SumaUnaNotificaciones();
+                  this.notificacionesService.SumaUnaNotificaciones(); */
 
                   this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
                   ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
@@ -466,11 +466,11 @@ export class AppComponent {
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
                 case 'DOCUMENTO-COVID':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-covid';
+                  notificacion.Ruta = '/documentos-covid-menu';
                   break;
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
@@ -481,9 +481,9 @@ export class AppComponent {
                   notificacion.Ruta = '/vista-tubirculina';
                   const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
                   const fecha48h = moment(notificacion.Fecha).add(2, 'days');
-                  this.db.addNotificacion(notificacion);
+                  /* this.db.addNotificacion(notificacion);
                   //  this.db.ModificarRutaNotificacion();
-                  this.notificacionesService.SumaUnaNotificaciones();
+                  this.notificacionesService.SumaUnaNotificaciones(); */
 
                   this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
                   ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
@@ -491,7 +491,7 @@ export class AppComponent {
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
               }
             }

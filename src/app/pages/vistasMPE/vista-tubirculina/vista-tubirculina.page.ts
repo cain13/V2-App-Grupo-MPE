@@ -80,7 +80,7 @@ export class VistaTubirculinaPage implements OnInit {
 
 
 
-        const mensajeAlert = 'Su plazo para realizar la prueba era entre el dia ' + fecha48h.format('DD/MM/YYYY') +
+        const mensajeAlert = 'Su plazo para realizar la prueba es entre el dia ' + fecha48h.format('DD/MM/YYYY') +
         ' y el dia ' + fecha48h.add(720, 'minutes').format('DD/MM/YYYY');
         console.log('aux ', aux);
         console.log('fe ', fecha48hAux);
@@ -91,9 +91,9 @@ export class VistaTubirculinaPage implements OnInit {
         console.log(aux <= fecha60h);
 
         if ( !((fecha48hAux <= aux) && (aux <= fecha60h))) {
-          if ((fecha48hAux <= aux)) {
+          if (!(fecha48hAux <= aux)) {
 
-            this.presentAlertNoTestMontoux('Alerta', 'Vd. No puede realizar la prueba ya que se encuentra fuera de plazo' , mensajeAlert);
+            this.presentAlertNoTestMontoux('Alerta', 'Vd. No puede realizar la prueba ya que aun no se encuentra dentro de plazo' , mensajeAlert);
 
           } else {
 

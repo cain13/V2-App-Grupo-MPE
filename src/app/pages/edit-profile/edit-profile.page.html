@@ -15,13 +15,13 @@
 
 <ion-content class="profile">
   <ion-card class="ion-no-margin">
-    <ion-card-content class="bg-profile">
-      <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar"  *ngIf="EsGuardiaCivil !== undefined && !EsGuardiaCivil">
+    <ion-card-content class="bg-profile" *ngIf="EsGuardiaCivil !== undefined && !EsGuardiaCivil">
+      <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar"  >
       <h1 class="fw500">{{Nombre}}</h1>
       <h1 color="light" class="ion-margin-bottom">{{Tipo}}</h1>
     </ion-card-content>
-    <ion-card-content class="bg-profile">
-      <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar"  *ngIf="EsGuardiaCivil !== undefined && EsGuardiaCivil">
+    <ion-card-content class="bg-profile" *ngIf="EsGuardiaCivil !== undefined && EsGuardiaCivil">
+      <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar"  >
       <h1 class="fw500">Guardia Civil</h1>
       <h1 class="fw500">{{usuario.Usuario}}</h1>
     </ion-card-content>

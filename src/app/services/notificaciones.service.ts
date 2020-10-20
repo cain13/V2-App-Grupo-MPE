@@ -12,7 +12,7 @@ export class NotificacionesService {
 
 
   numNotificaciones$ = new Subject<number>();
-  numNot: number;
+  numNot = 0;
   listaMensajes: Array<Notificacion> = [];
 
 
@@ -41,7 +41,7 @@ export class NotificacionesService {
   }
 
   getNotifiaciones$(): Observable<number> {
-
+    console.log('this.numNotificaciones$.asObservable(): ', this.numNotificaciones$.asObservable());
     return this.numNotificaciones$.asObservable();
 
   }

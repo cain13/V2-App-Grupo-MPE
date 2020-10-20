@@ -58,10 +58,21 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
       this.EsGuardiaCivil = false;
     }
 
+    this.notificacionesService.aumentarNotificaciones();
+    this.cantidad$ = this.notificacionesService.getNotifiaciones$();
+    this.cantidad$.subscribe(num => {
+      console.log('Hola1: ', num);
+      this.cantidad = num;});
+    console.log('Cantidad$ Notificacioens: ', this.cantidad);
+    this.menuCtrl.enable(true);
+
   }
 
   ionViewWillEnter() {
+    console.log('Cantidad$ Notificacioens: 33 ', this.cantidad);
+
     this.notificacionesService.aumentarNotificaciones();
+    console.log('Cantidad$ Notificacioens 222: ', this.cantidad);
     this.cantidad$ = this.notificacionesService.getNotifiaciones$();
     this.cantidad$.subscribe(num => this.cantidad = num);
     console.log('Cantidad$ Notificacioens: ', this.cantidad);
