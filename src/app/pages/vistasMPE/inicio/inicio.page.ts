@@ -3,7 +3,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { NavigationExtras } from '@angular/router';
 import { IonRouterOutlet, MenuController, ModalController, NavController, Platform, PopoverController } from '@ionic/angular';
 import { Observable } from 'rxjs';
-import { Noticia, ObtenerDatosConsultorResult, RespuestaAPIGetDatos, RespuestaAPINoticias } from 'src/app/interfaces/interfaces-grupo-mpe';
+import { DatosMantoux, Noticia, ObtenerDatosConsultorResult, ObtenerResultadoTestMantouxResult, RespuestaAPIGetDatos, RespuestaAPINoticias, RespuestAPIMantoux, RespuestaTestMantouxInfo } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { UsuarioLogin, EmpresaConsultor } from 'src/app/interfaces/usuario-interfaces';
 import { NotificacionesService } from 'src/app/services/notificaciones.service';
 import { UsuarioService } from 'src/app/services/usuario.service';
@@ -20,6 +20,8 @@ import {
 } from '@angular/animations';
 import { ModalCondicionesPage } from '../modal-condiciones/modal-condiciones.page';
 import { PopoverAvisarEditPerfilComponent } from '../../../components/popover-avisar-edit-perfil/popover-avisar-edit-perfil.component';
+import * as moment from 'moment';
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 @Component({
   selector: 'app-inicio',
@@ -66,6 +68,8 @@ export class InicioPage implements OnInit {
   onLoginForm: any;
   hayCondiciones = false;
 
+  datosMantoux: ObtenerResultadoTestMantouxResult;
+
   @ViewChild(IonRouterOutlet, { static : true }) routerOutlet: IonRouterOutlet;
   lastBack = Date.now();
 
@@ -75,7 +79,8 @@ export class InicioPage implements OnInit {
                 public modalCtrl: ModalController,
                 private http: HttpClient,
                 private ngxXml2jsonService: NgxXml2jsonService,
-                private popoverController: PopoverController
+                private popoverController: PopoverController,
+                private localNotifications: LocalNotifications
     ) {
     this.usuario = this.usuarioService.getUsuario();
   }
@@ -286,6 +291,14 @@ export class InicioPage implements OnInit {
 
                     }
 
+                    if (a.RequiereMantoux !== null && a.RequiereMantoux !== undefined) {
+                      if ( a.RequiereMantoux.toString() === 'true') {
+
+                        this.getDatosMantoux(usuario);
+
+                      }
+                    }
+
                     this.usuarioService.login(usuario);
                     this.usuarioService.guardarUsuario(usuario);
 
@@ -299,6 +312,257 @@ export class InicioPage implements OnInit {
       console.log('Error: ', error);
     }
   }
+
+  getDatosMantoux(usuario: UsuarioLogin) {
+    try {
+      const xmlhttp = new XMLHttpRequest();
+      console.log('COGEMOS DATOS MANTOUX... ');
+
+      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+      xmlhttp.setRequestHeader('content-type', 'text/xml');
+
+      xmlhttp.responseType = 'document';
+        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+      const sr =
+        '<?xml version="1.0" encoding="utf-8"?>' +
+        '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+          '<soap:Header>' +
+            '<AuthHeader xmlns="http://tempuri.org/">' +
+              '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
+              '<Password>' + this.usuario.Password + '</Password>' +
+            '</AuthHeader>' +
+          '</soap:Header>' +
+          '<soap:Body>' +
+            '<ObtenerResultadoTestMantoux  xmlns="http://tempuri.org/" />' +
+          '</soap:Body>' +
+        '</soap:Envelope>';
+
+     xmlhttp.onreadystatechange = () => {
+
+      console.log('XMLHTTP: ', xmlhttp);
+
+            if (xmlhttp.readyState === 4) {
+                if (xmlhttp.status === 200) {
+                    const xml = xmlhttp.responseXML;
+                    console.log('xml... ', xml);
+
+                    const obj: RespuestAPIMantoux = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
+                    console.log('obj: ', obj);
+                    // tslint:disable-next-line: max-line-length
+                    const a: ObtenerResultadoTestMantouxResult = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerResultadoTestMantouxResponse']['ObtenerResultadoTestMantouxResult']['ResultadoTestMantouxInfo']));
+                    if (a.DatosMantoux !== null && a.DatosMantoux !== undefined) {
+                      console.log('a.DatosMantoux: ', a.DatosMantoux);
+                      console.log('a.DatosMantoux es ARRAY?: ', Array.isArray(a.DatosMantoux));
+
+                      if (!Array.isArray(a.DatosMantoux.RespuestaTestMantouxInfo)) {
+                        console.log('EL ARRAY DE OBJETOS TIENE SOLO 1 OBJETO...');
+
+                        console.log('a.DatosMantoux: ', a.DatosMantoux);
+                        const aux: any = [];
+                        aux.push(a.DatosMantoux.RespuestaTestMantouxInfo);
+
+                        // SI EL USUARIO REQUIERE TEST MANTOUX, TIENE FECHA DE INOCULACIÓN PERO NO TIENE FOTO HECHA
+                        if (this.isObject(aux[0].FechaFoto)) {
+
+                          // COMPROBAMOS QUE LA FECHA DE INOCULACIÓN NO ES MAYOR A 72 HORAS
+                          const fechaAUX = moment(aux[0].FechaInoculacion);
+                          const fecha48h = moment(aux[0].FechaInoculacion).add(2, 'days');
+                          const fecha72h = moment(aux[0].FechaInoculacion).add(3, 'days');
+                          const fechaActual = moment();
+                          console.log('FECHA INOCULACION: ', aux[0].FechaInoculacion);
+                          console.log('FECHA HOY: ', fechaActual);
+                          console.log('FECHA AUX: ', fechaAUX.format('MMMM Do YYYY, h:mm:ss a'));
+                          console.log('FECHA 48H: ', fecha48h.format('MMMM Do YYYY, h:mm:ss a'));
+                          console.log('FECHA 72H: ', fecha72h.format('MMMM Do YYYY, h:mm:ss a'));
+
+                          if (fechaAUX < moment('2000-01-01T00:00:00')) {
+
+                            console.log('NO HACEMOS NADA YA NO SE HA INOCULADO AUN: 1900-01-01T00:00:00: ', fechaAUX);
+
+                          } else {
+                            console.log('aux[0] ', aux[0]);
+                            console.log('aux[0]: ', this.tieneResultado(aux[0]));
+
+                            if (fechaActual < fecha72h && !this.tieneResultado(aux[0])) {
+                              // COMPROBAMOS QUE LA FECHA DE INOCULACIÓN NO ES MENOR A 48 HORAS
+
+                                console.log('ENTRAMOS PORQUE LA FECHA ES MENOR A 72h');
+
+                                if (fechaActual > fecha48h) {
+                                  if (this.usuario.FechaMantoux !== null  && this.usuario.FechaMantoux !== undefined && this.usuario.FechaMantoux !== aux[0].FechaInoculacion) {
+                                    console.log('CREAMOS NOTIFICACIONES PORQUE NO SE HABIAN CREADO: ', this.usuario.FechaMantoux);
+                                    this.crearNotificacionesLocalesMantoux(aux[0].FechaInoculacion);
+                                    this.usuarioService.presentAlertTestMantouxBotones('ALERTA', 'Le recordamos, que se encuentra dentro del plazo para realizar su prueba Mantoux, y solo dispone hasta el dia ' +
+                                    fecha72h + ' para realizarsela.', '', aux[0].FechaInoculacion);
+                                  } else {
+                                    this.usuario.HacerMantoux = true;
+                                    this.usuario.FechaMantoux = moment(fechaAUX).locale('es').format().toString();
+                                    console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+                                    console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+                                    this.usuarioService.actualizarPerfil(this.usuario);
+                                    this.usuarioService.guardarUsuario(this.usuario);
+                                    this.usuarioService.presentAlert('ALERTA', 'Le recordamos, que se encuentra dentro del plazo para realizar su prueba Mantoux, y solo dispone hasta el dia ' +
+                                    fecha72h + ' para realizarsela.', '');
+
+                                  }
+                                } else {
+                                  if (this.usuario.FechaMantoux !== null  && this.usuario.FechaMantoux !== undefined && this.usuario.FechaMantoux !== aux[0].FechaInoculacion) {
+
+                                    this.crearNotificacionesLocalesMantoux(aux[0].FechaInoculacion);
+                                    this.usuarioService.presentAlertTestMantoux('RECUERDE', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + aux[0].FechaInoculacion +
+                                    ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + moment(aux[0].FechaInoculacion).format('DD/MM/YYYY') + ' y el ' +
+                                    moment(aux[0].FechaInoculacion).add(1440, 'minutes').format('DD/MM/YYYY') + ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n'
+                                    + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.', aux[0].FechaInoculacion);
+
+                                  } else {
+                                    this.usuario.HacerMantoux = true;
+                                    this.usuario.FechaMantoux = moment(fechaAUX).locale('es').format().toString();
+                                    console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+                                    console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+                                    this.usuarioService.actualizarPerfil(this.usuario);
+                                    this.usuarioService.guardarUsuario(this.usuario);
+                                    this.usuarioService.presentAlert('RECUERDE', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + aux[0].FechaInoculacion +
+                                    ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + moment(aux[0].FechaInoculacion).format('DD/MM/YYYY') + ' y el ' +
+                                    moment(aux[0].FechaInoculacion).add(1440, 'minutes').format('DD/MM/YYYY') + ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n'
+                                    + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
+
+                                  }
+                                }
+
+                              } else {
+                                if (!this.tieneResultado(aux[0])) {
+                                  this.usuario.HacerMantoux = true;
+                                  this.usuario.FechaMantoux = moment(fechaAUX).locale('es').format().toString();
+                                  console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+                                  console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+                                  this.usuarioService.actualizarPerfil(this.usuario);
+                                  this.usuarioService.guardarUsuario(this.usuario);
+                                  this.usuarioService.presentAlertNoTestMontoux('Alerta', 'Vd. No puede realizar la prueba ya que se encuentra fuera de plazo',
+                                  'Su plazo ha expirado ya que han pasado mas de 72h desde su inoculación y' +
+                                  'no ha procedido a la realización de la fotografía para su diagnóstico, dicha prueba se considera invalida sin ninguna responsabilidad para Grupo MPE');
+
+                                }}
+
+                          }
+
+                        } else {
+
+                          console.log('NO HACEMOS NADA YA QUE YA TIENE FECHA DE INOCULACIÓN Y FECHA DE FOTO');
+
+                        }
+
+                      } else {
+
+                        console.log('EL ARRAY DE OBJETOS TIENE MÁS DE 1 OBJETO...');
+                        const arrayDatos = a.DatosMantoux.RespuestaTestMantouxInfo;
+                        console.log('arrayDatos: ', arrayDatos);
+                        arrayDatos.sort(function (ax , b) {
+                          return (new Date(b.FechaFoto).valueOf() - new Date(ax.FechaFoto).valueOf());
+                          });
+                        if (arrayDatos[0].FechaFoto === undefined) {
+
+                            // COMPROBAMOS QUE LA FECHA DE INOCULACIÓN NO ES MAYOR A 72 HORAS
+                            const fechaAUX = moment(arrayDatos[0].FechaInoculacion);
+                            const fecha48h = moment(arrayDatos[0].FechaInoculacion).add(2, 'days');
+                            const fecha72h = moment(arrayDatos[0].FechaInoculacion).add(3, 'days');
+                            const fechaActual = moment();
+                            console.log('FECHA AUX: ', fechaAUX.format('MMMM Do YYYY, h:mm:ss a'));
+                            console.log('FECHA 48H: ', fecha48h.format('MMMM Do YYYY, h:mm:ss a'));
+                            console.log('FECHA 72H: ', fecha72h.format('MMMM Do YYYY, h:mm:ss a'));
+                            console.log('FECHA HOY: ', fechaActual);
+
+                            if (fechaAUX < moment('2000-01-01T00:00:00')) {
+
+                              console.log('NO HACEMOS NADA YA NO SE HA INOCULADO AUN: 1900-01-01T00:00:00: ', fechaAUX);
+
+                            } else {
+                              console.log('aux[0] ', arrayDatos[0]);
+                              console.log('aux[0]: ', this.tieneResultado(arrayDatos[0]));
+                              if (fechaActual < fecha72h && !this.tieneResultado(arrayDatos[0])) {
+                                // COMPROBAMOS QUE LA FECHA DE INOCULACIÓN NO ES MENOR A 48 HORAS
+
+                                  console.log('ENTRAMOS PORQUE LA FECHA ES MENOR A 72h');
+
+                                  if (fechaActual > fecha48h) {
+                                    if (this.usuario.FechaMantoux !== null  && this.usuario.FechaMantoux !== undefined && this.usuario.FechaMantoux !== arrayDatos[0].FechaInoculacion) {
+                                      console.log('CREAMOS NOTIFICACIONES PORQUE NO SE HABIAN CREADO: ', this.usuario.FechaMantoux);
+                                      this.crearNotificacionesLocalesMantoux(arrayDatos[0].FechaInoculacion);
+                                      this.usuarioService.presentAlertTestMantouxBotones('ALERTA', 'Le recordamos, que se encuentra dentro del plazo para realizar su prueba Mantoux, y solo dispone hasta el dia ' +
+                                      fecha72h + ' para realizarsela.', '', arrayDatos[0].FechaInoculacion);
+                                    } else {
+                                      this.usuario.HacerMantoux = true;
+                                      this.usuario.FechaMantoux = moment(fechaAUX).locale('es').format().toString();
+                                      console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+                                      console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+                                      this.usuarioService.actualizarPerfil(this.usuario);
+                                      this.usuarioService.guardarUsuario(this.usuario);
+                                      this.usuarioService.presentAlert('ALERTA', 'Le recordamos, que se encuentra dentro del plazo para realizar su prueba Mantoux, y solo dispone hasta el dia ' +
+                                      fecha72h + ' para realizarsela.', '');
+
+                                    }
+                                  } else {
+                                    if (this.usuario.FechaMantoux !== null  && this.usuario.FechaMantoux !== undefined && this.usuario.FechaMantoux !== arrayDatos[0].FechaInoculacion) {
+
+                                      this.crearNotificacionesLocalesMantoux(arrayDatos[0].FechaInoculacion);
+                                      this.usuarioService.presentAlertTestMantoux('RECUERDE', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + arrayDatos[0].FechaInoculacion +
+                                      ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + moment(arrayDatos[0].FechaInoculacion).format('DD/MM/YYYY') + ' y el ' +
+                                      moment(arrayDatos[0].FechaInoculacion).add(1440, 'minutes').format('DD/MM/YYYY') + ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n'
+                                      + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.', arrayDatos[0].FechaInoculacion);
+
+                                    } else {
+                                      this.usuario.HacerMantoux = true;
+                                      this.usuario.FechaMantoux = moment(fechaAUX).locale('es').format().toString();
+                                      console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+                                      console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+                                      this.usuarioService.actualizarPerfil(this.usuario);
+                                      this.usuarioService.guardarUsuario(this.usuario);
+                                      this.usuarioService.presentAlert('RECUERDE', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + arrayDatos[0].FechaInoculacion +
+                                      ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + moment(arrayDatos[0].FechaInoculacion).format('DD/MM/YYYY') + ' y el ' +
+                                      moment(arrayDatos[0].FechaInoculacion).add(1440, 'minutes').format('DD/MM/YYYY') + ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n'
+                                      + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
+
+                                    }
+                                  }
+
+                                } else {
+                                  if (!this.tieneResultado(arrayDatos[0])) {
+                                    this.usuario.HacerMantoux = true;
+                                    this.usuario.FechaMantoux = moment(fechaAUX).locale('es').format().toString();
+                                    console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+                                    console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+                                    this.usuarioService.actualizarPerfil(this.usuario);
+                                    this.usuarioService.guardarUsuario(this.usuario);
+                                    this.usuarioService.presentAlertNoTestMontoux('Alerta', 'Vd. No puede realizar la prueba ya que se encuentra fuera de plazo',
+                                    'Su plazo ha expirado ya que han pasado mas de 72h desde su inoculación y' +
+                                    'no ha procedido a la realización de la fotografía para su diagnóstico, dicha prueba se considera invalida sin ninguna responsabilidad para Grupo MPE');
+
+                                  }
+                                }
+                            }
+
+
+                          } else {
+
+                            console.log('NO HACEMOS NADA YA QUE YA TIENE FECHA DE INOCULACIÓN Y FECHA DE FOTO');
+
+                          }
+                      }
+
+                    }
+                    // tslint:disable-next-line: no-shadowed-variable
+                    this.datosMantoux = a;
+
+                } else if (xmlhttp.status === 500 ) {
+                  this.presentAlert('Error al actualizar datos de mantoux', '');
+                }
+            }
+        };
+      xmlhttp.send(sr);
+    } catch (error) {
+      console.log('Error: ', error);
+    }
+  }
+
   guardarTokenAPI(Tipo: string) {
     throw new Error('Method not implemented.');
   }
@@ -311,6 +575,139 @@ export class InicioPage implements OnInit {
   presentAlert(arg0: string, arg1: string) {
     throw new Error('Method not implemented.');
   }
+
+  crearNotificacionesLocalesMantoux(fecha: string) {
+    const fechaPrueba = moment(fecha);
+    console.log('fecha notificacion: ', fechaPrueba.format());
+    const fecha48h = moment(fechaPrueba.add(48, 'hours'));
+    const fecha2d17h = moment(fecha48h.format('L') + ' 17:00');
+    const fechaActual = moment().locale('es');
+    console.log('fecha actual: ', fechaActual.format());
+    console.log('fecha 48h ', fecha48h.format());
+    console.log('fecha 48h a las 17: ', fecha2d17h.format());
+    if (fechaActual >= fecha48h && fechaActual <= fecha2d17h ) {
+      for (let i = 0; i < 4; i++) {
+        switch (i) {
+          case 0:
+            // tslint:disable-next-line: no-shadowed-variable
+            const notificacionHora8 = fecha48h.format('L') + ' 08:00';
+            console.log('notificacionHora8:' , moment(notificacionHora8).format());
+            const fechaNot0 = new Date(notificacionHora8);
+            console.log('FICHAPRUEBA:', fechaNot0);
+
+            if (fechaActual < moment(notificacionHora8)) {
+              this.localNotifications.schedule({
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'Le recordamos que durante el día de hoy debe realizarse la fotografía para su diagnóstico de la prueba de Mantoux',
+                trigger: { at: fechaNot0, count: 365 }
+              });
+
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 8:00 de la mañana.');
+
+            }
+            break;
+
+          case 1:
+            const notificacionHora11 = fecha48h.format('L') + '11:00';
+            console.log('notificacionHora11:' , moment(notificacionHora11).format());
+            const fechaNot1 = new Date(notificacionHora11);
+            console.log('FICHAPRUEBA:', fechaNot1);
+
+            if (fechaActual < moment(notificacionHora11)) {
+
+              this.localNotifications.schedule({
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'Le recordamos que durante el día de hoy debe realizarse la fotografía para su diagnóstico de la prueba de Mantoux',
+                trigger: { at: fechaNot1, count: 365 }
+              });
+
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 8:00 de la mañana.');
+
+            }
+
+            break;
+
+          case 2:
+            const notificacionHora14 = fecha48h.format('L') + ' 14:00';
+            console.log('notificacionHora14:' , moment(notificacionHora14).format());
+            const fechaNot2 = new Date(notificacionHora11);
+            console.log('FICHAPRUEBA:', fechaNot2);
+
+            if (fechaActual < moment(notificacionHora14)) {
+
+              this.localNotifications.schedule({
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'Le recordamos que durante el día de hoy debe realizarse la fotografía para su diagnóstico de la prueba de Mantoux',
+                trigger: { at: fechaNot2, count: 365 }
+              });
+
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 8:00 de la mañana.');
+
+            }
+            break;
+
+          case 3:
+            const notificacionHora17 = fecha48h.format('L') + ' 17:00';
+            console.log('notificacionHora17:' , moment(notificacionHora17).format());
+            const fechaNot3 = new Date(notificacionHora17);
+            console.log('FICHAPRUEBA:', fechaNot3);
+
+            if (fechaActual < moment(notificacionHora17)) {
+              this.localNotifications.schedule({
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'Le recordamos que durante el día de hoy debe realizarse la fotografía para su diagnóstico de la prueba de Mantoux',
+                trigger: { at: fechaNot3, count: 365 }
+              });
+
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 8:00 de la mañana.');
+
+            }
+            break;
+
+          default:
+            console.log('Caso null');
+          break;
+        }
+
+      }
+    }
+
+  }
+
+  isObject( obj: any) {
+    console.log('TYPE OF: ', typeof obj === 'object' ? true : false);
+    return typeof obj === 'object' ? true : false;
+  }
+
+  tieneResultado(obj: any) {
+
+    const aux: RespuestaTestMantouxInfo = obj;
+
+    if (aux.EsPositivo.toString() === 'false' && aux.EsNegativo.toString() === 'false') {
+
+      return false;
+
+    } else {
+
+      return true;
+
+    }
+
+  }
+
+
 
 
 

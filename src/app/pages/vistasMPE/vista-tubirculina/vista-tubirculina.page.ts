@@ -5,6 +5,7 @@ import { ImagenTestMantoux } from 'src/app/interfaces/interfaces-grupo-mpe';
 import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 import { UsuarioService } from '../../../services/usuario.service';
 import * as moment from 'moment';
+import { DatosMantoux } from '../../../interfaces/interfaces-grupo-mpe';
 
 
 @Component({
@@ -20,6 +21,8 @@ export class VistaTubirculinaPage implements OnInit {
   usuario: UsuarioLogin;
   fechaImagen: string;
   noTieneMantoux = false;
+
+  
 
 
   constructor(private actionSheetCtrl: ActionSheetController,
@@ -81,7 +84,7 @@ export class VistaTubirculinaPage implements OnInit {
 
 
         const mensajeAlert = 'Su plazo para realizar la prueba es entre el dia ' + fecha48h.format('DD/MM/YYYY') +
-        ' y el dia ' + fecha48h.add(720, 'minutes').format('DD/MM/YYYY');
+        ' y el dia ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY');
         console.log('aux ', aux);
         console.log('fe ', fecha48hAux);
         console.log('dee ', fecha60h);
@@ -260,7 +263,7 @@ export class VistaTubirculinaPage implements OnInit {
     try {
       let Envio = false;
       console.log('TRY');
-      this.usuarioService.present('Enviando Test...');
+      this.usuarioService.present('Enviando Prueba...');
       const xmlhttp = new XMLHttpRequest();
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
       xmlhttp.setRequestHeader('Content-Type', 'text/xml');
@@ -311,7 +314,7 @@ export class VistaTubirculinaPage implements OnInit {
             } else {
               this.usuarioService.dismiss();
               console.log('Error 1');
-              this.usuarioService.presentAlert('Fallo!!', 'Su test no ha podido ser enviado !!', 'Intentelo de nuevo más tarde');
+              this.usuarioService.presentAlert('Fallo!!', 'Su prueba no ha podido ser enviada!!', 'Intentelo de nuevo más tarde');
               console.log('200 ' + xmlhttp.response);
             }
         } else {
@@ -327,7 +330,7 @@ export class VistaTubirculinaPage implements OnInit {
     } catch (error) {
       console.log('error ', error);
       this.usuarioService.dismiss();
-      this.usuarioService.presentAlert('Fallo!!', 'Su test no ha podido ser enviado !!', 'Intentelo de nuevo más tarde');
+      this.usuarioService.presentAlert('Fallo!!', 'Su prueba no ha podido ser enviada!!', 'Intentelo de nuevo más tarde');
     }
 
   }

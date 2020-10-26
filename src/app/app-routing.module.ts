@@ -182,7 +182,8 @@ const routes: Routes = [
   {
     path: 'modal-condiciones',
     loadChildren: () => import('./pages/vistasMPE/modal-condiciones/modal-condiciones.module').then( m => m.ModalCondicionesPageModule)
-  },  {
+  },
+  {
     path: 'construccion',
     loadChildren: () => import('./pages/vistasMPE/construccion/construccion.module').then( m => m.ConstruccionPageModule)
   },
@@ -193,10 +194,13 @@ const routes: Routes = [
   {
     path: 'vista-tubirculina',
     loadChildren: () => import('./pages/vistasMPE/vista-tubirculina/vista-tubirculina.module').then( m => m.VistaTubirculinaPageModule)
+  },  {
+    path: 'vista-tuberculina-inicio',
+    loadChildren: () => import('./pages/vistasMPE/vista-tuberculina-inicio/vista-tuberculina-inicio.module').then( m => m.VistaTuberculinaInicioPageModule)
   },
 
 
-  
+
 
 
 
