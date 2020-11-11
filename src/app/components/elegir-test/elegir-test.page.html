@@ -31,7 +31,7 @@
   <ion-list-header color="dark">
     <ion-label class="fw700">Seleccione un Test</ion-label>
   </ion-list-header>
-  <ion-item class="bg-white ion-no-padding ion-no-margin"  *ngFor="let test of arrayTest"  tappable (click)="closeModal()" (click)="elegirTest(test)" [disabled] = test.HacerTest>
+  <ion-item class="bg-white ion-no-padding ion-no-margin"  *ngFor="let test of arrayTest"  tappable (click)="closeModal()" (click)="elegirTest(test)" [disabled] = !test.HacerTest>
     <ion-icon style="margin: 0px !important; padding: 10px;" slot="start" name="school-outline"  color="danger"></ion-icon>
     <ion-label>
       <h2>

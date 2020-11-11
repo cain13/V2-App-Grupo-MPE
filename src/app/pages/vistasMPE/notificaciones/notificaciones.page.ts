@@ -22,6 +22,9 @@ export class NotificacionesPage implements OnInit {
   listaNotificaciones: Array<Notificaciones> = [];
   listaMensajes: Array<Notificacion> = [];
   usuario: UsuarioLogin;
+
+
+  
   constructor(
     public messageService: MessageService,
     public modalCtrl: ModalController,
@@ -74,7 +77,7 @@ export class NotificacionesPage implements OnInit {
 
   delete(notificacion: Notificacion) {
     this.db.BorrarNotificacion(notificacion.IdNotificacion);
-    this.usuarioService.presentToast('Notificación eliminada correctamente!!');
+    this.usuarioService.presentToast('Notificación eliminada correctamente.');
     this.modalCtrl.dismiss();
   }
 
@@ -88,25 +91,30 @@ export class NotificacionesPage implements OnInit {
     this.modalCtrl.dismiss();
     console.log('Usuario Notificaciones ', this.usuario);
     if (this.usuario.Tipo !== 'TRABAJADOR') {
-      this.navController.navigateRoot('/certificado-aptitud');
+      this.navController.navigateRoot('/tab-inicio');
 
     } else {
-      this.navController.navigateRoot('/documentos-trabajador');
+      this.navController.navigateRoot('/tab-inicio');
     }
-    this.notificacionesService.marcarNotificacionesLeidas();
+    this.notificacionesService.marcarNotificacionesTodasLeidas();
   }
 
-  async abrirNotificacion(idNotificacion: number, ruta: string, tipoDocumento: string) {
+  abrirNotificacion(idNotificacion: number, ruta: string, tipoDocumento: string, not: Notificacion) {
     // const rutaAux = ruta.concat(':')
-    await this.db.marcarNotificacionLeida(idNotificacion).then(() => {
+    this.db.marcarNotificacionLeida(idNotificacion).then(() => {
       console.log('Ruta ' + ruta);
-      let rutaMensaje = "";
-      if(tipoDocumento.toUpperCase() === "MENSAJE"){
+      let rutaMensaje = '';
+      if (tipoDocumento.toUpperCase() === 'MENSAJE') {
         rutaMensaje = ruta + idNotificacion.toString();
-      }else{
+      } else {
         rutaMensaje = ruta;
       }
-       console.log('rutaMensaje ' + rutaMensaje);
+      if (tipoDocumento.toUpperCase() === 'MANTOUX') {
+
+        this.notificacionesService.guardarNotMantoux(not);
+
+      }
+      console.log('rutaMensaje ' + rutaMensaje);
       this.navController.navigateForward(rutaMensaje);
       this.modalCtrl.dismiss();
       this.notificacionesService.marcarNotificacionesLeidas();
@@ -115,6 +123,7 @@ export class NotificacionesPage implements OnInit {
       this.modalCtrl.dismiss();
 
     } );
+
 
   }
 

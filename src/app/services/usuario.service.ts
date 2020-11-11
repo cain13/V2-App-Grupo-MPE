@@ -448,7 +448,7 @@ export class UsuarioService {
               console.log('someAsyncOperation');
               navTransition.then(() => {
                 console.log('navTransition.then');
-                this.navController.navigateForward('/vista-tuberculina');
+                this.navController.navigateForward('/vista-tuberculina-inicio');
               });
             });
             return false;

@@ -15,6 +15,8 @@ export class NotificacionesService {
   numNot = 0;
   listaMensajes: Array<Notificacion> = [];
 
+  notificacionMantoux: any;
+
 
   constructor(private db: DatabaseService) { }
 
@@ -29,7 +31,21 @@ export class NotificacionesService {
 
   }
 
-  marcarNotificacionesLeidas() {
+   marcarNotificacionesLeidas() {
+    if (this.numNot !== 0) {
+
+      this.numNot = this.numNot - 1;
+
+    } else {
+
+      this.numNot = 0;
+
+    }
+
+    this.numNotificaciones$.next(this.numNot);
+  }
+
+  marcarNotificacionesTodasLeidas() {
     this.numNot = 0;
     this.numNotificaciones$.next(this.numNot);
   }
@@ -52,6 +68,19 @@ export class NotificacionesService {
       notificacion = noti;
     });
     return notificacion;
+  }
+
+
+  guardarNotMantoux(not: any) {
+
+    this.notificacionMantoux = not;
+
+  }
+
+  leerNotMantoux(): any {
+
+    return this.notificacionMantoux;
+
   }
 
 

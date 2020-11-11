@@ -33,13 +33,23 @@ export class ElegirTestPage implements OnInit {
 
     if ( this.usuario.EsBuzo.toString() === 'true' ) {
 
-      this.arrayTest = aux;
+      for (const test of aux) {
+
+        if (test.Permiso.toUpperCase() !== 'MANTOUX') {
+
+          this.arrayTest.push(test);
+
+        }
+
+      }
+
+      /* this.arrayTest = aux; */
 
     } else {
 
       for (const test of aux) {
 
-        if (test.Permiso !== 'BUCEO') {
+        if (test.Permiso.toUpperCase() !== 'BUCEO' && test.Permiso.toUpperCase() !== 'MANTOUX') {
 
           this.arrayTest.push(test);
 

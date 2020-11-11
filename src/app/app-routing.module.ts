@@ -198,6 +198,10 @@ const routes: Routes = [
     path: 'vista-tuberculina-inicio',
     loadChildren: () => import('./pages/vistasMPE/vista-tuberculina-inicio/vista-tuberculina-inicio.module').then( m => m.VistaTuberculinaInicioPageModule)
   },
+  {
+    path: 'mensaje-mantoux',
+    loadChildren: () => import('./pages/vistasMPE/mensaje-mantoux/mensaje-mantoux.module').then( m => m.MensajeMantouxPageModule)
+  },
 
 
 

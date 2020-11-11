@@ -61,7 +61,7 @@ export class TestPage implements OnInit {
               private camera: Camera,
               public alertCtrl: AlertController,
               private platform: Platform
-              ){
+              ) {
 
   }
 

@@ -27,7 +27,9 @@
 				<div class="desc"  *ngIf="!isObject(prueba)">
 					<span class="time-wrapper" style="padding-bottom: 20px; padding-top: 0px !important;"><span >Imagen Enviada</span></span>
 
-					<img src="https://mpecronos.com/Documentos/imagenesMPE/promo.png" />
+<!-- 					<img src="https://mpecronos.com/Documentos/imagenesMPE/promo.png" />
+ -->			
+ 					<img [src]="'data:image/jpeg;base64,'+prueba.Foto"/>
 
 				</div>
 				<span class="time-wrapper"><span class="time">{{prueba.FechaFoto | date: "dd/MM/yyyy HH:mm"}}</span></span>
@@ -39,11 +41,11 @@
 				</div>
 				<div class="desc" *ngIf="!isPendiente(prueba)">
 					<ion-button expand="block" color="primary" *ngIf="isResultPositivo(prueba)">
-						Resulado: POSITIVO
+						Resultado: POSITIVO
 					</ion-button>
 
 					<ion-button expand="block" color="primary" *ngIf="!isResultPositivo(prueba)">
-						Resulado: NEGATIVO
+						Resultado: NEGATIVO
 					</ion-button>
 				</div>				
 			</div>
@@ -57,11 +59,11 @@
 				<div class="desc" *ngIf="!isPendiente(prueba)">
 					<span class="time-wrapper" style="padding-bottom: 20px; padding-top: 0px !important;"><span >Prueba Vista en Consulta</span></span>
 					<ion-button expand="block" color="primary" *ngIf="isResultPositivo(prueba)">
-						Resulado: POSITIVO
+						Resultado: POSITIVO
 					</ion-button>
 
 					<ion-button expand="block" color="primary" *ngIf="!isResultPositivo(prueba)">
-						Resulado: NEGATIVO
+						Resultado: NEGATIVO
 					</ion-button>
 				</div>				
 			</div>
@@ -75,7 +77,7 @@
 				<div class="desc">
 					<ion-button expand="block" color="danger" (click)="hacerPrueba()">
 						<ion-icon slot="start" color="light" name="camera-outline"></ion-icon>
-						Hacer Prueba
+						Hacer Fotografía
 					</ion-button>
 				</div>
 			</div>

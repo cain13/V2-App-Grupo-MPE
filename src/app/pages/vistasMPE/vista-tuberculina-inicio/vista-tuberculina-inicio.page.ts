@@ -13,59 +13,13 @@ import * as moment from 'moment';
 })
 export class VistaTuberculinaInicioPage implements OnInit {
 
-  items = [
-    {
-      title: 'Confirm payment',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. delectus vitae nostrum eligendi quaerat dolore reprehenderit.',
-      icon: 'calendar',
-      dir: 'direction-r',
-      time: { subtitle: '1/16/2018', title: '21:30' }
-    },
-    {
-      title: 'Hotel Booked!',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. delectus vitae nostrum eligendi quaerat dolore reprehenderit.',
-      icon: 'calendar',
-      dir: 'direction-l',
-      time: { subtitle: 'January', title: '29' }
-    },
-    {
-      title: 'Travel Agent Contact',
-      content: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. delectus vitae nostrum eligendi quaerat dolore reprehenderit.',
-      icon: 'calendar',
-      dir: 'direction-r',
-      time: { title: 'Short Text' }
-    }
-  ];
-
-  arrayPruebas: RespuestaTestMantouxInfo[] = [
-    {
-      Foto: 'https://mpecronos.com/Documentos/imagenesMPE/promo.png',
-      EsNegativo: false,
-      EsPositivo: true,
-      FechaFoto: '2015/09/11 11:00',
-      FechaInoculacion: '2019/09/13 11:00'
-    },
-    {
-      Foto: 'https://mpecronos.com/Documentos/imagenesMPE/promo.png',
-      EsNegativo: true,
-      EsPositivo: false,
-      FechaFoto: '2020/09/13 11:00',
-      FechaInoculacion: '2018/09/11 10:05'
-    },
-    {
-      Foto: 'https://mpecronos.com/Documentos/imagenesMPE/promo.png',
-      EsNegativo: false,
-      EsPositivo: false,
-      FechaFoto: '2019/09/13 11:00',
-      FechaInoculacion: '2020/10/20 11:00'
-    },
-
-  ];
-
   datosMostrar: VistaTimeLineDatos;
   usuario: UsuarioLogin;
   datosMantoux: any[] = [];
   noHayDocumentos = false;
+
+
+  // tslint:disable-next-line: max-line-length
 
 
   constructor(private navCtrl: NavController,
@@ -118,33 +72,77 @@ export class VistaTuberculinaInicioPage implements OnInit {
                     const obj: RespuestAPIMantoux = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                     console.log('obj: ', obj);
                     // tslint:disable-next-line: max-line-length
-                    const a: ObtenerResultadoTestMantouxResult = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerResultadoTestMantouxResponse']['ObtenerResultadoTestMantouxResult']['ResultadoTestMantouxInfo']));
+                    let a: ObtenerResultadoTestMantouxResult;
+                    try {
+                        a = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerResultadoTestMantouxResponse']['ObtenerResultadoTestMantouxResult']['ResultadoTestMantouxInfo']));
 
-                    if (a.DatosMantoux.RespuestaTestMantouxInfo !== undefined && a.DatosMantoux.RespuestaTestMantouxInfo !== null) {
+                    } catch (error) {
+                      a = null;
 
-                      if (!Array.isArray(a.DatosMantoux.RespuestaTestMantouxInfo)) {
-                        console.log('EL ARRAY DE OBJETOS TIENE SOLO 1 OBJETO...');
-                        this.datosMantoux.push(a.DatosMantoux.RespuestaTestMantouxInfo);
-                        console.log('this.datosMantoux[0].FechaInoculacion: ', this.datosMantoux[0].FechaInoculacion);
-                        const fechaAux = moment(this.datosMantoux[0].FechaInoculacion);
-                        if (fechaAux < moment('2000-01-01T00:00:00')) {
-                          console.log('NO HACEMOS NADA YA NO SE HA INOCULADO AUN: 1900-01-01T00:00:00: ', fechaAux);
-                          this.datosMantoux = null;
-                          this.noHayDocumentos = true;
+                    }
+                    console.log('a: ', a);
+
+                    if (a !== null ) {
+                      console.log('Array.isArray(a): ', Array.isArray(a));
+                      if (!Array.isArray(a)) {
+                        if (a.DatosMantoux.RespuestaTestMantouxInfo !== undefined && a.DatosMantoux.RespuestaTestMantouxInfo !== null && !Array.isArray(a.DatosMantoux.RespuestaTestMantouxInfo)) {
+                          console.log('EL ARRAY DE OBJETOS TIENE SOLO 1 OBJETO...');
+                          this.datosMantoux.push(a.DatosMantoux.RespuestaTestMantouxInfo);
+                          console.log('this.datosMantoux[0].FechaInoculacion: ', this.datosMantoux[0].FechaInoculacion);
+                          const fechaAux = moment(this.datosMantoux[0].FechaInoculacion);
+                          if (fechaAux < moment('2000-01-01T00:00:00')) {
+                            console.log('NO HACEMOS NADA YA NO SE HA INOCULADO AUN: 1900-01-01T00:00:00: ', fechaAux);
+                            this.datosMantoux = null;
+                            this.noHayDocumentos = true;
+                          }
+                          this.usuarioService.dismiss();
+
+
+                        } else {
+
+                          this.datosMantoux = a.DatosMantoux.RespuestaTestMantouxInfo;
+
+                          this.usuarioService.dismiss();
+
                         }
-                        console.log('OBJETO: ', this.datosMantoux[0]);
-                        console.log('OBJETO FechaFoto: ', this.datosMantoux[0].FechaFoto);
-                        this.usuarioService.dismiss();
-
-
                       } else {
 
-                        this.datosMantoux = a.DatosMantoux.RespuestaTestMantouxInfo;
-                        console.log('OBJETO: ', this.datosMantoux[0]);
-                        console.log('OBJETO FechaFoto: ', this.datosMantoux[0].FechaFoto);
-                        this.usuarioService.dismiss();
+                        for (const aux of a) {
+
+                          if (!Array.isArray(aux.DatosMantoux.RespuestaTestMantouxInfo)) {
+                            console.log('EL ARRAY DE OBJETOS TIENE SOLO 1 OBJETO...');
+                            const fechaAux = moment(aux.DatosMantoux.RespuestaTestMantouxInfo.FechaInoculacion);
+                            if (fechaAux < moment('2000-01-01T00:00:00')) {
+
+                              console.log('NO HACEMOS NADA YA NO SE HA INOCULADO AUN: 1900-01-01T00:00:00: ', fechaAux);
+
+                            } else {
+
+                              this.datosMantoux.push(aux.DatosMantoux.RespuestaTestMantouxInfo);
+
+                            }
+
+
+                          } else {
+                            for (const aux2 of aux.DatosMantoux.RespuestaTestMantouxInfo) {
+
+                              this.datosMantoux.push(aux2);
+
+                            }
+
+
+                          }
+                          this.usuarioService.dismiss();
+
+
+                        }
 
                       }
+                    } else if (a === null) {
+                      this.datosMantoux = null;
+                      this.noHayDocumentos = true;
+                      console.log('a===null? ', a === null);
+                      this.usuarioService.dismiss();
 
                     }
                 } else if (xmlhttp.status === 500 ) {
@@ -200,14 +198,11 @@ export class VistaTuberculinaInicioPage implements OnInit {
   isPendiente(obj: any) {
 
     const aux: RespuestaTestMantouxInfo = obj;
-    console.log('AUXXXX: ', aux);
     if (aux.EsPositivo.toString() === 'false' && aux.EsNegativo.toString() === 'false') {
-      console.log('AUXXXX: ', true);
 
       return true;
 
     } else {
-      console.log('AUXXXX: ', false);
 
       return false;
 
