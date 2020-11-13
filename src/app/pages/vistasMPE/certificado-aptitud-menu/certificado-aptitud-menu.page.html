@@ -10,7 +10,7 @@
     </ion-title >
   </ion-toolbar>  
   <ion-toolbar color="dark">
-      <ion-searchbar style="margin-top: 2mm; margin-bottom: 0mm;" [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar Certificado"></ion-searchbar>
+      <ion-searchbar style="margin-top: 2mm; margin-bottom: 2mm;" [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar Certificado"></ion-searchbar>
       <ion-buttons slot="end" style="margin-top: 2mm;"> 
         <ion-button size="small" shape="round" color="medium" (click)="searchFilter()">
           <ion-icon name="options"></ion-icon>
@@ -29,7 +29,11 @@
 </ion-header>
 
 <ion-content>
-  <h4 style="padding: 20px !important;" *ngIf="listaCertificados === null || listaCertificados === undefined || listaCertificados.length < 1">No tiene documentos.</h4>
+  <ion-row *ngIf="listaCertificados === null || listaCertificados === undefined || listaCertificados.length < 1" style="background: #FFE294!important; padding:10px !important;">
+    <ion-col>
+      <label> No hay documentos.</label>        
+      </ion-col>
+  </ion-row>
   <ion-list class="ion-no-padding" [@staggerIn]="listaCertificados">
     <ion-item class="bg-white" *ngFor="let certificado of listaCertificados" tappable > <!--(click)="goCheckout(invoice.id)">-->
        <ion-icon slot="start" name="information-circle-outline" color="primary" (click)="masInfo(certificado)"></ion-icon>

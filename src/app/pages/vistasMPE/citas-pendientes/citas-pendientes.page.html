@@ -2,7 +2,7 @@
   <app-header></app-header>
 
   <ion-toolbar color="dark">
-    <ion-searchbar style="margin-top: 2mm; margin-bottom: 0mm;" [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar Cita"></ion-searchbar>
+    <ion-searchbar style="margin-top: 2mm; margin-bottom: 2mm;" [(ngModel)]="searchKey" (ionInput)="onInput($event)" (ionCancel)="onCancel($event)" placeholder="Buscar Cita"></ion-searchbar>
     <ion-buttons slot="end" style="margin-top: 2mm;"> 
       <ion-button size="small" shape="round" color="medium" (click)="searchFilter()">
         <ion-icon name="options"></ion-icon>
@@ -19,6 +19,13 @@
 </ion-header>
 
 <ion-content>
+
+  <ion-row *ngIf="listaAsistencias === null || listaAsistencias === undefined || listaAsistencias.length < 1" style="background: #FFE294!important; padding:10px !important;">
+    <ion-col>
+      <label> No hay documentos.</label>        
+      </ion-col>
+  </ion-row>
+
   <ion-list class="ion-no-padding" [@staggerIn]="listaAsistencias">
     <ion-item class="bg-white"  *ngFor="let certificado of listaAsistencias"  tappable (click)="masInfo(certificado.Id)">
       <ion-label>

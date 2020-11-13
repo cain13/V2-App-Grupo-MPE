@@ -34,6 +34,8 @@ export class AsistenciaPage implements OnInit, ViewDidLeave {
   hayConsultor = false;
   pagina = 0;
   filtro: DatosFiltros;
+  noHayDocumentos = false;
+
 
   @ViewChild(IonInfiniteScroll) infiniteScroll: IonInfiniteScroll;
 
@@ -70,6 +72,7 @@ export class AsistenciaPage implements OnInit, ViewDidLeave {
   getAsistencias(event?) {
 
     let aux: Asistencia[];
+    console.log('this.filtro:', this.filtro);
     if (this.filtro !== undefined && this.filtro !== null) {
       try {
         if (event === undefined || event === null && this.pagina === 0) {
@@ -142,6 +145,16 @@ export class AsistenciaPage implements OnInit, ViewDidLeave {
                           }
                           aux = a.AsistenciaInfo;
                         }
+
+                        console.log('this.LISTA ASISTENCIA', this.listaAsistencias);
+                        console.log('this.LISTA ASISTENCIA NUM', this.listaAsistencias.length);
+
+                      if (this.listaAsistencias.length === 0) {
+
+                        this.noHayDocumentos = true;
+
+                      }
+                      console.log('this.noHayDocumentos ASISTENCIA', this.noHayDocumentos);
                       this.asistenciaService.setAsistencia(this.listaAsistencias);
                       console.log('ListaAsistencia ' + this.listaAsistencias);
                       this.usuarioService.dismiss();
@@ -153,7 +166,7 @@ export class AsistenciaPage implements OnInit, ViewDidLeave {
                       this.usuarioService.presentAlert('Error', 'Cliente ' + this.usuarioService.empresaConsultor.NombreCliente + ' no encontrado', 'Póngase en contacto con atención al cliente atencionalcliente@grupompe.es');
                     }
                   }
-                  if ( event !== undefined ) {
+                  if ( event !== undefined && event !== null ) {
                     event.target.complete();
                     console.log('AUXXXX: ', aux);
                     if ( Array.isArray(aux) ) {
@@ -177,7 +190,9 @@ export class AsistenciaPage implements OnInit, ViewDidLeave {
       }
     } else {
       try {
-        if (event === undefined || event === null && this.pagina === 0) {
+
+        console.log('ELSE ASISTENCIAS');
+        if ((event === undefined || event === null) && this.pagina === 0) {
           this.pagina = 0;
           console.log('Numero pagina ', this.pagina);
           this.usuarioService.present('Cargando...');
@@ -241,9 +256,18 @@ export class AsistenciaPage implements OnInit, ViewDidLeave {
                           aux = a.AsistenciaInfo;
                         }
 
+                        console.log('this.LISTA ASISTENCIA', this.listaAsistencias);
+                        console.log('this.LISTA ASISTENCIA NUM', this.listaAsistencias.length);
 
+                      if (this.listaAsistencias.length === 0) {
+
+                        this.noHayDocumentos = true;
+
+                      }
+                      console.log('this.noHayDocumentos ASISTENCIA', this.noHayDocumentos);
                       this.asistenciaService.setAsistencia(this.listaAsistencias);
                       console.log('ListaAsistencia ' + this.listaAsistencias);
+
                       this.usuarioService.dismiss();
                       }
                   } else {
@@ -304,7 +328,7 @@ export class AsistenciaPage implements OnInit, ViewDidLeave {
        this.pagina = 0;
        console.log('this.citasService.getFiltrosCitas: ', this.asistenciaService.getFiltrosAsistencias());
        this.filtro = this.asistenciaService.getFiltrosAsistencias();
-       this.getAsistencias(null);
+       this.getAsistencias();
      });
      return await modal.present();
   }

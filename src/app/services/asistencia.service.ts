@@ -8,6 +8,7 @@ import { DatosFiltros } from '../interfaces/usuario-interfaces';
 export class AsistenciaService {
   listaAsistenciasTodos = [];
   filtrosAsistencias: DatosFiltros;
+
   constructor() { }
 
     setAsistencia(listadocumentos){
@@ -40,11 +41,10 @@ export class AsistenciaService {
       this.filtrosAsistencias = filtros;
       console.log('Filtros Service: ' , this.filtrosAsistencias);
     }
-  
 
     getFiltrosAsistencias(): DatosFiltros {
 
-      return this.filtrosAsistencias
+      return this.filtrosAsistencias;
     }
     findByName(searchKey: string) {
       console.log(searchKey);

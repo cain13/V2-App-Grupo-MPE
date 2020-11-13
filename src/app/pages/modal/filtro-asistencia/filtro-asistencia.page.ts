@@ -60,7 +60,7 @@ export class FiltroAsistenciaPage implements OnInit {
 
     if (this.filtro_desde === null) {
 
-     fecha_desde_aux = moment().format('YYYY-MM-DDT00:00:00');
+      fecha_desde_aux = '1900-01-01T00:00:00';
     } else {
 
       fecha_desde_aux = moment(this.filtro_desde.toString()).format('YYYY-MM-DDT00:00:00');
@@ -94,7 +94,7 @@ export class FiltroAsistenciaPage implements OnInit {
       nombre: this.filtro_nombre,
       dni: this.filtro_dni,
       noPresentado: this.filtro_noPresentado,
-    }
+    };
     console.log('FILTROS: ', filtros);
     this.asistenciaService.guardarFiltrosAsistencias(filtros);
     this.closeModal();

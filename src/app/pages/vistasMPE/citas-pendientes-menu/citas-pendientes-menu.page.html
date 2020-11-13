@@ -19,6 +19,11 @@
 </ion-header>
 
 <ion-content>
+  <ion-row *ngIf="listaAsistencias === null || listaAsistencias === undefined || listaAsistencias.length < 1" style="background: #FFE294!important; padding:10px !important;">
+    <ion-col>
+      <label> No hay documentos.</label>        
+      </ion-col>
+  </ion-row>
   <ion-list class="ion-no-padding" [@staggerIn]="listaAsistencias">
     <ion-item class="bg-white"  *ngFor="let certificado of listaAsistencias"  tappable (click)="masInfo(certificado.Id)">
       <ion-label>

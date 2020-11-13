@@ -20,7 +20,12 @@
 </ion-header>
 
 <ion-content>
-  <ion-list class="ion-no-padding" [@staggerIn]="listaCitas">
+  <ion-row *ngIf="listaCitas === null || listaCitas === undefined || listaCitas.length < 1" style="background: #FFE294!important; padding:10px !important;">
+    <ion-col>
+      <label> No hay documentos.</label>        
+      </ion-col>
+  </ion-row>
+  <ion-list class="ion-no-padding" [@staggerIn]="listaCitas" *ngIf="listaCitas !== null || listaCitas !== undefined || listaCitas.length > 0">
     <ion-item class="bg-white"  *ngFor="let certificado of listaCitas"  tappable>
       <ion-label>
         <h2> 

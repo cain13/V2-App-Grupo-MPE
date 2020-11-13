@@ -14,8 +14,12 @@
     </ion-toolbar>
 </ion-header>
 <ion-content>
-  <h4 style="padding: 20px !important;" *ngIf="listaDocumentos === null || listaDocumentos === undefined || listaDocumentos.length < 1">No tiene documentos.</h4>
-  <ion-list class="ion-no-padding" [@staggerIn]="listaDocumentos">
+  <ion-row *ngIf="listaDocumentos === null || listaDocumentos === undefined || listaDocumentos.length < 1" style="background: #FFE294!important; padding:10px !important;">
+    <ion-col>
+      <label> No hay documentos.</label>        
+      </ion-col>
+  </ion-row>
+  <ion-list class="ion-no-padding" [@staggerIn]="listaDocumentos" *ngIf="listaDocumentos !== null || listaDocumentos !== undefined || listaDocumentos.length > 0">
     <ion-item class="bg-white"  *ngFor="let certificado of listaDocumentos"  tappable (click)="downloadDocumento(certificado.Id)"> <!--(click)="goCheckout(invoice.id)">-->
       <ion-icon slot="start" name="document-outline" color="danger"></ion-icon>
       <ion-label>
