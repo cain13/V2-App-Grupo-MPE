@@ -194,7 +194,8 @@ const routes: Routes = [
   {
     path: 'vista-tubirculina',
     loadChildren: () => import('./pages/vistasMPE/vista-tubirculina/vista-tubirculina.module').then( m => m.VistaTubirculinaPageModule)
-  },  {
+  },
+  {
     path: 'vista-tuberculina-inicio',
     loadChildren: () => import('./pages/vistasMPE/vista-tuberculina-inicio/vista-tuberculina-inicio.module').then( m => m.VistaTuberculinaInicioPageModule)
   },
