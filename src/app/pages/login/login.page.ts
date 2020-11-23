@@ -13,6 +13,8 @@ import { Token } from '@angular/compiler/src/ml_parser/lexer';
 import { FCM } from 'cordova-plugin-fcm-with-dependecy-updated/ionic/ngx';
 import { ModalCondicionesPage } from '../vistasMPE/modal-condiciones/modal-condiciones.page';
 import { ModalTerminosPage } from '../vistasMPE/modal-terminos/modal-terminos.page';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+
 
 
 
@@ -60,7 +62,8 @@ export class LoginPage implements OnInit {
     private usuarioService: UsuarioService,
     public modalCtrl: ModalController,
     private fcm: FCM,
-    private platform: Platform
+    private platform: Platform,
+    private iab: InAppBrowser
 
   ) {}
 
@@ -237,8 +240,8 @@ export class LoginPage implements OnInit {
 
 
   async forgotPass() {
-
-    window.open('https://grupompe.es/MpeNube/RecuperarPassApp.aspx', '_system');
+    let browser = this.iab.create('https://grupompe.es/MpeNube/RecuperarPassApp.aspx','_system');
+    //window.open('https://grupompe.es/MpeNube/RecuperarPassApp.aspx', '_system');
 
 
     /* const alert = await this.alertCtrl.create({

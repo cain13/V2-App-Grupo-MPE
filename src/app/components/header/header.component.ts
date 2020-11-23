@@ -6,6 +6,8 @@ import { ViewWillEnter, MenuController, ModalController, Platform, ActionSheetCo
 import { NotificacionesService } from '../../services/notificaciones.service';
 import { NotificacionesPage } from 'src/app/pages/vistasMPE/notificaciones/notificaciones.page';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
+
 
 
 @Component({
@@ -32,7 +34,9 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
                 private modalCtrl: ModalController,
                 private platform: Platform,
                 private actionSheetController: ActionSheetController,
-                private socialSharing: SocialSharing) { }
+                private socialSharing: SocialSharing,
+                private iab: InAppBrowser
+                ) { }
 
   ngOnInit() {
     this.platform.ready().then(() => {
@@ -164,7 +168,7 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
 
   abrirNubeMPE() {
 
-    window.open('https://grupompe.es/MpeNube/Login.aspx', '_system');
+    let browser = this.iab.create('https://grupompe.es/MpeNube/Login.aspx','_system');
 
   }
 

@@ -23,6 +23,7 @@ import { TestService } from './services/test.service';
 import { ELocalNotificationTriggerUnit, LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 import * as moment from 'moment';
+import { InAppBrowser } from '@ionic-native/in-app-browser/ngx';
 
 
 
@@ -69,7 +70,8 @@ export class AppComponent {
     private popoverController: PopoverController,
     private testService: TestService,
     private alertCtrl: AlertController,
-    private localNotifications: LocalNotifications
+    private localNotifications: LocalNotifications,
+    private iab: InAppBrowser
     
     // public router: Router
   ) {
@@ -855,17 +857,17 @@ export class AppComponent {
   }
 
   proteccionGuardiaCivil() {
-    window.open('https://mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
+    let browser = this.iab.create('https://mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
   }
 
   proteccionGenerico() {
 
-    window.open('https:mpeprevencion.com/proteccion_datos_MPE.html', '_system');
+    let browser = this.iab.create('https:mpeprevencion.com/proteccion_datos_MPE.html', '_system');
 
   }
   terminosCondiciones() {
 
-    window.open('https://mpeprevencion.com/terminos-condiciones.html', '_system');
+    let browser = this.iab.create('https://mpeprevencion.com/terminos-condiciones.html', '_system');
 
   }
   editarPerfil() {
@@ -1148,8 +1150,8 @@ export class AppComponent {
 
   abrirNubeMPE() {
 
-    window.open('https://grupompe.es/MpeNube/Login.aspx','_system');
-
+    // window.open('https://grupompe.es/MpeNube/Login.aspx','_system');
+    let browser = this.iab.create('https://grupompe.es/MpeNube/Login.aspx','_system');
   }
 
 

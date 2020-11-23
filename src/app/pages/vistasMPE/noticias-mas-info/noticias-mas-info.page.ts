@@ -18,7 +18,8 @@ export class NoticiasMasInfoPage implements OnInit {
   trustedVideoUrl: SafeResourceUrl;
   constructor(  private route: ActivatedRoute,
                 private platform: Platform,
-                private domSanitizer: DomSanitizer) { }
+                private domSanitizer: DomSanitizer,
+                private iab: InAppBrowser) { }
 
   ngOnInit() {
 
@@ -44,8 +45,8 @@ export class NoticiasMasInfoPage implements OnInit {
 
   vistarWeb() {
 
-    window.open(this.noticia.Url, '_system');
-
+    //.open(this.noticia.Url, '_system');
+    let browser = this.iab.create(this.noticia.Url, '_system');
   }
 
 }
