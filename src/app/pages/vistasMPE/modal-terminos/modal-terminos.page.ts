@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ModalController, AlertController } from '@ionic/angular';
+import { UsuarioService } from '../../../services/usuario.service';
+import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 
 @Component({
   selector: 'app-modal-terminos',
@@ -8,7 +10,10 @@ import { ModalController, AlertController } from '@ionic/angular';
 })
 export class ModalTerminosPage implements OnInit {
 
-  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController) { }
+  private usuario: UsuarioLogin;
+  EsGuardiaCivil: boolean;
+  
+  constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private usuarioService: UsuarioService) { }
 
   ngOnInit() {
 

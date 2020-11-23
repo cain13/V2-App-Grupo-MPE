@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>Resumen Mantoux</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+	<ion-row *ngIf="noHayDocumentos" style="background: #FFE294!important; padding:10px !important;">
+		<ion-col>
+		<label> No hay documentos.</label>        
+		</ion-col>
+	</ion-row>
+	<ul class="timeline" *ngIf="!noHayDocumentos">
+
+		<li *ngFor="let prueba of datosMantoux">
+			<!-- TENEMOS 3 TIPOS DE POSIBLES CASOS -->
+
+			<!-- TIENE FOTO  -->
+			<div class="direction-l" *ngIf="!isObject(prueba) && isPendiente(prueba)">
+				<div class="flag-wrapper">
+					<span class="flag"><ion-text color="dark">Fecha Inoculación</ion-text></span>
+					<span class="time-wrapper"><span class="time">{{prueba.FechaInoculacion | date: "dd/MM/yyyy HH:mm"}}</span></span>
+				</div>
+				<div class="desc"  *ngIf="!isObject(prueba)">
+					<span class="time-wrapper" style="padding-bottom: 20px; padding-top: 0px !important;"><span >Imagen Enviada</span></span>
+
+					<img [src]="'data:image/jpeg;base64,'+prueba.Foto"/>
+
+				</div>
+				<span class="time-wrapper"><span class="time">{{prueba.FechaFoto | date: "dd/MM/yyyy HH:mm"}}</span></span>
+
+				<div class="desc" *ngIf="isPendiente(prueba)">
+					<ion-button expand="block" color="light">
+						Pendiente de Resultado
+					</ion-button>
+				</div>
+				<div class="desc" *ngIf="!isPendiente(prueba)">
+					<ion-button expand="block" color="primary" *ngIf="isResultPositivo(prueba)">
+						Resultado: POSITIVO
+					</ion-button>
+
+					<ion-button expand="block" color="primary" *ngIf="!isResultPositivo(prueba)">
+						Resultado: NEGATIVO
+					</ion-button>
+				</div>				
+			</div>
+
+			<!-- NO TIENE FOTO PERO SÍ TIENE RESULTADO -->
+			<div class="direction-l" *ngIf="!isObject(prueba) && !isPendiente(prueba)">
+				<div class="flag-wrapper">
+					<span class="flag"><ion-text color="dark">Fecha Inoculación</ion-text></span>
+					<span class="time-wrapper"><span class="time">{{prueba.FechaInoculacion | date: "dd/MM/yyyy HH:mm"}}</span></span>
+				</div>
+				<div class="desc" *ngIf="!isPendiente(prueba)">
+					<span class="time-wrapper" style="padding-bottom: 20px; padding-top: 0px !important;"><span >Prueba Vista en Consulta</span></span>
+					<ion-button expand="block" color="primary" *ngIf="isResultPositivo(prueba)">
+						Resultado: POSITIVO
+					</ion-button>
+
+					<ion-button expand="block" color="primary" *ngIf="!isResultPositivo(prueba)">
+						Resultado: NEGATIVO
+					</ion-button>
+				</div>				
+			</div>
+
+			<!-- NO TIENE FOTO PERO SÍ SE LA TIENE QUE HACER -->
+			<div class="direction-l" *ngIf="isObject(prueba)">
+				<div class="flag-wrapper">
+					<span class="flag"><ion-text color="dark">Fecha Inoculación</ion-text></span>
+					<span class="time-wrapper"><span class="time">{{prueba.FechaInoculacion | date: "dd/MM/yyyy HH:mm"}}</span></span>
+				</div>
+				<div class="desc">
+					<ion-button expand="block" color="danger" (click)="hacerPrueba()">
+						<ion-icon slot="start" color="light" name="camera-outline"></ion-icon>
+						Hacer Fotografía
+					</ion-button>
+				</div>
+			</div>
+		</li>
+
+	</ul>
+</ion-content>

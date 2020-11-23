@@ -3,6 +3,32 @@
   <ion-card>
     <img src="{{imagenDestacada.PathImagen}}" />
   </ion-card>
+
+  <ion-list class="ion-no-padding" [@staggerIn]="noticias">
+    <ion-list-header color="danger" mode="md">
+      <ion-text class="ion-text-center" color="light" style="font-size: large;">Promociones</ion-text>
+    </ion-list-header>
+    <ion-item class="bg-white"  *ngFor="let prom of promociones"  tappable (click)="masInfo(prom)">
+       <!--  <ion-avatar slot="start">
+         <img src="{{not.PathImagen}}" />
+       </ion-avatar> -->
+       <ion-icon *ngIf="prom.URLYoutube !== null && prom.URLYoutube !== undefined " color="danger" slot="end" name="logo-youtube" ></ion-icon>
+       <ion-label >
+         <h2> 
+          <ion-text color="dark" class = "ion-text-wrap"><strong> {{prom.Titulo}}</strong></ion-text>
+         </h2>
+         <!-- <p class="text-12x">
+           <ion-text color="secondary">{{not.DescripcionCorta}}</ion-text>
+         </p>
+         <p class="text-12x">
+           <ion-text color="secondary">{{not.FechaInicio | date: 'dd/MM/yyyy'}}</ion-text>
+         </p> -->
+       </ion-label>
+       <ion-icon color="danger" slot="end" name="chevron-forward-outline" ></ion-icon>
+     </ion-item>
+  </ion-list> 
+
+
   <ion-list class="ion-no-padding" [@staggerIn]="noticias">
     <ion-list-header color="danger" mode="md">
       <ion-text class="ion-text-center" color="light" style="font-size: large;">Noticias</ion-text>
@@ -25,29 +51,6 @@
       </ion-label>
       <ion-icon color="danger" slot="end" name="chevron-forward-outline" ></ion-icon>
     </ion-item>
- </ion-list> 
+  </ion-list> 
 
- <ion-list class="ion-no-padding" [@staggerIn]="noticias">
-  <ion-list-header color="danger" mode="md">
-    <ion-text class="ion-text-center" color="light" style="font-size: large;">Promociones</ion-text>
-  </ion-list-header>
-  <ion-item class="bg-white"  *ngFor="let prom of promociones"  tappable (click)="masInfo(prom)">
-     <!--  <ion-avatar slot="start">
-       <img src="{{not.PathImagen}}" />
-     </ion-avatar> -->
-     <ion-icon *ngIf="prom.URLYoutube !== null && prom.URLYoutube !== undefined " color="danger" slot="end" name="logo-youtube" ></ion-icon>
-     <ion-label >
-       <h2> 
-        <ion-text color="dark" class = "ion-text-wrap"><strong> {{prom.Titulo}}</strong></ion-text>
-       </h2>
-       <!-- <p class="text-12x">
-         <ion-text color="secondary">{{not.DescripcionCorta}}</ion-text>
-       </p>
-       <p class="text-12x">
-         <ion-text color="secondary">{{not.FechaInicio | date: 'dd/MM/yyyy'}}</ion-text>
-       </p> -->
-     </ion-label>
-     <ion-icon color="danger" slot="end" name="chevron-forward-outline" ></ion-icon>
-   </ion-item>
-</ion-list> 
 </ion-content>

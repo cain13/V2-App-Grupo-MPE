@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalController, NavController, Platform } from '@ionic/angular';
 import { UsuarioService } from '../../../services/usuario.service';
 import * as moment from 'moment';
-import { CambiarPassword } from '../../../interfaces/usuario-interfaces';
+import { CambiarPassword, UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 import { NgxXml2jsonService } from 'ngx-xml2json';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CambioPassword } from 'src/app/interfaces/interfaces-grupo-mpe';
@@ -115,8 +115,11 @@ export class CambiarPasswordPage implements OnInit {
     xmlhttp.onreadystatechange =  () => {
           if (xmlhttp.readyState === 4) {
               if (xmlhttp.status === 200) {
-                  const xml = xmlhttp.responseXML;
-                  this.usuarioService.dismiss();
+                const usuarioAux: UsuarioLogin = this.usuarioService.usuario;
+                usuarioAux.Password = passNew;
+                console.log('USUARIO NUEVO: ', usuarioAux);
+                this.usuarioService.actualizarPerfil(usuarioAux);
+                this.usuarioService.dismiss();
                   this.usuarioService.presentToast('Contraseña Cambiada correctamente !!');
               } else {
                 this.usuarioService.dismiss();

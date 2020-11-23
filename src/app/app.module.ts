@@ -63,7 +63,9 @@ import { Geolocation } from '@ionic-native/geolocation/ngx';
 import { ComponentsModule } from './components/components.module';
 
 
-//Subir Imagenes
+// Local Notification
+
+import { LocalNotifications } from '@ionic-native/local-notifications/ngx';
 
 
 
@@ -106,6 +108,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     SplashScreen,
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     TranslateProvider,
+    LocalNotifications,
     PropertyService,
     SQLitePorter,
     SQLite,

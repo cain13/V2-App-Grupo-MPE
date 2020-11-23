@@ -8,6 +8,8 @@ import { File } from '@ionic-native/file/ngx';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NotificacionesPage } from '../pages/vistasMPE/notificaciones/notificaciones.page';
 import { CentroAPI } from '../interfaces/centros-interfaces';
+import * as moment from 'moment';
+
 
 @Injectable({
   providedIn: 'root'
@@ -152,11 +154,56 @@ export class UsuarioService {
 
   }
 
-  setTerminos(bol: boolean) {
+  setTerminos(user: UsuarioLogin, bol: boolean) {
 
     this.terminosOK = bol;
     console.log('this.terminosOK: ', this.terminosOK);
-  }
+    try {
+        const xmlhttp = new XMLHttpRequest();
+        console.log('ACTUALIZAMOS DATOS BD 1... ');
+
+        xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+        xmlhttp.setRequestHeader('content-type', 'text/xml');
+
+        xmlhttp.responseType = 'document';
+          // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+        const sr =
+            '<?xml version="1.0" encoding="utf-8"?>' +
+            '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+              '<soap:Header>' +
+                '<AuthHeader xmlns="http://tempuri.org/">' +
+                  '<Usuario>' + user.Usuario + '</Usuario>' +
+                  '<Password>' + user.Password + '</Password>' +
+                '</AuthHeader>' +
+              '</soap:Header>' +
+              '<soap:Body>' +
+                '<AceptarTerminos xmlns="http://tempuri.org/">' +
+                  '<Aceptado>' + true + '</Aceptado>' +
+                '</AceptarTerminos>' +
+              '</soap:Body>' +
+            '</soap:Envelope>';
+
+       xmlhttp.onreadystatechange = () => {
+
+        console.log('XMLHTTP: ', xmlhttp);
+
+              if (xmlhttp.readyState === 4) {
+                  if (xmlhttp.status === 200) {
+                      const xml = xmlhttp.responseXML;
+                      console.log('Guardado en la API correctamente');
+
+
+                  } else if (xmlhttp.status === 500 ) {
+                    console.log('Error al guardar en la API');
+                  }
+              }
+          };
+        xmlhttp.send(sr);
+      } catch (error) {
+        console.log('Error: ', error);
+
+      }
+    }
 
   getTerminos() {
 
@@ -496,6 +543,159 @@ export class UsuarioService {
       duration: 2000
     });
     toast.present();
+  }
+
+  async presentAlertTestMantouxBotones(titulo: string, subtitulo: string, mensaje: string, fecha: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const cerrar = false;
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ver más tarde',
+          handler: (blah) => {
+            if (this.usuario !== undefined && this.usuario != null && this.usuario.RequiereMantoux !== undefined && this.usuario.RequiereMantoux != null ) {
+              this.usuario.HacerMantoux = true;
+              this.usuario.FechaMantoux = moment(fecha).locale('es').format().toString();
+              console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+              console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+              this.actualizarPerfil(this.usuario);
+              this.guardarUsuario(this.usuario);
+            } else {
+              this.usuario = this.getUsuario();
+              this.usuario.HacerMantoux = true;
+              this.usuario.FechaMantoux = moment(fecha).locale('es').format().toString();
+              console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+              console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+              this.actualizarPerfil(this.usuario);
+              this.guardarUsuario(this.usuario);
+            }
+            console.log('Lanzamos ver mas tarde');
+
+          }
+        }, {
+          text: 'Ver ahora',
+          handler: () => {
+            const navTransition = alerta.dismiss();
+
+            if (this.usuario !== undefined && this.usuario != null && this.usuario.RequiereMantoux !== undefined && this.usuario.RequiereMantoux != null ) {
+              this.usuario.HacerMantoux = true;
+              this.usuario.FechaMantoux = moment(fecha).locale('es').format().toString();
+              console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+              console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+              this.actualizarPerfil(this.usuario);
+              this.guardarUsuario(this.usuario);
+            } else {
+              this.usuario = this.getUsuario();
+              this.usuario.HacerMantoux = true;
+              this.usuario.FechaMantoux = moment(fecha).locale('es').format().toString();
+              console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+              console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+              this.actualizarPerfil(this.usuario);
+              this.guardarUsuario(this.usuario);
+            }
+
+            this.someAsyncOperation().then(() => {
+              console.log('someAsyncOperation');
+              navTransition.then(() => {
+                console.log('navTransition.then');
+                this.navController.navigateForward('/vista-tuberculina-inicio');
+              });
+            });
+            return false;
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+
+    return null;
+  }
+
+  async presentAlertNoTestMontoux(titulo: string, subtitulo: string, mensaje: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Cerrar',
+          handler: () => {
+            const navTransition = alerta.dismiss();
+
+            this.someAsyncOperation().then(() => {
+              console.log('someAsyncOperation');
+              navTransition.then(() => {
+                this.navController.navigateRoot('tab-inicio');
+              });
+            });
+            return false;
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+    return null;
+  }
+
+  async presentAlertTestMantoux(titulo: string, subtitulo: string, mensaje: string, fecha: string): Promise<boolean>  {
+    console.log('presentAlert');
+    const cerrar = false;
+    const alerta = await this.alertCtrl.create({
+      header: titulo,
+      subHeader: subtitulo,
+      message: mensaje,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Ver más tarde',
+          handler: (blah) => {
+            console.log('Lanzamos ver mas tarde');
+
+          }
+        }, {
+          text: 'Ver ahora',
+          handler: () => {
+            const navTransition = alerta.dismiss();
+            if (this.usuario !== undefined && this.usuario != null && this.usuario.RequiereMantoux !== undefined && this.usuario.RequiereMantoux != null ) {
+              this.usuario.HacerMantoux = true;
+              this.usuario.FechaMantoux = moment(fecha).locale('es').format().toString();
+              console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+              console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+              this.actualizarPerfil(this.usuario);
+              this.guardarUsuario(this.usuario);
+            } else {
+              this.usuario = this.getUsuario();
+              this.usuario.HacerMantoux = true;
+              this.usuario.FechaMantoux = moment(fecha).locale('es').format().toString();
+              console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);
+              console.log('Fecha fecha: ' , moment().locale('es').format().toString());
+              this.actualizarPerfil(this.usuario);
+              this.guardarUsuario(this.usuario);
+            }
+            this.someAsyncOperation().then(() => {
+              console.log('someAsyncOperation');
+              navTransition.then(() => {
+                console.log('navTransition.then');
+                this.navController.navigateForward('/vista-tuberculina-inicio');
+              });
+            });
+            return false;
+          }
+        }
+      ]
+    });
+
+    await alerta.present();
+
+    return null;
   }
 
 

@@ -19,6 +19,9 @@ import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { Tests } from './interfaces/interfaces-grupo-mpe';
 import { TestService } from './services/test.service';
 
+
+import { ELocalNotificationTriggerUnit, LocalNotifications } from '@ionic-native/local-notifications/ngx';
+
 import * as moment from 'moment';
 
 
@@ -65,11 +68,18 @@ export class AppComponent {
     private socialSharing: SocialSharing,
     private popoverController: PopoverController,
     private testService: TestService,
-    private alertCtrl: AlertController
+    private alertCtrl: AlertController,
+    private localNotifications: LocalNotifications
+    
     // public router: Router
   ) {
     this.appPagesTrabajador = [
-
+      {
+        title: 'Pruebas COVID',
+        url: '/documentos-covid-menu',
+        direct: 'forward',
+        icon: 'clipboard-outline'
+      },
       {
         title: 'Reconocimientos Médicos',
         url: '/documentos-trabajador-menu',
@@ -77,14 +87,8 @@ export class AppComponent {
         icon: 'document-outline'
       },
       {
-        title: 'Documentos COVID',
-        url: '/documentos-covid-menu',
-        direct: 'forward',
-        icon: 'clipboard-outline'
-      },
-      {
         title: 'Citas Pendientes',
-        url: '/citas-pendientes-trabajador-menu',
+        url: '/construccion-menu',
         direct: 'forward',
         icon: 'timer-outline'
       }
@@ -105,8 +109,8 @@ export class AppComponent {
         icon: 'document-outline'
       },
       {
-        title: 'Pruebas de Tuberculina',
-        url: '/construccion',
+        title: 'Pruebas de Mantoux',
+        url: '/vista-tuberculina-inicio',
         direct: 'forward',
         icon: 'document-text-outline'
       },
@@ -135,19 +139,19 @@ export class AppComponent {
       },
       {
         title: 'Planificación VS',
-        url: '/construccion',
+        url: '/construccion-menu',
         direct: 'forward',
         icon: 'calendar-outline'
       },
       {
         title: 'Memoria Anual',
-        url: '/construccion',
+        url: '/construccion-menu',
         direct: 'forward',
         icon: 'folder-outline'
       },
       {
         title: 'Estudio Epidemiológico',
-        url: '/construccion',
+        url: '/construccion-menu',
         direct: 'forward',
         icon: 'flask-outline'
       },
@@ -192,13 +196,38 @@ export class AppComponent {
 
     ];
 
+    this.platform.ready().then(() => {
+      this.localNotifications.on('click').subscribe(notification => {
+        console.log('click on notification fired');
+        console.log('notification:', notification);
 
+        const notificacion: Notificacion = {
+          IdNotificacion: 1,
+          Fecha: moment(new Date(notification.trigger.at)).format('L'),
+          Titulo: notification.title,
+          Mensaje: notification.text,
+          Icono: 'medkit-outline',
+          Leido: 0,
+          Ruta: '/mensaje-mantoux',
+          TipoDocumento: 'MANTOUX'
+        };
+        console.log('NOTIFICACION MANTOUX INICIO: ', notificacion);
+        this.db.addNotificacion(notificacion);
+        this.notificacionesService.SumaUnaNotificaciones();
+        this.notificacionesService.guardarNotMantoux(notification);
+        this.navCtrl.navigateForward('/mensaje-mantoux');
+      });
+    });
 
     this.initializeApp();
   }
 
   initializeApp() {
     this.platform.ready().then(() => {
+
+      this.menu.enable(false, 'menuTrabajadores');
+      this.menu.enable(true, 'menuGuardiaCivil');
+      this.menu.enable(false, 'menuCompleto');
 
       setTimeout(() => {
 
@@ -232,12 +261,12 @@ export class AppComponent {
             this.notificacion = notificacion;
 
 
-            if (data['TipoUsuario'] !== 'TRABAJADOR') {
+            if (data['TipoUsuario'].toString().includes('TRABAJADOR')) {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
                 case 'HISTORICO':
                   notificacion.Icono = 'document-text-outline';
@@ -248,19 +277,24 @@ export class AppComponent {
                   notificacion.Ruta = '/message/';
                   break;
                 case 'MANTOUX':
-                    notificacion.Icono = 'medkit-outline';
-                    notificacion.Ruta = '/vista-tubirculina';
-                    const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
-                     const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+                  notificacion.Icono = 'medkit-outline';
+                  notificacion.Ruta = '/mensaje-mantoux';
+                  /* this.db.addNotificacion(notificacion);
+                  //  this.db.ModificarRutaNotificacion();
+                  this.notificacionesService.SumaUnaNotificaciones(); */
+                  this.crearNotificacionesLocalesMantoux(notificacion.Fecha, notificacion);
 
 
-                     this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
-                   ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
-                   ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
-                   break;
+                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                  ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
+                  break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
               }
             } else {
@@ -268,29 +302,35 @@ export class AppComponent {
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
                 case 'DOCUMENTO-COVID':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-covid';
+                  notificacion.Ruta = '/documentos-covid-menu';
                   break;
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
                 case 'MANTOUX':
-                  notificacion.Icono = 'medkit-outline';
-                  notificacion.Ruta = '/vista-tubirculina';
-                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
-                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
-
-                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
-                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
-                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
-                  break;
+                    notificacion.Icono = 'medkit-outline';
+                    notificacion.Ruta = '/mensaje-mantoux';
+                    /* this.db.addNotificacion(notificacion);
+                    //  this.db.ModificarRutaNotificacion();
+                    this.notificacionesService.SumaUnaNotificaciones(); */
+                    this.crearNotificacionesLocalesMantoux(notificacion.Fecha, notificacion);
+  
+  
+                    const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                    const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+  
+                    this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                    ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                    ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
+                    break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
               }
             }
@@ -331,12 +371,12 @@ export class AppComponent {
             this.notificacion = notificacion;
 
 
-            if (data['TipoUsuario'] !== 'TRABAJADOR') {
+            if (data['TipoUsuario'].toString().includes('TRABAJADOR')) {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
                 case 'HISTORICO':
                   notificacion.Icono = 'document-text-outline';
@@ -347,18 +387,24 @@ export class AppComponent {
                   notificacion.Ruta = '/message/';
                   break;
                 case 'MANTOUX':
-                  notificacion.Icono = 'medkit-outline';
-                  notificacion.Ruta = '/vista-tubirculina';
-                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
-                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
-
-                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
-                  ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
-                  ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
-                  break;
+                    notificacion.Icono = 'medkit-outline';
+                    notificacion.Ruta = '/mensaje-mantoux';
+                    /* this.db.addNotificacion(notificacion);
+                    //  this.db.ModificarRutaNotificacion();
+                    this.notificacionesService.SumaUnaNotificaciones(); */
+                    this.crearNotificacionesLocalesMantoux(notificacion.Fecha, notificacion);
+  
+  
+                    const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                    const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+  
+                    this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                    ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                    ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
+                    break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
               }
             } else {
@@ -366,24 +412,35 @@ export class AppComponent {
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
                 case 'DOCUMENTO-COVID':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-covid';
+                  notificacion.Ruta = '/documentos-covid-menu';
                   break;
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
                 case 'MANTOUX':
-                  notificacion.Icono = 'medkit-outline';
-                  notificacion.Ruta = '/vista-tubirculina';
-                  this.presentAlertTestMantoux('ALERTA', 'Prueba MANTOUX', 'Tiene 48h para realizar la prueba MANTOUX o será invalidada');
-                  break;
+                    notificacion.Icono = 'medkit-outline';
+                    notificacion.Ruta = '/mensaje-mantoux';
+                    /* this.db.addNotificacion(notificacion);
+                    //  this.db.ModificarRutaNotificacion();
+                    this.notificacionesService.SumaUnaNotificaciones(); */
+                    this.crearNotificacionesLocalesMantoux(notificacion.Fecha, notificacion);
+  
+  
+                    const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                    const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+  
+                    this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                    ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                    ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
+                    break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
               }
             }
@@ -416,12 +473,12 @@ export class AppComponent {
             this.notificacion = notificacion;
 
 
-            if (data['TipoUsuario'] !== 'TRABAJADOR') {
+            if (data['TipoUsuario'].toString().includes('TRABAJADOR')) {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
                 case 'HISTORICO':
                   notificacion.Icono = 'document-text-outline';
@@ -432,19 +489,24 @@ export class AppComponent {
                   notificacion.Ruta = '/message/';
                   break;
                 case 'MANTOUX':
-                  notificacion.Icono = 'medkit-outline';
-                  notificacion.Ruta = '/vista-tubirculina';
-                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
-                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
-
-
-                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
-                   ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
-                   ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
-                   break;
+                    notificacion.Icono = 'medkit-outline';
+                    notificacion.Ruta = '/mensaje-mantoux';
+                    /* this.db.addNotificacion(notificacion);
+                    //  this.db.ModificarRutaNotificacion();
+                    this.notificacionesService.SumaUnaNotificaciones(); */
+                    this.crearNotificacionesLocalesMantoux(notificacion.Fecha, notificacion);
+  
+  
+                    const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                    const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+  
+                    this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                    ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                    ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
+                    break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
               }
             } else {
@@ -452,30 +514,35 @@ export class AppComponent {
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
                 case 'DOCUMENTO-COVID':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/documentos-covid';
+                  notificacion.Ruta = '/documentos-covid-menu';
                   break;
                 case 'MENSAJE':
                   notificacion.Icono = 'mail-outline';
                   notificacion.Ruta = '/message/';
                   break;
                 case 'MANTOUX':
-                  notificacion.Icono = 'medkit-outline';
-                  notificacion.Ruta = '/vista-tubirculina';
-                  const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
-                  const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+                    notificacion.Icono = 'medkit-outline';
+                    notificacion.Ruta = '/mensaje-mantoux';
+                    /* this.db.addNotificacion(notificacion);
+                    //  this.db.ModificarRutaNotificacion();
+                    this.notificacionesService.SumaUnaNotificaciones(); */
+                    this.crearNotificacionesLocalesMantoux(notificacion.Fecha, notificacion);
 
 
-                  this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
-                   ' una prueba de Mantoux, por lo que le comunicamos que en el plazo del ' + fecha48h.format('DD/MM/YYYY') + ' y ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
-                   ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través se notificaciones push durante el plazo indicado.');
+                    const fechaPrueba = moment(notificacion.Fecha).format('DD/MM/YYYY');
+                    const fecha48h = moment(notificacion.Fecha).add(2, 'days');
+
+                    this.presentAlertTestMantoux('ALERTA', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + fechaPrueba +
+                    ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + fecha48h.format('DD/MM/YYYY') + ' y el ' + fecha48h.add(1440, 'minutes').format('DD/MM/YYYY') +
+                    ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n' + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/documentos-trabajador';
+                  notificacion.Ruta = '/documentos-trabajador-menu';
                   break;
               }
             }
@@ -558,7 +625,7 @@ export class AppComponent {
        // this.navCtrl.navigateRoot('/tab-inicio');
   }
   closeMenu() {
-    this.usuarioService.presentAlertSalir('Información', '', '¿Quieres usted salir de la aplicación?');
+    this.usuarioService.presentAlertSalir('Información', '', '¿Quiere usted cerrar su sesión de usuario?');
     //this.menu.close();
     //navigator['app'].exitApp();
   }
@@ -688,7 +755,7 @@ export class AppComponent {
               console.log('someAsyncOperation');
               navTransition.then(() => {
                 console.log('navTransition.then');
-                this.navCtrl.navigateForward('/vista-tubirculina');
+                this.navCtrl.navigateForward('/mensaje-mantoux');
               });
             });
             return false;
@@ -813,6 +880,283 @@ export class AppComponent {
     this.usuarioService.BorrarEmpleado();
     this.usuarioService.guardarUsuario(null);
     this.navCtrl.navigateRoot('blanco');
+  }
+
+
+  crearNotificacionesLocalesMantoux(fecha: string, not: Notificacion) {
+
+    const fechaPrueba = moment(fecha);
+    console.log('fecha notificacion: ', fechaPrueba.format());
+    const fecha48h = moment(fechaPrueba.add(48, 'hours'));
+    const fecha72h = moment(fechaPrueba.add(24, 'hours'));
+    const fecha3d17h = moment(fecha72h.format('L') + ' 17:00');
+    const fechaActual = moment().locale('es');
+    console.log('fecha actual: ', fechaActual.format());
+    console.log('fecha 48h ', fecha48h.format());
+    console.log('fecha 72h ', fecha72h.format());
+    console.log('fecha 72h a las 17: ', fecha3d17h.format());
+    if (fechaActual <= fecha3d17h ) {
+
+      // CREAMOS PRIMER GRUPO DE NOTIFICACIONES
+
+      for (let i = 0; i < 4; i++) {
+        console.log('CREAMOS PRIMER DIA DE NOTIFICACIONES');
+
+        const año = moment(fecha48h).year();
+        const mes = moment(fecha48h).month();
+        const dia = moment(fecha48h).date();
+
+        console.log('año: ', año);
+        console.log('mes: ', mes);
+        console.log('dia: ', dia);
+
+        switch (i) {
+          case 0:
+            // tslint:disable-next-line: no-shadowed-variable
+            const notificacionHora8 = fecha48h.format('L') + ' 8:00'; // Cambiar esta fecha a la fecha de la not limite osea a las 8:00
+
+            console.log('notificacionHora8 - 0:' , moment(notificacionHora8));
+            console.log('fechaActual: ', fechaActual);
+
+            if (fechaActual < moment(notificacionHora8)) {
+
+              console.log('CREAMOS NOT DE LAS 8:00: ', new Date(año, mes, dia, 8, 0).toLocaleString());
+
+              this.localNotifications.schedule({
+                id: Math.round(Math.random() * 10000),
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'ALERTA: Le recordamos que durante el día de hoy debe realizarse la fotografía para su diagnóstico de la prueba de Mantoux',
+                trigger: { at: new Date(año, mes, dia, 8, 0), count: 9999  },
+
+              });
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 8:00 de la mañana.  - 0');
+
+            }
+            break;
+
+          case 1:
+            console.log('fecha48h ', fecha48h);
+            const notificacionHora11 = fecha48h.format('L') + ' 11:00';
+            console.log('notificacionHora11: - 1' , moment(notificacionHora11).format());
+            const fechaNot1 = new Date(notificacionHora11);
+            console.log('FICHAPRUEBA: - 1', fechaNot1);
+
+            if (fechaActual < moment(notificacionHora11)) {
+
+              console.log('CREAMOS NOT DE LAS 11:00: ', new Date(año, mes, dia, 11, 0).toLocaleString());
+
+              this.localNotifications.schedule({
+                id: Math.round(Math.random() * 10000),
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'ALERTA: Le recordamos que durante el día de hoy debe realizarse la fotografía para su diagnóstico de la prueba de Mantoux',
+                trigger: { at: new Date(año, mes, dia, 11, 0), count: 9999  },
+
+              });
+
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 11:00 de la mañana. - 1');
+
+            }
+
+            break;
+
+          case 2:
+            const notificacionHora14 = fecha48h.format('L') + ' 14:00';
+            console.log('notificacionHora14: - 2' , moment(notificacionHora14).format());
+            const fechaNot2 = new Date(notificacionHora14);
+            console.log('FICHAPRUEBA: - 2', fechaNot2);
+
+            if (fechaActual < moment(notificacionHora14)) {
+
+              console.log('CREAMOS NOT DE LAS 14:00: ', new Date(año, mes, dia, 14, 0).toLocaleString());
+
+              this.localNotifications.schedule({
+                id: Math.round(Math.random() * 10000),
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'ALERTA: Le recordamos que durante el día de hoy debe realizarse la fotografía para su diagnóstico de la prueba de Mantoux',
+                trigger: { at: new Date(año, mes, dia, 14, 0), count: 9999  },
+
+              });
+
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 14:00 de la tarde. - 2');
+
+            }
+            break;
+
+          case 3:
+            const notificacionHora17 = fecha48h.format('L') + ' 17:00';
+            console.log('notificacionHora17: - 3' , moment(notificacionHora17).format());
+            const fechaNot3 = new Date(notificacionHora17);
+            console.log('FICHAPRUEBA: - 3', fechaNot3);
+
+            if (fechaActual < moment(notificacionHora17)) {
+              console.log('CREAMOS NOT DE LAS 17:00: ', new Date(año, mes, dia, 17, 0).toLocaleString());
+
+              this.localNotifications.schedule({
+                id: Math.round(Math.random() * 10000),
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'ALERTA: Le recordamos que durante el día de hoy debe realizarse la fotografía para su diagnóstico de la prueba de Mantoux',
+                trigger: { at: new Date(año, mes, dia, 17, 0), count: 9999  },
+
+              });
+
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 17:00 de la tarde. - 3');
+
+            }
+            break;
+
+          default:
+            console.log('Caso null');
+          break;
+        }
+
+      }
+
+      // CREAMOS SEGUNDO GRUPO DE NOTIFICACIONES
+
+      for (let i = 0; i < 4; i++) {
+
+        const año2 = moment(fecha72h).year();
+        const mes2 = moment(fecha72h).month();
+        const dia2 = moment(fecha72h).date();
+
+        console.log('año: ', año2);
+        console.log('mes: ', mes2);
+        console.log('dia: ', dia2);
+
+        switch (i) {
+          case 0:
+            // tslint:disable-next-line: no-shadowed-variable
+            const notificacionHora8 = fecha72h.format('L') + ' 08:00';
+            console.log('notificacionHora8: - 4' , moment(notificacionHora8).format());
+            const fechaNot0 = new Date(notificacionHora8);
+            console.log('FICHAPRUEBA: - 4', fechaNot0);
+
+            if (fechaActual < moment(notificacionHora8)) {
+
+              console.log('CREAMOS NOT DE LAS 8:00: ', new Date(año2, mes2, dia2, 8, 0).toLocaleString());
+
+              this.localNotifications.schedule({
+                id: Math.round(Math.random() * 10000),
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'ALERTA: Le recordamos que hoy es el último día para realizarse la fotografía para su diagnóstico de la prueba de Mantoux',
+                trigger: { at: new Date(año2, mes2, dia2, 8, 0), count: 9999  },
+
+              });
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 8:00 de la mañana. - 4');
+
+            }
+            break;
+
+          case 1:
+            const notificacionHora11 = fecha72h.format('L') + ' 11:00';
+            console.log('notificacionHora11: - 5' , moment(notificacionHora11).format());
+            const fechaNot1 = new Date(notificacionHora11);
+            console.log('FICHAPRUEBA: - 5', fechaNot1);
+
+            if (fechaActual < moment(notificacionHora11)) {
+
+              console.log('CREAMOS NOT DE LAS 11:00 DIA DOS: ', new Date(año2, mes2, dia2, 2, 0).toLocaleString());
+
+              this.localNotifications.schedule({
+                id: Math.round(Math.random() * 10000),
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'ALERTA: Le recordamos que hoy es el último día para realizarse la fotografía para su diagnóstico de la prueba de Mantoux',
+                trigger: { at: new Date(año2, mes2, dia2, 11, 0), count: 9999  },
+
+              });
+
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 8:00 de la mañana. - 5');
+
+            }
+
+            break;
+
+          case 2:
+            const notificacionHora14 = fecha72h.format('L') + ' 14:00';
+            console.log('notificacionHora14: - 6' , moment(notificacionHora14).format());
+            const fechaNot2 = new Date(notificacionHora14);
+            console.log('FICHAPRUEBA: - 6', fechaNot2);
+
+            if (fechaActual < moment(notificacionHora14)) {
+              console.log('CREAMOS NOT DE LAS 14:00 DIA DOS: ', new Date(año2, mes2, dia2, 14, 0).toLocaleString());
+
+              this.localNotifications.schedule({
+                id: Math.round(Math.random() * 10000),
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'ALERTA: Le recordamos que pasado el plazo de 72 horas y no proceder a la realización de la fotografía para su diagnóstico, dicha prueba se considerará invalida sin ninguna responsabilidad para Grupo MPE.',
+                trigger: { at: new Date(año2, mes2, dia2, 14, 0), count: 9999  },
+              });
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 8:00 de la mañana. - 6');
+
+            }
+            break;
+
+          case 3:
+            const notificacionHora17 = fecha72h.format('L') + ' 17:00';
+            console.log('notificacionHora17: - 7' , moment(notificacionHora17).format());
+            const fechaNot3 = new Date(notificacionHora17);
+            console.log('FICHAPRUEBA: - 7', fechaNot3);
+
+            if (fechaActual < moment(notificacionHora17)) {
+
+              console.log('CREAMOS NOT DE LAS 17:00 DIA DOS: ', new Date(año2, mes2, dia2, 17, 0).toLocaleString());
+
+              this.localNotifications.schedule({
+                id: Math.round(Math.random() * 10000),
+                title: 'Recuerde: Prueba Médica Mantoux',
+                text: 'ALERTA: Le recordamos que pasado el plazo de 72 horas y no proceder a la realización de la fotografía para su diagnóstico, dicha prueba se considerará invalida sin ninguna responsabilidad para Grupo MPE.',
+                trigger: { at: new Date(año2, mes2, dia2, 17, 0), count: 9999  },
+              });
+
+            } else {
+
+              console.log('No creamos la notificación porque se hizo la prueba despues de las 8:00 de la mañana. - 7');
+
+            }
+            break;
+
+          default:
+            console.log('Caso null');
+          break;
+        }
+
+      }
+    }
+
+  }
+
+  abrirNubeMPE() {
+
+    window.open('https://grupompe.es/MpeNube/Login.aspx','_system');
+
+  }
+
+
+  salirApp() {
+
+    navigator['app'].exitApp();
+
   }
   // goToEditProgile() {
   //   this.router.navigateByUrl('/edit-profile');

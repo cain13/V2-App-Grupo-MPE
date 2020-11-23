@@ -1,6 +1,12 @@
 <ion-header>
   <app-header></app-header>
-  <ion-list-header *ngIf="mostrarTest" (click)="seleccionarTest()">
+
+  <ion-row *ngIf="!mostrarTest" style="background: #FFE294!important; padding:10px !important;">
+    <ion-col >
+      <label>Usted no tiene formularios que realizar.</label>        
+    </ion-col>
+  </ion-row>
+    <ion-list-header *ngIf="mostrarTest" (click)="seleccionarTest()">
     <ion-label color="primary"  >
       <h2>Seleccionar Test</h2>
       <small color="primary">{{test.Nombre}}</small>
@@ -55,66 +61,3 @@
 
 </ion-content>
 
-<ion-content class="ion-padding" *ngIf="isMantoux">
-
-  <ion-card *ngIf="mostrarTest && this.contador === 0">
-    <ion-card-header>
-<!--       <ion-card-subtitle>Pregunta Número {{contador + 1}}</ion-card-subtitle>
- -->      <ion-card-title>Por favor, inserte una imagen de su rodilla derecha de perfil girada 45 grados.</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-button mode="ios" expand="full" color="primary" (click)="presentActionSheet()">
-        <ion-icon slot="start" color="light" name="camera-outline"> </ion-icon>
-        <ion-label>Subir Imagen</ion-label>
-     </ion-button>    </ion-card-content>
-  </ion-card>
-  <ion-card *ngIf="mostrarTest && this.contador !== 0">
-    <ion-card-header>
-<!--       <ion-card-subtitle>Pregunta Número {{contador + 1}}</ion-card-subtitle>
- -->      <ion-card-title>Por favor, inserte una imagen de su brazo derecho de perfil por la parte trasera.</ion-card-title>
-    </ion-card-header>
-    <ion-card-content>
-      <ion-button mode="ios" expand="full" color="primary" (click)="presentActionSheet()">
-        <ion-icon slot="start" color="light" name="camera-outline"> </ion-icon>
-        <ion-label>Subir Imagen</ion-label>
-     </ion-button>    
-    </ion-card-content>
-  </ion-card>
-
-
-  <ion-grid>
-
-    <ion-row *ngIf="isImagenAdjuntada" style="background: #FFE294!important; padding:10px !important;">
-      <ion-col >
-        <label> Ha adjuntado una imagen.</label>        
-      </ion-col>
-    </ion-row>
-
-    <ion-row>
-      <ion-col>
-        <ion-button expand="full" *ngIf="mostrarTest && contador === 1" (click)="preguntaAnterior()">
-          <ion-icon slot="start" name="chevron-back-outline"></ion-icon>
-          <label>Anterior</label>
-        </ion-button>
-      </ion-col>
-      <ion-col>
-        <ion-button expand="full" *ngIf="mostrarTest && contador === 0" (click)="preguntaSiguienteMantoux()">
-          <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
-          <span>Siguiente</span>
-        </ion-button>
-        <ion-button color="danger" expand="full" *ngIf="mostrarTest && contador === 1" (click)="finalizarTestMantoux()">
-          <ion-icon slot="end" name="chevron-forward-outline"></ion-icon>
-          <span> Finalizar</span>
-        </ion-button>
-        
-      </ion-col>
-    </ion-row>
-    <!-- <ion-row *ngIf="mostrarTest &&  numeroPreguntasSinResponder > 0" style="background: #FFE294!important; padding:10px !important;">
-      <ion-col >
-        <label> Tienes {{numeroPreguntasSinResponder}} preguntas sin responder, complete todas para poder finalizar el test.</label>        
-      </ion-col>
-    </ion-row> -->
-  </ion-grid>
-
-
-</ion-content>

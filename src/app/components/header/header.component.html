@@ -1,19 +1,19 @@
-<ion-header>
+<ion-header mode="md">
   <ion-toolbar color="primary"><!-- *ngIf="!isSmallPhone"> -->
     <ion-buttons slot="start">
       <ion-menu-button color="tertiary"></ion-menu-button>
     </ion-buttons>
-    <ion-title style="margin-top: 2mm; margin-bottom: 0mm;">
+    <ion-title *ngIf="usuario !== undefined" style="margin-top: 2mm; margin-bottom: 0mm;" (click)="abrirNubeMPE()">
         <ion-text color="light">
-          <ion-text color="tertiary" class="fw700"> {{titulo}} </ion-text>
+          <ion-text color="tertiary" class="fw700" > {{titulo}} </ion-text>
         </ion-text>
     </ion-title >
-    <ion-title *ngIf="usuario !== undefined && usuario.Nombre !== undefined && EsGuardiaCivil" style="margin-top: 0cm;  margin-bottom: 1mm;" >
+    <ion-title lot="start" *ngIf="usuario !== undefined && usuario.Nombre !== undefined && EsGuardiaCivil" style="margin-top: 0cm;  margin-bottom: 1mm;" >
       <ion-text color="light" style="font-size: x-small; margin-top: 0cm; margin-bottom: 3mm;">
         {{usuario.Usuario}}
       </ion-text>
     </ion-title>
-    <ion-title *ngIf="usuario !== undefined && usuario.Nombre !== undefined && !EsGuardiaCivil" style="margin-top: 0cm;  margin-bottom: 1mm;" >
+    <ion-title lot="start" *ngIf="usuario !== undefined && usuario.Nombre !== undefined && !EsGuardiaCivil" style="margin-top: 0cm;  margin-bottom: 1mm;" >
       <ion-text color="light" style="font-size: x-small; margin-top: 0cm; margin-bottom: 3mm;">
         {{usuario.Nombre}}
       </ion-text>
@@ -24,7 +24,7 @@
         <ion-icon name="notifications" [color]="cantidad > 0 ? '#FFFFFF':'dark'"></ion-icon>
         <ion-badge [color]="cantidad > 0 ? 'danger': 'dark'" slot="end">{{cantidad}}</ion-badge>
       </ion-button>
-      <ion-button size="small" shape="round" color="medium" (click)="compartir()">
+      <ion-button size="small" shape="round" color="medium" (click)="compartirAPP()">
         <ion-icon slot="icon-only" name="share-social-outline"></ion-icon>
       </ion-button>
       <ion-button size="small" shape="round" color="medium" tappable routerLink="/edit-profile" routerDirection="forward">

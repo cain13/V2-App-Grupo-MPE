@@ -76,7 +76,7 @@ export class BlancoPage implements OnInit {
           this.menuCtrl.enable(true, 'menuCompleto');
           this.searchFilter();
         } else {
-          if (this.usuario.EsGuardiaCivil) {
+          if (this.usuario.EsGuardiaCivil.toString() === 'true') {
 
             console.log('ACCEDEMOS COMO GUARDIA CIVIL');
             this.menuCtrl.enable(false, 'menuTrabajadores');

@@ -1,0 +1,36 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>
+        <ion-text color="light"> Grupo MPE</ion-text>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding animated fadeIn">
+
+  <ion-card class="ion-no-margin bg-white">
+    <ion-card-header>
+        <ion-card-subtitle>{{fecha | date: 'dd/MM/yyyy HH:mm'}} ∙ por <strong>GRUPO MPE</strong></ion-card-subtitle>
+        <ion-card-title>
+          <ion-text color="primary">
+            {{titulo}}
+          </ion-text>
+        </ion-card-title>
+    </ion-card-header>
+      <ion-card-content>
+        <p class="ion-margin-top">
+          <ion-text color="primary">
+            {{mensaje}}
+          </ion-text>
+        </p>
+        <ion-button expand="block" color="danger" (click)="irMantoux()">
+          <ion-icon slot="start" color="light" name="camera-outline"></ion-icon>
+          Hacer Fotografía
+        </ion-button>
+      </ion-card-content>
+    </ion-card>
+
+</ion-content>

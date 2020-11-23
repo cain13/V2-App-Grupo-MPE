@@ -31,6 +31,71 @@ export interface RespuestaAPIGetDatos {
 
 }
 
+export interface RespuestAPIMantoux {
+  'soap:Envelope': {
+    '$': {
+      'xmlns:soap': 'http://schemas.xmlsoap.org/soap/envelope/',
+      'xmlns:xsi': 'http://www.w3.org/2001/XMLSchema-instance',
+      'xmlns:xsd': 'http://www.w3.org/2001/XMLSchema'
+    },
+    'soap:Body': [
+      {
+        'ObtenerResultadoTestMantouxResponse': [
+          {
+            '$': {
+              'xmlns': 'http://tempuri.org/'
+            },
+            'ObtenerResultadoTestMantouxResult': [
+              {
+                'ResultadoTestMantouxInfo': [
+                  {
+                    'DatosMantoux': [ DatosMantoux ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  };
+}
+
+export interface ObtenerResultadoTestMantouxResult {
+
+  DatosMantoux: DatosMantoux;
+
+}
+
+export interface DatosMantoux {
+
+  RespuestaTestMantouxInfo: RespuestaTestMantouxInfo[];
+
+}
+
+export interface RespuestaTestMantouxInfo {
+
+  FechaFoto: string;
+  Foto: string;
+  EsPositivo: boolean;
+  EsNegativo: boolean;
+  FechaInoculacion: string;
+
+}
+export interface VistaTimeLineDatos {
+
+  datosPrueba: DatosMantoux;
+  avisos?: AvisoMantoux[];
+
+}
+
+export interface AvisoMantoux {
+
+  fechaAviso: string;
+  textoAviso: string;
+
+}
+
 
 
 export interface ObtenerDatosConsultorResult {

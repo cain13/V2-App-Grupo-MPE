@@ -18,7 +18,7 @@ export class TabInicioPage implements OnInit {
 
     this.usuario = this.usuarioService.getUsuario();
 
-    if(this.usuario.EsGuardiaCivil){
+    if(this.usuario.EsGuardiaCivil.toString() === 'true'){
       this.esGuardiaCivil = true;
     }    
   }

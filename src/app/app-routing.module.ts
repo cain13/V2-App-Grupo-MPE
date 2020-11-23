@@ -198,6 +198,22 @@ const routes: Routes = [
   {
     path: 'modal-terminos',
     loadChildren: () => import('./pages/vistasMPE/modal-terminos/modal-terminos.module').then( m => m.ModalTerminosPageModule)
+  },
+  {
+    path: 'vista-tuberculina-inicio',
+    loadChildren: () => import('./pages/vistasMPE/vista-tuberculina-inicio/vista-tuberculina-inicio.module').then( m => m.VistaTuberculinaInicioPageModule)
+  },
+  {
+    path: 'mensaje-mantoux',
+    loadChildren: () => import('./pages/vistasMPE/mensaje-mantoux/mensaje-mantoux.module').then( m => m.MensajeMantouxPageModule)
+  },
+  {
+    path: 'construccion-menu',
+    loadChildren: () => import('./pages/vistasMPE/construccion-menu/construccion-menu.module').then( m => m.ConstruccionMenuPageModule)
+  },
+  {
+    path: 'formacion',
+    loadChildren: () => import('./pages/vistasMPE/formacion/formacion.module').then( m => m.FormacionPageModule)
   }
 
 

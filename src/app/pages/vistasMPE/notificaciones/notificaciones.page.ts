@@ -74,7 +74,7 @@ export class NotificacionesPage implements OnInit {
 
   delete(notificacion: Notificacion) {
     this.db.BorrarNotificacion(notificacion.IdNotificacion);
-    this.usuarioService.presentToast('Notificación eliminada correctamente!!');
+    this.usuarioService.presentToast('Notificación eliminada correctamente.');
     this.modalCtrl.dismiss();
   }
 
@@ -88,17 +88,17 @@ export class NotificacionesPage implements OnInit {
     this.modalCtrl.dismiss();
     console.log('Usuario Notificaciones ', this.usuario);
     if (this.usuario.Tipo !== 'TRABAJADOR') {
-      this.navController.navigateRoot('');
+      this.navController.navigateRoot('/tab-inicio');
 
     } else {
-      this.navController.navigateRoot('');
+      this.navController.navigateRoot('/tab-inicio');
     }
-    this.notificacionesService.marcarNotificacionesLeidas();
+    this.notificacionesService.marcarNotificacionesTodasLeidas();
   }
 
-  async abrirNotificacion(idNotificacion: number, ruta: string, tipoDocumento: string) {
+  abrirNotificacion(idNotificacion: number, ruta: string, tipoDocumento: string, not: Notificacion) {
     // const rutaAux = ruta.concat(':')
-    await this.db.marcarNotificacionLeida(idNotificacion).then(() => {
+    this.db.marcarNotificacionLeida(idNotificacion).then(() => {
       console.log('Ruta ' + ruta);
       let rutaMensaje = "";
       if(tipoDocumento.toUpperCase() === "MENSAJE"){
@@ -106,8 +106,11 @@ export class NotificacionesPage implements OnInit {
       }else{
         rutaMensaje = ruta;
       }
-       console.log('rutaMensaje ' + rutaMensaje);
-      this.navController.navigateForward(rutaMensaje);
+      if (tipoDocumento.toUpperCase() === 'MANTOUX') {
+
+        this.notificacionesService.guardarNotMantoux(not);
+
+      }      this.navController.navigateForward(rutaMensaje);
       this.modalCtrl.dismiss();
       this.notificacionesService.marcarNotificacionesLeidas();
     }).catch( error => {

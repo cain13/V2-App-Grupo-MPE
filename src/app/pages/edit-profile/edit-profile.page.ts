@@ -21,6 +21,7 @@ export class EditProfilePage implements OnInit {
   Email = '';
   Telefono = '';
   Movil = '';
+  DNI = '';
 
   usuario: UsuarioLogin;
   EsGuardiaCivil = false;
@@ -44,12 +45,10 @@ export class EditProfilePage implements OnInit {
     this.Tipo = this.usuarioService.usuario.Tipo;
     this.usuario = this.usuarioService.getUsuario();
     if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true'){
-      this.Nombre = 'GUARDIA CIVIL';
-      this.Tipo = this.usuarioService.usuario.Nombre;
       this.EsGuardiaCivil = true;
       this.Email = this.usuario.Email;
-      this.Telefono = this.usuario.Telefono;
       this.Movil = this.usuario.Movil;
+      this.DNI = this.usuario.Usuario;
     }
     
     /* if(this.EsGuardiaCivil === null) {
@@ -60,29 +59,20 @@ export class EditProfilePage implements OnInit {
     }else{
       this.Email = '';
     }
-    if(this.usuario.Telefono !== undefined && this.usuario.Telefono !== null && this.usuario.Telefono.length > 0) {
-      this.Telefono = this.usuario.Telefono;
-    }else{
-      this.Telefono = '';
-    }
+    
     if(this.usuario.Movil !== undefined && this.usuario.Movil !== null && this.usuario.Movil.length > 0 && this.usuario.Movil.toString() !== '0') {
       this.Movil = this.usuario.Movil;
     }else{
       this.Movil = '';
     }
     console.log('Nombre: ', this.Nombre);
-    console.log('Telefono: ', this.Telefono);
     console.log('movil: ', this.Movil);
     console.log('email: ', this.Email);
 
 
 
-    if (this.EsGuardiaCivil) {
       this.editProfileForm = this.formBuilder.group({
         nombre: [this.Nombre.toString(), Validators.compose([
-          Validators.required
-        ])],
-        telefono: [this.Telefono.toString(), Validators.compose([
           Validators.required
         ])],
         movil: [this.Movil.toString(), Validators.compose([
@@ -90,21 +80,11 @@ export class EditProfilePage implements OnInit {
         ])],
         email: [this.Email.toString(), Validators.compose([
           Validators.required
-        ])]
-      });
-
-    } else {
-
-      this.editProfileForm = this.formBuilder.group({
-        nombre: [this.usuario.Nombre.toString(), Validators.compose([
-          Validators.required
         ])],
         tipo: [this.usuario.Tipo.toString(), Validators.compose([
           Validators.required
         ])]
       });
-
-    }
 
 
   }
@@ -169,7 +149,7 @@ export class EditProfilePage implements OnInit {
                 '<Datos>' +
                   '<Nombre>' + this.editProfileForm.value.nombre + '</Nombre>' +
                   '<Movil>' + this.editProfileForm.value.movil + '</Movil>' +
-                  '<Telefono>' + this.editProfileForm.value.telefono + '</Telefono>' +
+                  '<Telefono>' + this.editProfileForm.value.movil + '</Telefono>' +
                   '<Email>' + this.editProfileForm.value.email + '</Email>' +
                 '</Datos>' +
               '</InsertarDatosTrabajador>' +
@@ -185,7 +165,7 @@ export class EditProfilePage implements OnInit {
                 const aux: UsuarioLogin = this.usuario;
                 aux.Email = this.editProfileForm.value.email;
                 aux.Nombre = this.editProfileForm.value.nombre;
-                aux.Telefono = this.editProfileForm.value.telefono;
+                aux.Telefono = this.editProfileForm.value.movil;
                 aux.Movil = this.editProfileForm.value.movil;
 
                 if (aux.Email === null) {
