@@ -15,7 +15,7 @@ import * as moment from 'moment';
 })
 export class UsuarioService {
 
-  version = 'Versión 1.0.4';
+  version = 'Versión 1.0.6';
   usuario: UsuarioLogin;
   empresaConsultor: EmpresaConsultor;
   cambiarPassword: CambiarPassword;
