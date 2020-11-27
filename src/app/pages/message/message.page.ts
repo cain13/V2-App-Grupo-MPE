@@ -37,12 +37,12 @@ export class MessagePage implements OnInit {
       this.message = {
         IdNotificacion: noti.IdNotificacion,
         TipoDocumento: noti.TipoDocumento,
-        Titulo:noti.Titulo,
-        Leido:noti.Leido,
-        Mensaje:noti.Mensaje,
+        Titulo: noti.Titulo,
+        Leido: noti.Leido,
+        Mensaje: noti.Mensaje,
         Fecha:  new Date(noti.Fecha),
         Icono: noti.Icono,
-        Ruta:noti.Ruta
+        Ruta: noti.Ruta
       };
     });
   }

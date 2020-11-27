@@ -21,6 +21,7 @@ export class EditProfilePage implements OnInit {
   Email = '';
   Telefono = '';
   Movil = '';
+  DNI = '';
 
   usuario: UsuarioLogin;
   EsGuardiaCivil = false;
@@ -49,6 +50,7 @@ export class EditProfilePage implements OnInit {
       this.Email = this.usuario.Email;
       this.Telefono = this.usuario.Telefono;
       this.Movil = this.usuario.Movil;
+      this.DNI = this.usuario.Usuario;
     }
 
     /* if (this.EsGuardiaCivil === null) {

@@ -6,7 +6,7 @@
 
           <ion-item lines="none">
 
-            <ion-avatar class="user-avatar">
+            <ion-avatar class="user-avatar" (click)="abrirNubeMPE()">
               <img src="assets/img/avatar.jpeg">
             </ion-avatar>
             <ion-label>
@@ -61,47 +61,69 @@
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
+       
         <ion-list mode="md">
+
           <ion-list-header color="dark" mode="md">
             <ion-label>Configuración</ion-label>
           </ion-list-header>
 
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-            <ion-item tappable [routerLink]="p.url" [routerDirection]="p.direct" color="primary">
-              <ion-icon slot="start" [name]="p.icon" color="light"></ion-icon>
-              <ion-label>
-                {{p.title}}
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-        </ion-list>
-        <ion-list>
-          <ion-menu-toggle auto-hide="false" >
-            <ion-item  color="primary" (click)="cerrarSesion()">
-              <ion-icon slot="start" name="power-outline" color="light"></ion-icon>
-              <ion-label>
-                 Cerrar Sesion
-              </ion-label>
-            </ion-item>
-            <ion-item  color="primary">
+          <ion-item color="primary" (click)="compartirAPP()">
+            <ion-icon slot="start" name="share-social-outline" color="light"></ion-icon>
+            <ion-label>
+               Compartir App
+            </ion-label>
+          </ion-item>
+
+          <ion-item tappable routerLink="/edit-profile" routerDirection="forward" color="primary">
+            <ion-icon slot="start" name="person-outline" color="light"></ion-icon>
+            <ion-label>
+              Editar Perfil
+            </ion-label>
+          </ion-item>
+
+          <ion-item  color="primary" (click)="contactoMpe()">
+            <ion-icon slot="start" name="chatbubbles-outline" color="light"></ion-icon>
+            <ion-label>
+              Contactar con MPE
+            </ion-label>
+          </ion-item>
+
+          <ion-item  color="primary" (click)="cerrarSesion()">
+            <ion-icon slot="start" name="power-outline" color="light"></ion-icon>
+            <ion-label>
+               Cerrar Sesion
+            </ion-label>
+          </ion-item>
+
+          <ion-item  color="primary" (click)="salirApp()">
+            <ion-icon slot="start" name="log-out-outline" color="light"></ion-icon>
+            <ion-label>
+               Salir App
+            </ion-label>
+          </ion-item>
+
+          <ion-item  color="primary">
               <ion-icon slot="start" name="information-circle-outline" color="light"></ion-icon>
               <ion-label>
                  {{Version}}
               </ion-label>
-            </ion-item>
-            <ion-item color="primary" (click)="compartirAPP()">
-              <ion-icon slot="start" name="share-social-outline" color="light"></ion-icon>
-              <ion-label>
-                 Compartir App
-              </ion-label>
-            </ion-item>
-            <ion-item  color="primary" (click)="proteccionGenerico()">
-              <ion-icon slot="start" name="newspaper-outline" color="light"></ion-icon>
-              <ion-label>
-                 Protección de Datos
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
+          </ion-item>
+            
+          <ion-item  color="primary" (click)="proteccionGenerico()">
+            <ion-icon slot="start" name="newspaper-outline" color="light"></ion-icon>
+            <ion-label>
+                Protección de Datos
+            </ion-label>
+          </ion-item>
+            
+          <ion-item  color="primary" (click)="terminosCondiciones()">
+            <ion-icon slot="start" name="newspaper-outline" color="light"></ion-icon>
+            <ion-label>
+                Términos y Condiciones
+            </ion-label>
+          </ion-item>
+
         </ion-list>
       </ion-content>
       
@@ -113,7 +135,7 @@
 
           <ion-item lines="none">
 
-            <ion-avatar class="user-avatar">
+            <ion-avatar class="user-avatar" (click)="abrirNubeMPE()">
               <img src="assets/img/avatar.jpeg">
             </ion-avatar>
             <ion-label>
@@ -175,42 +197,56 @@
           </ion-list-header>
 
           <ion-menu-toggle auto-hide="false" >
+            
             <ion-item color="primary" (click)="compartirAPP()">
               <ion-icon slot="start" name="share-social-outline" color="light"></ion-icon>
               <ion-label>
                  Compartir App
               </ion-label>
             </ion-item>
+
             <ion-item  color="primary" (click)="editarPerfil()">
               <ion-icon slot="start" name="person-outline" color="light"></ion-icon>
               <ion-label>
                 Editar Perfil
               </ion-label>
             </ion-item>
+
             <ion-item  color="primary" (click)="contactoMpe()">
               <ion-icon slot="start" name="chatbubbles-outline" color="light"></ion-icon>
               <ion-label>
                 Contactar con MPE
               </ion-label>
             </ion-item>
+
             <ion-item  color="primary" (click)="cerrarSesion()">
               <ion-icon slot="start" name="power-outline" color="light"></ion-icon>
               <ion-label>
                  Cerrar Sesion
               </ion-label>
             </ion-item>
+
+            <ion-item  color="primary" (click)="salirApp()">
+              <ion-icon slot="start" name="log-out-outline" color="light"></ion-icon>
+              <ion-label>
+                 Salir App
+              </ion-label>
+            </ion-item>
+
             <ion-item  color="primary">
               <ion-icon slot="start" name="information-circle-outline" color="light"></ion-icon>
               <ion-label>
                  {{Version}}
               </ion-label>
             </ion-item>
+
             <ion-item  color="primary" (click)="proteccionGuardiaCivil()">
               <ion-icon slot="start" name="newspaper-outline" color="light"></ion-icon>
               <ion-label>
                  Protección de Datos
               </ion-label>
             </ion-item>
+
             <ion-item  color="primary" (click)="terminosCondiciones()">
               <ion-icon slot="start" name="newspaper-outline" color="light"></ion-icon>
               <ion-label>
@@ -231,7 +267,7 @@
 
           <ion-item lines="none">
 
-            <ion-avatar class="user-avatar">
+            <ion-avatar class="user-avatar" (click)="abrirNubeMPE()">
               <img src="assets/img/avatar.jpeg">
             </ion-avatar>
             <ion-label>
@@ -263,6 +299,7 @@
       </ion-header>
 
       <ion-content class="bg-profile">
+  
         <ion-list>
           <ion-menu-toggle auto-hide="false" >
             <ion-item  color="primary" (click)="inicioMenu()">
@@ -273,7 +310,9 @@
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
+
         <ion-list mode="md">
+
           <ion-list-header color="dark" mode="md">
             <ion-label>Vigilancia de la Salud</ion-label>
           </ion-list-header>
@@ -287,53 +326,71 @@
             </ion-item>
           </ion-menu-toggle>
         </ion-list>
+
         <ion-list mode="md">
+
           <ion-list-header color="dark" mode="md">
             <ion-label>Configuración</ion-label>
           </ion-list-header>
 
-          <ion-menu-toggle auto-hide="false" *ngFor="let p of appPages">
-            <ion-item tappable [routerLink]="p.url" [routerDirection]="p.direct" color="primary">
-              <ion-icon slot="start" [name]="p.icon" color="light"></ion-icon>
-              <ion-label>
-                {{p.title}}
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>
-        </ion-list>
-        <ion-list>
-          <ion-menu-toggle auto-hide="false" >
-            <ion-item  color="primary" (click)="cerrarSesion()">
-              <ion-icon slot="start" name="power-outline" color="light"></ion-icon>
-              <ion-label>
-                 Cerrar Sesion
-              </ion-label>
-            </ion-item>
-            <ion-item  color="primary">
+          <ion-item color="primary" (click)="compartirAPP()">
+            <ion-icon slot="start" name="share-social-outline" color="light"></ion-icon>
+            <ion-label>
+               Compartir App
+            </ion-label>
+          </ion-item>
+
+          <ion-item tappable routerLink="/edit-profile" routerDirection="forward" color="primary">
+            <ion-icon slot="start" name="person-outline" color="light"></ion-icon>
+            <ion-label>
+              Editar Perfil
+            </ion-label>
+          </ion-item>
+
+          <ion-item  color="primary" (click)="contactoMpe()">
+            <ion-icon slot="start" name="chatbubbles-outline" color="light"></ion-icon>
+            <ion-label>
+              Contactar con MPE
+            </ion-label>
+          </ion-item>
+
+          <ion-item  color="primary" (click)="cerrarSesion()">
+            <ion-icon slot="start" name="power-outline" color="light"></ion-icon>
+            <ion-label>
+               Cerrar Sesion
+            </ion-label>
+          </ion-item>
+
+          <ion-item  color="primary" (click)="salirApp()">
+            <ion-icon slot="start" name="log-out-outline" color="light"></ion-icon>
+            <ion-label>
+               Salir App
+            </ion-label>
+          </ion-item>
+
+          <ion-item  color="primary">
               <ion-icon slot="start" name="information-circle-outline" color="light"></ion-icon>
               <ion-label>
                  {{Version}}
               </ion-label>
-            </ion-item>
-            <ion-item color="primary" (click)="compartirAPP()">
-              <ion-icon slot="start" name="share-social-outline" color="light"></ion-icon>
-              <ion-label>
-                 Compartir App
-              </ion-label>
-            </ion-item>
-            <ion-item  color="primary" (click)="proteccionGenerico()">
-              <ion-icon slot="start" name="newspaper-outline" color="light"></ion-icon>
-              <ion-label>
-                 Protección de Datos
-              </ion-label>
-            </ion-item>
-            <ion-item  color="primary" (click)="terminosCondiciones()">
-              <ion-icon slot="start" name="newspaper-outline" color="light"></ion-icon>
-              <ion-label>
-                 Términos y Condiciones
-              </ion-label>
-            </ion-item>
-          </ion-menu-toggle>        </ion-list>
+          </ion-item>
+            
+          <ion-item  color="primary" (click)="proteccionGenerico()">
+            <ion-icon slot="start" name="newspaper-outline" color="light"></ion-icon>
+            <ion-label>
+                Protección de Datos
+            </ion-label>
+          </ion-item>
+            
+          <ion-item  color="primary" (click)="terminosCondiciones()">
+            <ion-icon slot="start" name="newspaper-outline" color="light"></ion-icon>
+            <ion-label>
+                Términos y Condiciones
+            </ion-label>
+          </ion-item>
+
+        </ion-list>
+       
       </ion-content>
       
     </ion-menu>

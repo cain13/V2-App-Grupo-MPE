@@ -4,14 +4,14 @@
       <ion-back-button></ion-back-button>
     </ion-buttons>
     <ion-title>
-      <ion-text *ngIf="usuario.EsGuardiaCivil === null || usuario.EsGuardiaCivil === undefined || usuario.EsGuardiaCivil !== true" color="light"> Grupo MPE</ion-text>
-      <ion-text *ngIf="usuario.EsGuardiaCivil !== null && usuario.EsGuardiaCivil !== undefined && usuario.EsGuardiaCivil" color="light"> MPE Sur</ion-text>
+      <ion-text *ngIf="!EsGuardiaCivil" color="light">Grupo MPE</ion-text>
+      <ion-text *ngIf="EsGuardiaCivil" color="light">MPE Sur</ion-text>
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
-  <ion-grid fixed class="ion-no-padding">
+  <ion-grid fixed class="ion-no-padding" *ngIf="usuario.Tipo !== 'CONSULTOR'">
     <ion-row>
       <ion-col size="12" class="ion-padding">
         <ion-row style="background: #FFE294!important; padding:10px !important;">
@@ -22,7 +22,7 @@
         <form [formGroup]="contactameForm" class="list-form">
           <ion-item>
             <ion-label color="dark" position="stacked">Nombre:</ion-label>
-            <ion-text color="dark" type="text" >{{Nombre}}</ion-text>
+            <ion-input color="dark" type="text" >{{Nombre}}</ion-input>
           </ion-item>
           <ion-item>
             <ion-label color="dark" position="stacked">Móvil:</ion-label>
@@ -35,7 +35,11 @@
           <ion-item>
             <ion-label color="dark" position="stacked">Asunto:</ion-label>
             <ion-input text="wrap" color="dark" type="text" formControlName="asunto"></ion-input>
-          </ion-item>          
+          </ion-item>
+          <ion-item style="padding-bottom: 5px;">
+            <ion-label color="dark" position="stacked" style="padding-bottom: 5px;">Descripción:</ion-label>
+            <ion-textarea formControlName="descripcion" rows="5" placeholder="Escriba aquí una descripción de la consulta."></ion-textarea>
+          </ion-item>           
         </form>
         <ion-row style="background: #FFE294!important; padding:10px !important;">
           <ion-col >
@@ -47,19 +51,35 @@
             <ion-icon  slot="start" name="call-outline" item-start></ion-icon>
             <ion-label color="dark" position="stacked"></ion-label>
           </ion-item> -->
-          <ion-item style="width: max-content !important;" lines="none">
+          <ion-item style="width: max-content !important; height: max-content !important;" lines="none" *ngIf="EsGuardiaCivil" href="mailto:vigilanciasaludguardiacivil@grupompe.es">
             <ion-label color="dark" position="stacked">Email de Contacto:</ion-label>
-            <ion-label color="dark" position="stacked" class="ion-text-wrap" style="width: 100%;">VigilanciaSaludGuardiaCivil@grupompe.es</ion-label>
+            <ion-label color="dark" position="stacked" style="width: 100%; " href="mailto:vigilanciasaludguardiaCivil@grupompe.es">VigilanciaSaludGuardiaCivil@grupompe.es</ion-label>
+          </ion-item>
+
+          <ion-item style="width: max-content !important; height: max-content !important;" lines="none" *ngIf="!EsGuardiaCivil" href="mailto:info@grupompe.es">
+            <ion-label color="dark" position="stacked">Email de Contacto:</ion-label>
+            <ion-label color="dark" position="stacked" style="width: 100%; " href="mailto:info@grupompe.es">info@grupompe.es</ion-label>
+          </ion-item>
+
+          <ion-item style="width: max-content !important; height: max-content !important;" lines="none" *ngIf="!EsGuardiaCivil" href="tel:902306630">
+            <ion-label color="dark" position="stacked">Teléfono:</ion-label>
+            <ion-label color="dark" position="stacked" style="width: 100%; ">902 30 66 30</ion-label>
           </ion-item>
 
         </ion-list>
       </ion-col>
     </ion-row>
   </ion-grid>
+  <ion-card *ngIf="usuario.Tipo === 'CONSULTOR'">
+    <ion-card-content>
+      <h4>INFORMACIÓN</h4>
+      <ion-text class="ion-text-wrap">Como consultor no puedo acceder a esta información.</ion-text>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
-<ion-footer class="no-padding">
+<ion-footer class="no-padding" *ngIf=" usuario.Tipo!== 'CONSULTOR'">
   <ion-button [disabled]="!contactameForm.valid" icon-left size="large" expand="full" color="dark" (click)="enviarConsulta()" tappable>
     <ion-icon slot="start" name="arrow-redo-outline"></ion-icon>
-   Enviar consulta
+    Enviar consulta
   </ion-button>
 </ion-footer>

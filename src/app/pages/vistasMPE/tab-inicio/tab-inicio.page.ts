@@ -17,10 +17,11 @@ export class TabInicioPage implements OnInit {
   constructor(private usuarioService: UsuarioService) {
 
     this.usuario = this.usuarioService.getUsuario();
+    console.log('TAB-INICIO: ', this.usuario);
 
-    if(this.usuario.EsGuardiaCivil){
+      if (this.usuario.EsGuardiaCivil.toString() === 'true') {
       this.esGuardiaCivil = true;
-    }    
+    }
   }
 
   ngOnInit() {

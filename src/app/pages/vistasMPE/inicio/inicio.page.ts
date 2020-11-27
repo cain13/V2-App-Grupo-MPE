@@ -396,14 +396,17 @@ export class InicioPage implements OnInit {
                       a = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerResultadoTestMantouxResponse']['ObtenerResultadoTestMantouxResult']['ResultadoTestMantouxInfo']));
 
                     } catch (error) {
+                      console.log('catch error: ', error);
+
                       a = null;
 
                     }
-                    if (a !== null && a.DatosMantoux !== null && a.DatosMantoux !== undefined) {
+                    console.log('a: ', a);
+                    if (a !== null) {
                       console.log('a.DatosMantoux: ', a.DatosMantoux);
-                      console.log('a.DatosMantoux es ARRAY?: ', Array.isArray(a.DatosMantoux));
+                      console.log('a.DatosMantoux es ARRAY?: ', Array.isArray(a));
 
-                      if (!Array.isArray(a.DatosMantoux.RespuestaTestMantouxInfo)) {
+                      if (!Array.isArray(a)) {
                         console.log('EL ARRAY DE OBJETOS TIENE SOLO 1 OBJETO...');
 
                         console.log('a.DatosMantoux: ', a.DatosMantoux);
@@ -506,17 +509,27 @@ export class InicioPage implements OnInit {
                       } else {
 
                         console.log('EL ARRAY DE OBJETOS TIENE MÁS DE 1 OBJETO...');
-                        const arrayDatos = a.DatosMantoux.RespuestaTestMantouxInfo;
+                        const arrayDatos = a;
+                        const aux2: RespuestaTestMantouxInfo[] = [];
+                        for (const aux of arrayDatos) {
+
+                          aux2.push(aux.DatosMantoux.RespuestaTestMantouxInfo);
+
+                        }
                         console.log('arrayDatos: ', arrayDatos);
-                        arrayDatos.sort(function (ax , b) {
-                          return (new Date(b.FechaFoto).valueOf() - new Date(ax.FechaFoto).valueOf());
+                        console.log('aux2: ', aux2);
+
+                        aux2.sort(function (ax , b) {
+                          return (new Date(b.FechaInoculacion).valueOf() - new Date(ax.FechaInoculacion).valueOf());
                           });
-                        if (arrayDatos[0].FechaFoto === undefined) {
+                        console.log('aux2: ', aux2);
+                        console.log('aux2[0].FechaFoto: ', aux2[0].FechaFoto);
+                        if (this.isObject(aux2[0].FechaFoto)) {
 
                             // COMPROBAMOS QUE LA FECHA DE INOCULACIÓN NO ES MAYOR A 72 HORAS
-                            const fechaAUX = moment(arrayDatos[0].FechaInoculacion);
-                            const fecha48h = moment(arrayDatos[0].FechaInoculacion).add(2, 'days');
-                            const fecha72h = moment(arrayDatos[0].FechaInoculacion).add(3, 'days');
+                            const fechaAUX = moment(aux2[0].FechaInoculacion);
+                            const fecha48h = moment(aux2[0].FechaInoculacion).add(2, 'days');
+                            const fecha72h = moment(aux2[0].FechaInoculacion).add(3, 'days');
                             const fechaActual = moment();
                             console.log('FECHA AUX: ', fechaAUX.format('MMMM Do YYYY, h:mm:ss a'));
                             console.log('FECHA 48H: ', fecha48h.format('MMMM Do YYYY, h:mm:ss a'));
@@ -528,19 +541,19 @@ export class InicioPage implements OnInit {
                               console.log('NO HACEMOS NADA YA NO SE HA INOCULADO AUN: 1900-01-01T00:00:00: ', fechaAUX);
 
                             } else {
-                              console.log('aux[0] ', arrayDatos[0]);
-                              console.log('aux[0]: ', this.tieneResultado(arrayDatos[0]));
-                              if (fechaActual < fecha72h && !this.tieneResultado(arrayDatos[0])) {
+                              console.log('aux[0] ', aux2[0]);
+                              console.log('aux[0]: ', this.tieneResultado(aux2[0]));
+                              if (fechaActual < fecha72h && !this.tieneResultado(aux2[0])) {
                                 // COMPROBAMOS QUE LA FECHA DE INOCULACIÓN NO ES MENOR A 48 HORAS
 
                                   console.log('ENTRAMOS PORQUE LA FECHA ES MENOR A 72h');
 
                                   if (fechaActual > fecha48h) {
-                                    if (this.usuario.FechaMantoux !== null  && this.usuario.FechaMantoux !== undefined && this.usuario.FechaMantoux !== arrayDatos[0].FechaInoculacion) {
+                                    if (this.usuario.FechaMantoux !== null  && this.usuario.FechaMantoux !== undefined && this.usuario.FechaMantoux !== aux2[0].FechaInoculacion) {
                                       console.log('CREAMOS NOTIFICACIONES PORQUE NO SE HABIAN CREADO: ', this.usuario.FechaMantoux);
-                                      this.crearNotificacionesLocalesMantoux(arrayDatos[0].FechaInoculacion);
+                                      this.crearNotificacionesLocalesMantoux(aux2[0].FechaInoculacion);
                                       this.usuarioService.presentAlertTestMantouxBotones('ALERTA', 'Le recordamos, que se encuentra dentro del plazo para realizar su prueba Mantoux, y solo dispone hasta el dia ' +
-                                      fecha72h.format('DD/MM/YYYY') + ' para realizarsela.', '', arrayDatos[0].FechaInoculacion);
+                                      fecha72h.format('DD/MM/YYYY') + ' para realizarsela.', '', aux2[0].FechaInoculacion);
                                     } else {
                                       this.usuario.HacerMantoux = true;
                                       this.usuario.FechaMantoux = moment(fechaAUX).locale('es').format().toString();
@@ -553,13 +566,13 @@ export class InicioPage implements OnInit {
 
                                     }
                                   } else {
-                                    if (this.usuario.FechaMantoux !== null  && this.usuario.FechaMantoux !== undefined && this.usuario.FechaMantoux !== arrayDatos[0].FechaInoculacion) {
+                                    if (this.usuario.FechaMantoux !== null  && this.usuario.FechaMantoux !== undefined && this.usuario.FechaMantoux !== aux2[0].FechaInoculacion) {
 
-                                      this.crearNotificacionesLocalesMantoux(arrayDatos[0].FechaInoculacion);
-                                      this.usuarioService.presentAlertTestMantoux('RECUERDE', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + arrayDatos[0].FechaInoculacion +
-                                      ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + moment(arrayDatos[0].FechaInoculacion).format('DD/MM/YYYY') + ' y el ' +
-                                      moment(arrayDatos[0].FechaInoculacion).add(1440, 'minutes').format('DD/MM/YYYY') + ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n'
-                                      + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.', arrayDatos[0].FechaInoculacion);
+                                      this.crearNotificacionesLocalesMantoux(aux2[0].FechaInoculacion);
+                                      this.usuarioService.presentAlertTestMantoux('RECUERDE', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + aux2[0].FechaInoculacion +
+                                      ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + moment(aux2[0].FechaInoculacion).format('DD/MM/YYYY') + ' y el ' +
+                                      moment(aux2[0].FechaInoculacion).add(1440, 'minutes').format('DD/MM/YYYY') + ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n'
+                                      + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.', aux2[0].FechaInoculacion);
 
                                     } else {
                                       this.usuario.HacerMantoux = true;
@@ -568,16 +581,16 @@ export class InicioPage implements OnInit {
                                       console.log('Fecha fecha: ' , moment().locale('es').format().toString());
                                       this.usuarioService.actualizarPerfil(this.usuario);
                                       this.usuarioService.guardarUsuario(this.usuario);
-                                      this.usuarioService.presentAlert('RECUERDE', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + arrayDatos[0].FechaInoculacion +
-                                      ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + moment(arrayDatos[0].FechaInoculacion).format('DD/MM/YYYY') + ' y el ' +
-                                      moment(arrayDatos[0].FechaInoculacion).add(1440, 'minutes').format('DD/MM/YYYY') + ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n'
+                                      this.usuarioService.presentAlert('RECUERDE', ' Información sobre su prueba de Mantoux', 'A Vd. se le ha realizado con fecha ' + aux2[0].FechaInoculacion +
+                                      ' una prueba de Mantoux, por lo que le comunicamos que entre el día ' + moment(aux2[0].FechaInoculacion).format('DD/MM/YYYY') + ' y el ' +
+                                      moment(aux2[0].FechaInoculacion).add(1440, 'minutes').format('DD/MM/YYYY') + ' debe proceder a realizarse una fotografía a través de ésta App para su diagnóstico. \n'
                                       + 'Esta App se lo recordara a través de notificaciones push durante el plazo indicado.');
 
                                     }
                                   }
 
                                 } else {
-                                  if (!this.tieneResultado(arrayDatos[0])) {
+                                  if (!this.tieneResultado(aux2[0])) {
                                     this.usuario.HacerMantoux = true;
                                     this.usuario.FechaMantoux = moment(fechaAUX).locale('es').format().toString();
                                     console.log('FECHA USUARIO: ', this.usuario.FechaMantoux);

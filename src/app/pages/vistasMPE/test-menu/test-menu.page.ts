@@ -64,7 +64,7 @@ export class TestMenuPage implements ViewWillEnter,OnInit {
               public alertCtrl: AlertController,
               private platform: Platform
               ) {
-               
+
                }
 
   ngOnInit() {
@@ -72,16 +72,15 @@ export class TestMenuPage implements ViewWillEnter,OnInit {
     //this.getTest();
 
   }
-  
+
   ionViewWillEnter() {
     this.usuario = this.usuarioService.getUsuario();
     this.test = this.testServices.getTest();
-    if(this.test !== null && this.test !== undefined && this.test.Preguntas !== null && this.test.Preguntas !== undefined)
-    {
-      console.log("ionViewWillEnter hay test", this.test !== null);
-//      this.getTest();      
-    }else{
-      console.log("ionViewWillEnter NO hay test");
+    if (this.test !== null && this.test !== undefined && this.test.Preguntas !== null && this.test.Preguntas !== undefined) {
+      console.log('ionViewWillEnter hay test', this.test !== null);
+//      this.getTest();
+    } else {
+      console.log('ionViewWillEnter NO hay test');
       this.mostrarTest = false;
       this.isFinTest = false;
       this.getTest();
@@ -94,7 +93,7 @@ export class TestMenuPage implements ViewWillEnter,OnInit {
 
 
     if (this.mostrarTest) {
-      if (this.isMantoux !== undefined && !this.isMantoux) {
+      if (this.isMantoux !== undefined && this.isMantoux.toString() === 'false') {
 
         if (this.testEnviadoCorrectamente === false && this.numeroPreguntasSinResponder !== this.test.Preguntas.PreguntaInfo.length) {
 
@@ -182,7 +181,6 @@ export class TestMenuPage implements ViewWillEnter,OnInit {
 
         };
 
-        this.isMantoux = true;
 
       }
 

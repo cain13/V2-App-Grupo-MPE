@@ -24,7 +24,7 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
   @Input() titulo = 'Grupo MPE';
 
   private textoCompartirAPP = 'Disfrute de la App de Grupo MPE de prevención de riesgos laborales, puede descargarla pinchando en el siguiente enlace. ';
-  private urlCompartirAPP = 'http://onelink.to/ept9em';
+  private urlCompartirAPP = 'https://mpeprevencion.com/qr-appmpe.html';
 
   constructor(  private usuarioService: UsuarioService,
                 private notificacionesService: NotificacionesService,
@@ -87,7 +87,8 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
   }
 
 
-  async compartir() {
+  async compartirAPP() {
+    try {
     const actionSheet = await this.actionSheetController.create({
       header: 'Compartir APP',
       cssClass: 'my-custom-class',
@@ -116,18 +117,18 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
             console.log('Lanzamos Twitter error', error);
             this.usuarioService.presentAlert('Error', 'No tiene la app de Twitter en su móvil', 'Descarguela y pruebe de nuevo, gracias.');
 
-          });
-        }
-      }, {
-        text: 'Whatsapp',
-        icon: 'logo-whatsapp',
-        handler: () => {
-          console.log('Lanzamos Whatsapp');
-          this.socialSharing.shareViaWhatsApp(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
+            });
+          }
+        }, {
+          text: 'Whatsapp',
+          icon: 'logo-whatsapp',
+          handler: () => {
+            console.log('Lanzamos Whatsapp');
+            this.socialSharing.shareViaWhatsApp(this.textoCompartirAPP, 'https://mpecronos.com/Documentos/Descarga/icn-app-mpe.jpg', this.urlCompartirAPP).then( () => {
 
 
 
-          }).catch( error => {
+            }).catch( error => {
 
             console.log('Lanzamos Whatsapp error', error);
             this.usuarioService.presentAlert('Error', 'No tiene la app de Whatsapp en su móvil', 'Descarguela y pruebe de nuevo, gracias.');
@@ -143,22 +144,30 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
           this.socialSharing.shareViaEmail(this.textoCompartirAPP + ':' + this.urlCompartirAPP, 'Descarga la App de prevención de Grupo MPE', null).then( () => {
 
 
-          }).catch( error => {
+            }).catch( error => {
 
 
 
-          });
-        }
-      }, {
-        text: 'Cancelar',
-        icon: 'close',
-        role: 'cancel',
-        handler: () => {
-          console.log('Cancel clicked');
-        }
-      }]
-    });
-    await actionSheet.present();
+            });
+          }
+        }, {
+          text: 'Cancelar',
+          icon: 'close',
+          role: 'cancel',
+          handler: () => {
+            console.log('Cancel clicked');
+          }
+        }]
+      });
+
+      await actionSheet.present();
+    } catch (error) {
+        console.log('Fallo al cargar ');
+    }
+  }
+
+  abrirNubeMPE() {
+    window.open('https://grupompe.es/MpeNube/Login.aspx', '_system');
   }
 
 

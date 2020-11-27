@@ -27,7 +27,7 @@ const routes: Routes = [
       },
       {
         path: 'citas-pendientes',
-        loadChildren: () => import('../citas-pendientes/citas-pendientes.module').then( m => m.CitasPendientesPageModule)
+        loadChildren: () => import('../construccion/construccion.module').then( m => m.ConstruccionPageModule)
       },
       {
         path: 'documentos',
@@ -35,7 +35,7 @@ const routes: Routes = [
       },
       {
         path: 'citas-pendientes-trabajador',
-        loadChildren: () => import('../citas-pendientes-trabajador/citas-pendientes-trabajador.module').then( m => m.CitasPendientesTrabajadorPageModule)
+        loadChildren: () => import('../construccion/construccion.module').then( m => m.ConstruccionPageModule)
       },
       {
         path: 'documentos-trabajador',
@@ -49,7 +49,11 @@ const routes: Routes = [
         path: 'test-menu',
         loadChildren: () => import('../test-menu/test-menu.module').then( m => m.TestMenuPageModule)
       },
-    
+      {
+        path: 'formacion',
+        loadChildren: () => import('../construccion/construccion.module').then( m => m.ConstruccionPageModule)
+      },
+
 
     ]
   }

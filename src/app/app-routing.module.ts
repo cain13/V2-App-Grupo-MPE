@@ -202,7 +202,15 @@ const routes: Routes = [
   {
     path: 'mensaje-mantoux',
     loadChildren: () => import('./pages/vistasMPE/mensaje-mantoux/mensaje-mantoux.module').then( m => m.MensajeMantouxPageModule)
+  },  {
+    path: 'formacion',
+    loadChildren: () => import('./pages/vistasMPE/formacion/formacion.module').then( m => m.FormacionPageModule)
   },
+  {
+    path: 'construccion-menu',
+    loadChildren: () => import('./pages/vistasMPE/construccion-menu/construccion-menu.module').then( m => m.ConstruccionMenuPageModule)
+  },
+
 
 
 

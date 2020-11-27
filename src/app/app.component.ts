@@ -72,20 +72,20 @@ export class AppComponent {
     this.appPagesTrabajador = [
 
       {
+        title: 'Pruebas COVID',
+        url: '/documentos-covid-menu',
+        direct: 'forward',
+        icon: 'clipboard-outline'
+      },
+      {
         title: 'Reconocimientos Médicos',
         url: '/documentos-trabajador-menu',
         direct: 'forward',
         icon: 'document-outline'
       },
       {
-        title: 'Documentos COVID',
-        url: '/documentos-covid-menu',
-        direct: 'forward',
-        icon: 'clipboard-outline'
-      },
-      {
         title: 'Citas Pendientes',
-        url: '/citas-pendientes-trabajador-menu',
+        url: '/construccion',
         direct: 'forward',
         icon: 'timer-outline'
       }
@@ -136,19 +136,19 @@ export class AppComponent {
       },
       {
         title: 'Planificación VS',
-        url: '/construccion',
+        url: '/construccion-menu',
         direct: 'forward',
         icon: 'calendar-outline'
       },
       {
         title: 'Memoria Anual',
-        url: '/construccion',
+        url: '/construccion-menu',
         direct: 'forward',
         icon: 'folder-outline'
       },
       {
         title: 'Estudio Epidemiológico',
-        url: '/construccion',
+        url: '/construccion-menu',
         direct: 'forward',
         icon: 'flask-outline'
       },
@@ -193,7 +193,6 @@ export class AppComponent {
 
     ];
 
-    console.log('thisssssssssssssssssss app');
     this.platform.ready().then(() => {
       this.localNotifications.on('click').subscribe(notification => {
         console.log('click on notification fired');
@@ -255,13 +254,13 @@ export class AppComponent {
             notificacion.TipoDocumento = data['TipoDocumento'];
 
             this.notificacion = notificacion;
-
-            if (data['TipoUsuario'] !== 'TRABAJADOR') {
+            console.log('PRUEBA TRABAJADOR APPCOMPONENTS: ', data['TipoUsuario'].toString().includes('TRABAJADOR'));
+            if (!data['TipoUsuario'].toString().includes('TRABAJADOR')) {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
                 case 'HISTORICO':
                   notificacion.Icono = 'document-text-outline';
@@ -289,7 +288,7 @@ export class AppComponent {
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
               }
             } else {
@@ -342,6 +341,7 @@ export class AppComponent {
           if (data.wasTapped) {
             console.log('Received Segundo in background: ', data);
             console.log('Tipo Documento ' + data['TipoDocumento']);
+            console.log('TipoUsuario ' + data['TipoUsuario']);
             const titulo = data['Titulo'];
             const tipoDocumento = data['TipoDocumento'];
             console.log('TITULO: ', titulo);
@@ -364,12 +364,13 @@ export class AppComponent {
 
             this.notificacion = notificacion;
 
-            if (data['TipoUsuario'] !== 'TRABAJADOR') {
+            console.log('PRUEBA TRABAJADOR APPCOMPONENTS: ', data['TipoUsuario'].toString().includes('TRABAJADOR'));
+            if (!data['TipoUsuario'].toString().includes('TRABAJADOR')) {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
                 case 'HISTORICO':
                   notificacion.Icono = 'document-text-outline';
@@ -396,7 +397,7 @@ export class AppComponent {
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
               }
             } else {
@@ -463,12 +464,13 @@ export class AppComponent {
 
             this.notificacion = notificacion;
 
-            if (data['TipoUsuario'] !== 'TRABAJADOR') {
+            console.log('PRUEBA TRABAJADOR APPCOMPONENTS: ', data['TipoUsuario'].toString().includes('TRABAJADOR'));
+            if (!data['TipoUsuario'].toString().includes('TRABAJADOR')) {
               console.log('tipoDocumento.toUpperCase( CLIENTE ) ', tipoDocumento.toUpperCase());
               switch (tipoDocumento.toUpperCase()) {
                 case 'DOCUMENTO':
                   notificacion.Icono = 'document-text-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
                 case 'HISTORICO':
                   notificacion.Icono = 'document-text-outline';
@@ -495,7 +497,7 @@ export class AppComponent {
                   break;
                 default:
                   notificacion.Icono = 'alert-circle-outline';
-                  notificacion.Ruta = '/certificado-aptitud';
+                  notificacion.Ruta = '/certificado-aptitud-menu';
                   break;
               }
             } else {
@@ -845,6 +847,10 @@ export class AppComponent {
     this.navCtrl.navigateForward('contacto-mpe');
   }
 
+  abrirNubeMPE() {
+    window.open('https://grupompe.es/MpeNube/Login.aspx', '_system');
+  }
+
   proteccionGuardiaCivil() {
     window.open('https://mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
   }
@@ -863,7 +869,7 @@ export class AppComponent {
   }
 
   cerrarSesion() {
-    this.usuarioService.presentAlertCerrarSesion('Información', '', '¿Quieres usted salir de la aplicación?');
+    this.usuarioService.presentAlertCerrarSesion('Información', '', '¿Quieres usted cerrar su sesión de usuario?');
   }
 
   crearNotificacionesLocalesMantoux(fecha: string, not: Notificacion) {
@@ -1127,6 +1133,11 @@ export class AppComponent {
       }
     }
 
+  }
+
+  salirApp() {
+
+    navigator['app'].exitApp();
   }
 
   /* crearNotificacionesLocalesMantoux(fecha: string) {

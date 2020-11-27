@@ -22,7 +22,7 @@ export class VistaTubirculinaPage implements OnInit {
   fechaImagen: string;
   noTieneMantoux = false;
 
-  
+
 
 
   constructor(private actionSheetCtrl: ActionSheetController,

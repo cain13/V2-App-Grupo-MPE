@@ -76,7 +76,7 @@ export class TestPage implements OnInit {
 
 
     if (this.mostrarTest) {
-      if (this.isMantoux !== undefined && !this.isMantoux) {
+      if (this.isMantoux !== undefined && this.isMantoux.toString() === 'false') {
 
         if (this.testEnviadoCorrectamente === false && this.numeroPreguntasSinResponder !== this.test.Preguntas.PreguntaInfo.length) {
 
@@ -164,8 +164,6 @@ export class TestPage implements OnInit {
           ImagenesMantoux: []
 
         };
-
-        this.isMantoux = true;
 
       }
 
