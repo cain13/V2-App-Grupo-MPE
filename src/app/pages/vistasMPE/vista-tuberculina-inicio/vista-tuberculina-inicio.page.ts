@@ -170,7 +170,7 @@ export class VistaTuberculinaInicioPage implements OnInit {
   debeHacerPrueba( obj: any) {
     const aux: RespuestaTestMantouxInfo = obj;
 
-    if (typeof aux.Foto === 'object' && aux.EsPositivo.toString() !== 'true' && aux.EsNegativo.toString() !== 'true') {
+    if ((aux.Foto === undefined || aux.Foto === null || typeof aux.Foto === 'object') && aux.EsPositivo.toString() !== 'true' && aux.EsNegativo.toString() !== 'true') {
       console.log('isObject: ', true);
       return true;
 

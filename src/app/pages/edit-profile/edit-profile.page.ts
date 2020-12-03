@@ -78,35 +78,20 @@ export class EditProfilePage implements OnInit {
 
 
 
-    if (this.EsGuardiaCivil) {
-      this.editProfileForm = this.formBuilder.group({
-        nombre: [this.Nombre.toString(), Validators.compose([
-          Validators.required
-        ])],
-        telefono: [this.Telefono.toString(), Validators.compose([
-          Validators.required
-        ])],
-        movil: [this.Movil.toString(), Validators.compose([
-          Validators.required
-        ])],
-        email: [this.Email.toString(), Validators.compose([
-          Validators.required
-        ])]
-      });
-
-    } else {
-
-      this.editProfileForm = this.formBuilder.group({
-        nombre: [this.usuario.Nombre.toString(), Validators.compose([
-          Validators.required
-        ])],
-        tipo: [this.usuario.Tipo.toString(), Validators.compose([
-          Validators.required
-        ])]
-      });
-
-    }
-
+    this.editProfileForm = this.formBuilder.group({
+      nombre: [this.usuario.Nombre.toString(), Validators.compose([
+        Validators.required
+      ])],
+      tipo: [this.usuario.Tipo.toString(), Validators.compose([
+        Validators.required
+      ])],
+      movil: [this.Movil.toString(), Validators.compose([
+        Validators.required
+      ])],
+      email: [this.Email.toString(), Validators.compose([
+        Validators.required
+      ])]
+    });
 
   }
 
