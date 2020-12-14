@@ -44,7 +44,7 @@ export class AppComponent {
 /*   private urlCompartirAPP = 'http://onelink.to/ept9em';
  */
   private urlCompartirAPP = 'https://mpeprevencion.com/qr-appmpe.html';
-  public Version = 'Versión 1.0.6';
+  public Version = 'Versión 1.0.7';
 
   private notificacion: Notificacion;
 
