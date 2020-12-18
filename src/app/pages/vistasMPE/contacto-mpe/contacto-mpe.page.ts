@@ -111,9 +111,13 @@ export class ContactoMpePage implements OnInit {
     xmlhttp.onreadystatechange =  () => {
           if (xmlhttp.readyState === 4) {
               if (xmlhttp.status === 200) {
+                if( !this.EsGuardiaCivil && this.usuario.Tipo !== 'CONSULTOR' && (this.contactameForm.value.movil !== this.Movil || this.contactameForm.value.email !== this.Email)) {
+                  console.log('GUARDAMOS NUEVOS DATOS EN MPE');
+                  this.guardarCambiosMPE();
 
-                  this.usuarioService.dismiss();
-                  this.usuarioService.presentToast('Consulta enviada, nos pondremos en contacto en breve con usted.');
+                }
+                this.usuarioService.dismiss();
+                this.usuarioService.presentToast('Consulta enviada, nos pondremos en contacto en breve con usted.');
               } else {
                 this.usuarioService.dismiss();
                 this.usuarioService.presentToast('¡ERROR! Su consulta no ha podido ser mandada');
@@ -125,5 +129,87 @@ export class ContactoMpePage implements OnInit {
       };
     xmlhttp.send(sr);
   }
+
+  guardarCambiosMPE() {
+    try {
+      this.usuarioService.present('Actualizando datos...');
+      const xmlhttp = new XMLHttpRequest();
+
+
+      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Headers', 'Content-Type');
+ */      xmlhttp.setRequestHeader('content-type', 'text/xml');
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */
+      console.log('HEADER2: ', xmlhttp.getResponseHeader);
+      xmlhttp.responseType = 'document';
+        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+      const sr =
+          '<?xml version="1.0" encoding="utf-8"?>' +
+          '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+            '<soap:Header>' +
+              '<AuthHeader xmlns="http://tempuri.org/">' +
+                '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
+                '<Password>' + this.usuario.Password + '</Password>' +
+              '</AuthHeader>' +
+            '</soap:Header>' +
+            '<soap:Body>' +
+              '<InsertarDatosTrabajador xmlns="http://tempuri.org/">' +
+                '<Datos>' +
+                  '<Nombre>' + this.usuario.Nombre + '</Nombre>' +
+                  '<Movil>' + this.contactameForm.value.movil + '</Movil>' +
+                  '<Telefono>' + this.contactameForm.value.movil + '</Telefono>' +
+                  '<Email>' + this.contactameForm.value.email + '</Email>' +
+                '</Datos>' +
+              '</InsertarDatosTrabajador>' +
+            '</soap:Body>' +
+          '</soap:Envelope>';
+
+
+      console.log('MENSAJE MANDADO A LA API:', sr);
+      xmlhttp.onreadystatechange = () => {
+        console.log('XMLHTTP: ', xmlhttp);
+            if (xmlhttp.readyState === 4) {
+
+                const aux: UsuarioLogin = this.usuario;
+                aux.Email = this.contactameForm.value.email;
+                aux.Nombre = this.usuario.Nombre;
+                aux.Telefono = this.contactameForm.value.movil;
+                aux.Movil = this.contactameForm.value.movil;
+
+                if (aux.Email === null) {
+                  aux.Email = '';
+                }
+                if (aux.Nombre === null) {
+                  aux.Nombre = '';
+                }
+                if (aux.Telefono === null) {
+                  aux.Telefono = '';
+                }
+                if (aux.Movil === null) {
+                  aux.Movil = '';
+                }
+
+
+                if (xmlhttp.status === 200) {
+
+                  this.usuarioService.actualizarPerfil(aux);
+                  this.usuarioService.presentToast('Datos actualizados correctamente');
+
+                } else if (xmlhttp.status === 500 ) {
+
+                }
+            }
+            this.usuarioService.dismiss();
+        };
+
+        console.log('XMLHTTP: ', xmlhttp);
+      xmlhttp.send(sr);
+    } catch (error) {
+      this.usuarioService.dismiss();
+    }
+
+  }
+
 
 }
