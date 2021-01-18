@@ -36,6 +36,8 @@
     "@angular/platform-browser-dynamic": "~10.0.7",
     "@angular/router": "~10.0.7",
     "@angular/service-worker": "~10.0.7",
+    "@capacitor/cli": "^2.4.5",
+    "@capacitor/core": "^2.4.5",
     "@ionic-native/app-availability": "^5.28.0",
     "@ionic-native/base64": "^5.28.0",
     "@ionic-native/camera": "^5.28.0",
