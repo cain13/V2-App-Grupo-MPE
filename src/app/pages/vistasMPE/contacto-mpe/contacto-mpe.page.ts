@@ -115,14 +115,21 @@ export class ContactoMpePage implements OnInit {
     xmlhttp.onreadystatechange =  () => {
           if (xmlhttp.readyState === 4) {
               if (xmlhttp.status === 200) {
+<<<<<<< HEAD
                   if ((this.Movil !== this.contactameForm.value.movil || this.Email !== this.contactameForm.value.email) && !this.EsGuardiaCivil && this.usuario.Tipo !== 'CONSULTOR') {
 
                     this.guardarCambiosEnLazaro();
 
                   }
+=======
+                if( !this.EsGuardiaCivil && this.usuario.Tipo !== 'CONSULTOR' && (this.contactameForm.value.movil !== this.Movil || this.contactameForm.value.email !== this.Email)) {
+                  console.log('GUARDAMOS NUEVOS DATOS EN MPE');
+                  this.guardarCambiosMPE();
+>>>>>>> c462fc65dae4c6650b05208ac6c648bed015303e
 
-                  this.usuarioService.dismiss();
-                  this.usuarioService.presentToast('Consulta enviada, nos pondremos en contacto en breve con usted.');
+                }
+                this.usuarioService.dismiss();
+                this.usuarioService.presentToast('Consulta enviada, nos pondremos en contacto en breve con usted.');
               } else {
                 this.usuarioService.dismiss();
                 this.usuarioService.presentToast('¡ERROR! Su consulta no ha podido ser mandada');
@@ -135,18 +142,32 @@ export class ContactoMpePage implements OnInit {
     xmlhttp.send(sr);
   }
 
+<<<<<<< HEAD
 
   guardarCambiosEnLazaro() {
+=======
+  guardarCambiosMPE() {
+>>>>>>> c462fc65dae4c6650b05208ac6c648bed015303e
     try {
       this.usuarioService.present('Actualizando datos...');
       const xmlhttp = new XMLHttpRequest();
 
 
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+<<<<<<< HEAD
       xmlhttp.setRequestHeader('content-type', 'text/xml');
 
       console.log('HEADER2: ', xmlhttp.getResponseHeader);
       xmlhttp.responseType = 'document';
+=======
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Headers', 'Content-Type');
+ */      xmlhttp.setRequestHeader('content-type', 'text/xml');
+/*       xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
+ */
+      console.log('HEADER2: ', xmlhttp.getResponseHeader);
+      xmlhttp.responseType = 'document';
+        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
+>>>>>>> c462fc65dae4c6650b05208ac6c648bed015303e
       const sr =
           '<?xml version="1.0" encoding="utf-8"?>' +
           '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
@@ -169,14 +190,23 @@ export class ContactoMpePage implements OnInit {
           '</soap:Envelope>';
 
 
+<<<<<<< HEAD
+=======
+      console.log('MENSAJE MANDADO A LA API:', sr);
+>>>>>>> c462fc65dae4c6650b05208ac6c648bed015303e
       xmlhttp.onreadystatechange = () => {
         console.log('XMLHTTP: ', xmlhttp);
             if (xmlhttp.readyState === 4) {
 
                 const aux: UsuarioLogin = this.usuario;
                 aux.Email = this.contactameForm.value.email;
+<<<<<<< HEAD
                 aux.Nombre = this.contactameForm.value.nombre;
                 aux.Telefono = this.contactameForm.value.telefono;
+=======
+                aux.Nombre = this.usuario.Nombre;
+                aux.Telefono = this.contactameForm.value.movil;
+>>>>>>> c462fc65dae4c6650b05208ac6c648bed015303e
                 aux.Movil = this.contactameForm.value.movil;
 
                 if (aux.Email === null) {
@@ -199,7 +229,11 @@ export class ContactoMpePage implements OnInit {
                   this.usuarioService.presentToast('Datos actualizados correctamente');
 
                 } else if (xmlhttp.status === 500 ) {
+<<<<<<< HEAD
                   this.usuarioService.presentAlert('Error', 'Fallo al actualizar datos', 'Intentelo de nuevo más tarde');
+=======
+
+>>>>>>> c462fc65dae4c6650b05208ac6c648bed015303e
                 }
             }
             this.usuarioService.dismiss();
@@ -212,4 +246,9 @@ export class ContactoMpePage implements OnInit {
     }
 
   }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> c462fc65dae4c6650b05208ac6c648bed015303e
 }

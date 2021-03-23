@@ -41,10 +41,14 @@ export class AppComponent {
   private HayModal = false;
   public appPagesGuardiaCivil: Array<Pages>;
   private textoCompartirAPP = 'Disfrute de la App de Grupo MPE de prevención de riesgos laborales, puede descargarla pinchando en el siguiente enlace. ';
+<<<<<<< HEAD
 
 /*   private urlCompartirAPP = 'http://onelink.to/ept9em';
  */
+=======
+>>>>>>> c462fc65dae4c6650b05208ac6c648bed015303e
   private urlCompartirAPP = 'https://mpeprevencion.com/qr-appmpe.html';
+
   public Version = 'Versión 1.0.7';
 
   private notificacion: Notificacion;
@@ -1139,6 +1143,10 @@ export class AppComponent {
   salirApp() {
 
     this.usuarioService.presentAlertSalir('Información', '', '¿Quieres usted salir de la aplicación?');
+<<<<<<< HEAD
+=======
+
+>>>>>>> c462fc65dae4c6650b05208ac6c648bed015303e
   }
 
   /* crearNotificacionesLocalesMantoux(fecha: string) {
