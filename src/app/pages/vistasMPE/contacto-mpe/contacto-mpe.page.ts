@@ -16,6 +16,10 @@ export class ContactoMpePage implements OnInit {
   DNI = '';
   EsGuardiaCivil = false;
 
+  EmailNuevo = '';
+  MovilNuevo = '';
+
+
   public contactameForm: FormGroup;
   usuario: UsuarioLogin;
 
@@ -111,6 +115,11 @@ export class ContactoMpePage implements OnInit {
     xmlhttp.onreadystatechange =  () => {
           if (xmlhttp.readyState === 4) {
               if (xmlhttp.status === 200) {
+                  if ((this.Movil !== this.contactameForm.value.movil || this.Email !== this.contactameForm.value.email) && !this.EsGuardiaCivil && this.usuario.Tipo !== 'CONSULTOR') {
+
+                    this.guardarCambiosEnLazaro();
+
+                  }
 
                   this.usuarioService.dismiss();
                   this.usuarioService.presentToast('Consulta enviada, nos pondremos en contacto en breve con usted.');
@@ -126,4 +135,81 @@ export class ContactoMpePage implements OnInit {
     xmlhttp.send(sr);
   }
 
+
+  guardarCambiosEnLazaro() {
+    try {
+      this.usuarioService.present('Actualizando datos...');
+      const xmlhttp = new XMLHttpRequest();
+
+
+      xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
+      xmlhttp.setRequestHeader('content-type', 'text/xml');
+
+      console.log('HEADER2: ', xmlhttp.getResponseHeader);
+      xmlhttp.responseType = 'document';
+      const sr =
+          '<?xml version="1.0" encoding="utf-8"?>' +
+          '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
+            '<soap:Header>' +
+              '<AuthHeader xmlns="http://tempuri.org/">' +
+                '<Usuario>' + this.usuario.Usuario + '</Usuario>' +
+                '<Password>' + this.usuario.Password + '</Password>' +
+              '</AuthHeader>' +
+            '</soap:Header>' +
+            '<soap:Body>' +
+              '<InsertarDatosTrabajador xmlns="http://tempuri.org/">' +
+                '<Datos>' +
+                  '<Nombre>' + this.usuario.Nombre + '</Nombre>' +
+                  '<Movil>' + this.contactameForm.value.movil + '</Movil>' +
+                  '<Telefono>' + this.contactameForm.value.movil + '</Telefono>' +
+                  '<Email>' + this.contactameForm.value.email + '</Email>' +
+                '</Datos>' +
+              '</InsertarDatosTrabajador>' +
+            '</soap:Body>' +
+          '</soap:Envelope>';
+
+
+      xmlhttp.onreadystatechange = () => {
+        console.log('XMLHTTP: ', xmlhttp);
+            if (xmlhttp.readyState === 4) {
+
+                const aux: UsuarioLogin = this.usuario;
+                aux.Email = this.contactameForm.value.email;
+                aux.Nombre = this.contactameForm.value.nombre;
+                aux.Telefono = this.contactameForm.value.telefono;
+                aux.Movil = this.contactameForm.value.movil;
+
+                if (aux.Email === null) {
+                  aux.Email = '';
+                }
+                if (aux.Nombre === null) {
+                  aux.Nombre = '';
+                }
+                if (aux.Telefono === null) {
+                  aux.Telefono = '';
+                }
+                if (aux.Movil === null) {
+                  aux.Movil = '';
+                }
+
+
+                if (xmlhttp.status === 200) {
+
+                  this.usuarioService.actualizarPerfil(aux);
+                  this.usuarioService.presentToast('Datos actualizados correctamente');
+
+                } else if (xmlhttp.status === 500 ) {
+                  this.usuarioService.presentAlert('Error', 'Fallo al actualizar datos', 'Intentelo de nuevo más tarde');
+                }
+            }
+            this.usuarioService.dismiss();
+        };
+
+        console.log('XMLHTTP: ', xmlhttp);
+      xmlhttp.send(sr);
+    } catch (error) {
+      this.usuarioService.dismiss();
+    }
+
+  }
 }
