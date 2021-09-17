@@ -16,6 +16,10 @@ export class ContactoMpePage implements OnInit {
   DNI = '';
   EsGuardiaCivil = false;
 
+  EmailNuevo = '';
+  MovilNuevo = '';
+
+
   public contactameForm: FormGroup;
   usuario: UsuarioLogin;
 
@@ -111,13 +115,13 @@ export class ContactoMpePage implements OnInit {
     xmlhttp.onreadystatechange =  () => {
           if (xmlhttp.readyState === 4) {
               if (xmlhttp.status === 200) {
-                if( !this.EsGuardiaCivil && this.usuario.Tipo !== 'CONSULTOR' && (this.contactameForm.value.movil !== this.Movil || this.contactameForm.value.email !== this.Email)) {
-                  console.log('GUARDAMOS NUEVOS DATOS EN MPE');
-                  this.guardarCambiosMPE();
+                  if ((this.Movil !== this.contactameForm.value.movil || this.Email !== this.contactameForm.value.email) && !this.EsGuardiaCivil && this.usuario.Tipo !== 'CONSULTOR') {
 
-                }
+                    this.guardarCambiosEnLazaro();
+
+                  }
                 this.usuarioService.dismiss();
-                this.usuarioService.presentToast('Consulta enviada, nos pondremos en contacto en breve con usted.');
+                this.usuarioService.presentToast('Consulta enviada, nos pondremos en contacto en breve con usted.');              
               } else {
                 this.usuarioService.dismiss();
                 this.usuarioService.presentToast('¡ERROR! Su consulta no ha podido ser mandada');
@@ -130,20 +134,18 @@ export class ContactoMpePage implements OnInit {
     xmlhttp.send(sr);
   }
 
-  guardarCambiosMPE() {
+
+  guardarCambiosEnLazaro() {
     try {
       this.usuarioService.present('Actualizando datos...');
       const xmlhttp = new XMLHttpRequest();
 
 
       xmlhttp.open('POST', 'https://grupompe.es/MpeNube/ws/DocumentosWS.asmx', true);
-/*       xmlhttp.setRequestHeader('Access-Control-Allow-Headers', 'Content-Type');
- */      xmlhttp.setRequestHeader('content-type', 'text/xml');
-/*       xmlhttp.setRequestHeader('Access-Control-Allow-Origin', '*');
- */
+      xmlhttp.setRequestHeader('content-type', 'text/xml');
+
       console.log('HEADER2: ', xmlhttp.getResponseHeader);
       xmlhttp.responseType = 'document';
-        // the following variable contains my xml soap request (that you can get thanks to SoapUI for example)
       const sr =
           '<?xml version="1.0" encoding="utf-8"?>' +
           '<soap:Envelope xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/soap/envelope/">' +
@@ -166,15 +168,14 @@ export class ContactoMpePage implements OnInit {
           '</soap:Envelope>';
 
 
-      console.log('MENSAJE MANDADO A LA API:', sr);
       xmlhttp.onreadystatechange = () => {
         console.log('XMLHTTP: ', xmlhttp);
             if (xmlhttp.readyState === 4) {
 
                 const aux: UsuarioLogin = this.usuario;
                 aux.Email = this.contactameForm.value.email;
-                aux.Nombre = this.usuario.Nombre;
-                aux.Telefono = this.contactameForm.value.movil;
+                aux.Nombre = this.contactameForm.value.nombre;
+                aux.Telefono = this.contactameForm.value.telefono;
                 aux.Movil = this.contactameForm.value.movil;
 
                 if (aux.Email === null) {
@@ -197,7 +198,7 @@ export class ContactoMpePage implements OnInit {
                   this.usuarioService.presentToast('Datos actualizados correctamente');
 
                 } else if (xmlhttp.status === 500 ) {
-
+                  this.usuarioService.presentAlert('Error', 'Fallo al actualizar datos', 'Intentelo de nuevo más tarde');
                 }
             }
             this.usuarioService.dismiss();
@@ -210,6 +211,4 @@ export class ContactoMpePage implements OnInit {
     }
 
   }
-
-
 }

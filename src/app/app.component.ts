@@ -1137,7 +1137,6 @@ export class AppComponent {
   salirApp() {
 
     this.usuarioService.presentAlertSalir('Información', '', '¿Quieres usted salir de la aplicación?');
-
   }
 
   /* crearNotificacionesLocalesMantoux(fecha: string) {
