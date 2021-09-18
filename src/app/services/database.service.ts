@@ -53,7 +53,7 @@ export class DatabaseService {
 
       if (this.isDbReady.getValue()) {
 
-        resolve();
+        resolve(null);
 
       } else {
 
@@ -61,7 +61,7 @@ export class DatabaseService {
 
           if (ready) {
 
-            resolve();
+            resolve(null);
 
           }
 
@@ -81,9 +81,9 @@ export class DatabaseService {
           console.log('DB: Tabla USUARIOS vacia'); }).catch(error => { console.log('DB: ERROR AL BORRAR TABLAS USUARIO'); });
 
         // tslint:disable-next-line: max-line-length
-        const data = [usuario.Usuario, usuario.Password, usuario.FingerID, usuario.Tipo, usuario.Nombre, usuario.Recordarme, usuario.EsBuzo, usuario.EsGuardiaCivil, usuario.RequiereMantoux, usuario.Email, usuario.Movil, usuario.Telefono, usuario.RecordarEditarPerfil, usuario.HacerMantoux, usuario.FechaMantoux];
+        const data = [usuario.Usuario, usuario.Password, usuario.FingerID, usuario.Tipo, usuario.Nombre, usuario.Recordarme, usuario.EsBuzo, usuario.EsGuardiaCivil, usuario.RequiereMantoux, usuario.Email, usuario.Movil, usuario.Telefono, usuario.RecordarEditarPerfil, usuario.HacerMantoux, usuario.FechaMantoux,usuario.EsPoliciaNacional];
         // tslint:disable-next-line: max-line-length
-        const respuesta = await this.storage.executeSql('INSERT INTO usuariosTable (Usuario, Password_, FingerID, Tipo, Nombre, Recordarme, EsBuzo, EsGuardiaCivil, RequiereMantoux, Email, Movil, Telefono, RecordarEditarPerfil, HacerMantoux, FechaMantoux) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', data).then(() => {
+        const respuesta = await this.storage.executeSql('INSERT INTO usuariosTable (Usuario, Password_, FingerID, Tipo, Nombre, Recordarme, EsBuzo, EsGuardiaCivil, RequiereMantoux, Email, Movil, Telefono, RecordarEditarPerfil, HacerMantoux, FechaMantoux, EsPoliciaNacional) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', data).then(() => {
           console.log('DB: Usuario añadido a la BD');
         });
     });
@@ -120,7 +120,8 @@ export class DatabaseService {
         Telefono: res.rows.item(0).Telefono,
         RecordarEditarPerfil: res.rows.item(0).RecordarEditarPerfil,
         HacerMantoux: res.rows.item(0).HacerMantoux,
-        FechaMantoux: res.rows.item(0).FechaMantoux
+        FechaMantoux: res.rows.item(0).FechaMantoux,
+        EsPoliciaNacional: res.rows.item(0).EsPoliciaNacional,
       };
     } else { return null; }
 

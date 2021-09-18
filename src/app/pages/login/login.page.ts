@@ -43,6 +43,7 @@ export class LoginPage implements OnInit {
   passwordIcon2 = 'eye-off-outline';
   plataforma: string;
   EsGuardiaCivil = false;
+  EsPoliciaNacional = false;
   mostrarTerminosModal = false;
 
   constructor(
@@ -172,6 +173,14 @@ export class LoginPage implements OnInit {
               if (this.usuario.EsGuardiaCivil) {
 
                 console.log('ACCEDEMOS COMO GUARDIA CIVIL');
+                this.menuCtrl.enable(false, 'menuTrabajadores');
+                this.menuCtrl.enable(true, 'menuGuardiaCivil');
+                this.menuCtrl.enable(false, 'menuCompleto');
+                this.navCtrl.navigateRoot('tab-inicio');
+
+              }else if (this.usuario.EsPoliciaNacional) {
+
+                console.log('ACCEDEMOS COMO POLICIA NACIONAL');
                 this.menuCtrl.enable(false, 'menuTrabajadores');
                 this.menuCtrl.enable(true, 'menuGuardiaCivil');
                 this.menuCtrl.enable(false, 'menuCompleto');
@@ -355,7 +364,8 @@ export class LoginPage implements OnInit {
                       Telefono: a.Telefono,
                       RecordarEditarPerfil: true,
                       HacerMantoux: null,
-                      FechaMantoux: null
+                      FechaMantoux: null,
+                      EsPoliciaNacional: a.EsPoliciaNacional,
                     };
                     console.log('TERMINOS ACPETADOS API: ', a.TerminosAceptados);
                     if (a.TerminosAceptados.toString() === 'true') {
@@ -376,6 +386,8 @@ export class LoginPage implements OnInit {
                       console.log('ACCEDEMOS COMO CLIENTE');
                       this.menuCtrl.enable(false, 'menuTrabajadores');
                       this.menuCtrl.enable(true, 'menuCompleto');
+                      this.menuCtrl.enable(false, 'menuGuardiaCivil');
+                      this.menuCtrl.enable(false, 'menuPoliciaNacional');
                       this.getCentros();
                       // this.navCtrl.navigateRoot('tab-inicio');
 
@@ -383,6 +395,8 @@ export class LoginPage implements OnInit {
                       console.log('ACCEDEMOS COMO CONSULTOR');
                       this.menuCtrl.enable(false, 'menuTrabajadores');
                       this.menuCtrl.enable(true, 'menuCompleto');
+                      this.menuCtrl.enable(false, 'menuGuardiaCivil');
+                      this.menuCtrl.enable(false, 'menuPoliciaNacional');
                       this.searchFilter();
                     } else {
                       if (usuario.EsGuardiaCivil.toString() === 'true') {
@@ -390,15 +404,26 @@ export class LoginPage implements OnInit {
                         console.log('ACCEDEMOS COMO GUARDIA CIVIL');
                         this.menuCtrl.enable(false, 'menuTrabajadores');
                         this.menuCtrl.enable(true, 'menuGuardiaCivil');
+                        this.menuCtrl.enable(false, 'menuPoliciaNacional');
                         this.menuCtrl.enable(false, 'menuCompleto');
                       //  this.navCtrl.navigateRoot('tab-inicio');
 
+                      }else if (usuario.EsPoliciaNacional.toString() === 'true') {
+
+                        console.log('ACCEDEMOS COMO POLICIA NACIONAL');
+                        this.menuCtrl.enable(false, 'menuTrabajadores');
+                        this.menuCtrl.enable(false, 'menuGuardiaCivil');
+                        this.menuCtrl.enable(true, 'menuPoliciaNacional');
+                        this.menuCtrl.enable(false, 'menuCompleto');
+                        this.navCtrl.navigateRoot('tab-inicio');
+        
                       } else {
 
                         console.log('ACCEDEMOS COMO TRABAJADOR');
                         this.menuCtrl.enable(true, 'menuTrabajadores');
                         this.menuCtrl.enable(false, 'menuGuardiaCivil');
                         this.menuCtrl.enable(false, 'menuCompleto');
+                        this.menuCtrl.enable(false, 'menuPoliciaNacional');
                       //  this.navCtrl.navigateRoot('tab-inicio');
 
                       }

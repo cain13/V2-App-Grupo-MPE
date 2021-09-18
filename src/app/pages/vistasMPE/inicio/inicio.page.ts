@@ -144,6 +144,10 @@ export class InicioPage implements OnInit {
 
       await this.recordarEditPerfil();
 
+    }else if (this.usuario.EsPoliciaNacional !== undefined && this.usuario.EsPoliciaNacional.toString() === 'true' && this.usuario.RecordarEditarPerfil.toString() === 'true' && this.hayCondiciones !== true && (this.usuario.Movil === null || this.usuario.Email === null || this.usuario.Telefono === null)) {
+
+      await this.recordarEditPerfil();
+
     }
 
     await this.usuarioService.present('Cargando datos...');
@@ -243,6 +247,10 @@ export class InicioPage implements OnInit {
       console.log('GuardiaCivil Inicio ', this.usuario.EsGuardiaCivil);
       usuario.Empleado = 'GuardiaCivil';
     }
+    if (this.usuario.EsPoliciaNacional !== undefined && this.usuario.EsPoliciaNacional.toString() === 'true') {
+      console.log('PoliciaNacional Inicio ', this.usuario.EsPoliciaNacional);
+      usuario.Empleado = 'PoliciaNacional';
+    }
     const respuesta = await  this.http.post<RespuestaAPINoticias>(URL, usuario, {headers: this.header}).toPromise();
 
     return respuesta;
@@ -316,7 +324,8 @@ export class InicioPage implements OnInit {
                       Telefono: a.Telefono,
                       RecordarEditarPerfil: this.usuario.RecordarEditarPerfil,
                       HacerMantoux: this.usuario.HacerMantoux,
-                      FechaMantoux: this.usuario.FechaMantoux
+                      FechaMantoux: this.usuario.FechaMantoux,
+                      EsPoliciaNacional: this.usuario.EsPoliciaNacional
                     };
 
                     if (a.Tests !== null && a.Tests !== undefined) {

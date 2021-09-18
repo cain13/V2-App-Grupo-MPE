@@ -15,7 +15,7 @@ export class ContactoMpePage implements OnInit {
   Movil = '';
   DNI = '';
   EsGuardiaCivil = false;
-
+  EsPoliciaNacional = false;
   EmailNuevo = '';
   MovilNuevo = '';
 
@@ -36,6 +36,10 @@ export class ContactoMpePage implements OnInit {
       if (this.usuario.EsGuardiaCivil.toString() === 'true') {
 
         this.EsGuardiaCivil = true;
+
+      }else if (this.usuario.EsPoliciaNacional.toString() === 'true') {
+
+        this.EsPoliciaNacional = true;
 
       }
 

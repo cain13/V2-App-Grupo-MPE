@@ -56,7 +56,8 @@ export class BlancoPage implements OnInit {
             Telefono: ultimoUsuario.Telefono,
             RecordarEditarPerfil: ultimoUsuario.RecordarEditarPerfil,
             HacerMantoux: ultimoUsuario.HacerMantoux,
-            FechaMantoux: ultimoUsuario.FechaMantoux
+            FechaMantoux: ultimoUsuario.FechaMantoux,
+            EsPoliciaNacional: ultimoUsuario.EsPoliciaNacional
           };
 
          this.usuarioService.guardarUsuario(this.usuario);
@@ -81,6 +82,16 @@ export class BlancoPage implements OnInit {
             console.log('ACCEDEMOS COMO GUARDIA CIVIL');
             this.menuCtrl.enable(false, 'menuTrabajadores');
             this.menuCtrl.enable(true, 'menuGuardiaCivil');
+            this.menuCtrl.enable(false, 'menuPoliciaNacional');
+            this.menuCtrl.enable(false, 'menuCompleto');
+            this.navCtrl.navigateRoot('tab-inicio');
+
+          }else if (this.usuario.EsPoliciaNacional.toString() === 'true') {
+
+            console.log('ACCEDEMOS COMO EsPoliciaNacional');
+            this.menuCtrl.enable(false, 'menuTrabajadores');
+            this.menuCtrl.enable(false, 'menuGuardiaCivil');
+            this.menuCtrl.enable(true, 'menuPoliciaNacional');
             this.menuCtrl.enable(false, 'menuCompleto');
             this.navCtrl.navigateRoot('tab-inicio');
 

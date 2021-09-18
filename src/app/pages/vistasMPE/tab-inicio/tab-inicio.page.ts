@@ -11,6 +11,7 @@ export class TabInicioPage implements OnInit {
 
   usuario: UsuarioLogin;
   esGuardiaCivil = false;
+  esPoliciaNacional = false;
   opcionesTab: Opciones[];
 
 
@@ -19,8 +20,11 @@ export class TabInicioPage implements OnInit {
     this.usuario = this.usuarioService.getUsuario();
     console.log('TAB-INICIO: ', this.usuario);
 
-      if (this.usuario.EsGuardiaCivil.toString() === 'true') {
+    if (this.usuario.EsGuardiaCivil.toString() === 'true') {
       this.esGuardiaCivil = true;
+    }
+    if (this.usuario.EsPoliciaNacional.toString() === 'true') {
+      this.esPoliciaNacional = true;
     }
   }
 

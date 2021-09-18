@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS usuariosTable (
     Telefono TEXT DEFAULT NULL,
     RecordarEditarPerfil BOOLEAN DEFAULT NULL,
     HacerMantoux BOOLEAN DEFAULT NULL,
-    FechaMantoux TEXT DEFAULT NULL
+    FechaMantoux TEXT DEFAULT NULL,
+    EsPoliciaNacional BOOLEAN DEFAULT NULL
 
 
 );

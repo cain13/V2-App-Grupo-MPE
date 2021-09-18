@@ -12,6 +12,7 @@ export class ModalTerminosPage implements OnInit {
   
   private usuario: UsuarioLogin;
   EsGuardiaCivil: boolean;
+  EsPoliciaNacional: boolean;
 
   constructor(private modalCtrl: ModalController, private alertCtrl: AlertController, private usuarioService: UsuarioService) { }
 

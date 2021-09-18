@@ -103,6 +103,7 @@ export interface ObtenerDatosConsultorResult {
   Tipo: string;
   EsBuzo: boolean;
   EsGuardiaCivil: boolean;
+  EsPoliciaNacional: boolean;
   RequiereMantoux: boolean;
   Email: string;
   Movil: string;

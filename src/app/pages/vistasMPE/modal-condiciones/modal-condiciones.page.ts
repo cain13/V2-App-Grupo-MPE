@@ -11,6 +11,7 @@ import { UsuarioLogin } from '../../../interfaces/usuario-interfaces';
 export class ModalCondicionesPage implements OnInit {
   usuario: UsuarioLogin;
   EsGuardiaCivil = false;
+  EsPoliciaNacional = false;
   constructor(public modalCtrl: ModalController,
               private usuarioService: UsuarioService,
               public navCtrl: NavController
@@ -21,6 +22,9 @@ export class ModalCondicionesPage implements OnInit {
     this.usuario = this.usuarioService.getUsuario();
     if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil) {
       this.EsGuardiaCivil = this.usuario.EsGuardiaCivil;
+    }
+    if (this.usuario.EsPoliciaNacional !== undefined && this.usuario.EsPoliciaNacional) {
+      this.EsPoliciaNacional = this.usuario.EsPoliciaNacional;
     }
   }
 

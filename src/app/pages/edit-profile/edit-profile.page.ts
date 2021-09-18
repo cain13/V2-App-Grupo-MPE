@@ -25,6 +25,7 @@ export class EditProfilePage implements OnInit {
 
   usuario: UsuarioLogin;
   EsGuardiaCivil = false;
+  EsPoliciaNacional = false;
   public editProfileForm: FormGroup;
 
   constructor(
@@ -47,6 +48,14 @@ export class EditProfilePage implements OnInit {
     console.log('this.usuario edit-profile: ', this.usuario);
     if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true') {
       this.EsGuardiaCivil = true;
+      this.EsPoliciaNacional = false;
+      this.Email = this.usuario.Email;
+      this.Telefono = this.usuario.Telefono;
+      this.Movil = this.usuario.Movil;
+      this.DNI = this.usuario.Usuario;
+    }else if (this.usuario.EsPoliciaNacional !== undefined && this.usuario.EsPoliciaNacional.toString() === 'true') {
+      this.EsGuardiaCivil = false;
+      this.EsPoliciaNacional = true;
       this.Email = this.usuario.Email;
       this.Telefono = this.usuario.Telefono;
       this.Movil = this.usuario.Movil;

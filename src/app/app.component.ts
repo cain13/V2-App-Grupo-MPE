@@ -40,6 +40,7 @@ export class AppComponent {
   public appPagesTrabajador: Array<Pages>;
   private HayModal = false;
   public appPagesGuardiaCivil: Array<Pages>;
+  public appPagesPoliciaNacional: Array<Pages>;
   private textoCompartirAPP = 'Disfrute de la App de Grupo MPE de prevención de riesgos laborales, puede descargarla pinchando en el siguiente enlace. ';
   private urlCompartirAPP = 'https://mpeprevencion.com/qr-appmpe.html';
 
@@ -124,6 +125,28 @@ export class AppComponent {
       },
 
 
+    ];
+    
+    this.appPagesPoliciaNacional = [
+      
+      {
+        title: 'Reconocimientos Médicos',
+        url: '/documentos-trabajador-menu',
+        direct: 'forward',
+        icon: 'document-outline'
+      },
+      {
+        title: 'Pruebas COVID',
+        url: '/documentos-covid-menu',
+        direct: 'forward',
+        icon: 'clipboard-outline'
+      },
+      {
+        title: 'Citas Pendientes',
+        url: '/citas-pendientes-trabajador-menu',
+        direct: 'forward',
+        icon: 'timer-outline'
+      },
     ];
 
     this.appPagesVSAll = [
@@ -854,7 +877,9 @@ export class AppComponent {
     window.open('https://mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
   }
 
-
+  proteccionPoliciaNacional() {
+    window.open('https://mpeprevencion.com/proteccion_datos_GuardiaCivil.html', '_system');
+  }
 
   proteccionGenerico() {
     window.open('https:mpeprevencion.com/proteccion_datos_MPE.html', '_system');

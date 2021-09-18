@@ -8,18 +8,19 @@
           <ion-text color="tertiary" class="fw700"> {{titulo}} </ion-text>
         </ion-text>
     </ion-title >
-    <ion-title *ngIf="usuario !== undefined && usuario.Nombre !== undefined && EsGuardiaCivil" style="margin-top: 0cm;  margin-bottom: 1mm;" >
+    <ion-title *ngIf="usuario !== undefined && usuario.Nombre !== undefined && (EsGuardiaCivil || EsPoliciaNacional)" style="margin-top: 0cm;  margin-bottom: 1mm;" >
       <ion-text color="light" style="font-size: x-small; margin-top: 0cm; margin-bottom: 3mm;">
         {{usuario.Usuario}}
       </ion-text>
     </ion-title>
-    <ion-title *ngIf="usuario !== undefined && usuario.Nombre !== undefined && !EsGuardiaCivil" style="margin-top: 0cm;  margin-bottom: 1mm;" >
+    <ion-title *ngIf="usuario !== undefined && usuario.Nombre !== undefined && (!EsGuardiaCivil && !EsPoliciaNacional)" style="margin-top: 0cm;  margin-bottom: 1mm;" >
       <ion-text color="light" style="font-size: x-small; margin-top: 0cm; margin-bottom: 3mm;">
         {{usuario.Nombre}}
       </ion-text>
     </ion-title>
     <ion-buttons slot="end">
       <img *ngIf="EsGuardiaCivil !== undefined && EsGuardiaCivil" src="assets/img/EscudoGC.png" style="width : 30px;" />
+      <img *ngIf="EsPoliciaNacional !== undefined && EsPoliciaNacional" src="assets/img/EscudoCNP.png" style="width : 30px;" />
       <ion-button size="small" shape="round" color="medium" (click)="notifications()">
         <ion-icon name="notifications" [color]="cantidad > 0 ? '#FFFFFF':'dark'"></ion-icon>
         <ion-badge [color]="cantidad > 0 ? 'danger': 'dark'" slot="end">{{cantidad}}</ion-badge>

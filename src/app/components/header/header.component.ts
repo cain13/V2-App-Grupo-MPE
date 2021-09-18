@@ -20,6 +20,7 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
   isSmallPhone = false;
 
   EsGuardiaCivil = false;
+  EsPoliciaNacional = false;
 
   @Input() titulo = 'Grupo MPE';
 
@@ -51,10 +52,17 @@ export class HeaderComponent implements OnInit, ViewWillEnter {
 
     this.usuario = this.usuarioService.getUsuario();
     console.log('App Header EsGuardiaCivil ', this.usuario.EsGuardiaCivil);
+    console.log('App Header EsPoliciaNacional ', this.usuario.EsPoliciaNacional);
     if (this.usuario.EsGuardiaCivil !== undefined && this.usuario.EsGuardiaCivil.toString() === 'true') {
       this.EsGuardiaCivil = true;
+      this.EsPoliciaNacional = false;
       this.titulo = 'MPE Sur';
-    } else {
+    }else if (this.usuario.EsPoliciaNacional !== undefined && this.usuario.EsPoliciaNacional.toString() === 'true') {
+      this.EsGuardiaCivil = false;
+      this.EsPoliciaNacional = true;
+      this.titulo = 'MPE Sur';
+    }
+    else {
       this.EsGuardiaCivil = false;
     }
 

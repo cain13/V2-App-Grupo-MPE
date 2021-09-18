@@ -44,7 +44,8 @@ export class PopoverAvisarEditPerfilComponent implements OnInit {
       Telefono: this.usuario.Telefono,
       RecordarEditarPerfil: this.botonCheck.checked,
       HacerMantoux: this.usuario.HacerMantoux,
-      FechaMantoux: this.usuario.FechaMantoux
+      FechaMantoux: this.usuario.FechaMantoux,
+      EsPoliciaNacional: this.usuario.EsPoliciaNacional
     };
 
     await this.usuarioService.login(usuario);

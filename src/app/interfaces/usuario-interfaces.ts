@@ -15,6 +15,7 @@ export interface UsuarioLogin {
     RecordarEditarPerfil: boolean;
     HacerMantoux: boolean;
     FechaMantoux: string;
+    EsPoliciaNacional: boolean;
 
 }
 

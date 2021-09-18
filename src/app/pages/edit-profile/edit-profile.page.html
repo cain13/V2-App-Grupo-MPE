@@ -15,14 +15,19 @@
 
 <ion-content class="profile">
   <ion-card class="ion-no-margin">
-    <ion-card-content class="bg-profile" *ngIf="EsGuardiaCivil !== undefined && !EsGuardiaCivil">
+    <ion-card-content class="bg-profile" *ngIf="(EsGuardiaCivil !== undefined && !EsGuardiaCivil) && (EsPoliciaNacional !== undefined && !EsPoliciaNacional)">
       <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar"  >
       <h1 class="fw500">{{Nombre}}</h1>
       <h1 class="fw500" *ngIf="usuario.Tipo === 'TRABAJADOR'">{{usuario.Usuario}}</h1>
     </ion-card-content>
-    <ion-card-content class="bg-profile" *ngIf="EsGuardiaCivil !== undefined && EsGuardiaCivil">
+    <ion-card-content class="bg-profile" *ngIf="(EsGuardiaCivil !== undefined && EsGuardiaCivil) && (EsPoliciaNacional !== undefined && !EsPoliciaNacional)">
       <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar"  >
       <h1 class="fw500">Guardia Civil</h1>
+      <h1 class="fw500">{{usuario.Usuario}}</h1>
+    </ion-card-content>
+    <ion-card-content class="bg-profile" *ngIf="(EsPoliciaNacional !== undefined && EsPoliciaNacional && (EsGuardiaCivil !== undefined && !EsGuardiaCivil))">
+      <img src="assets/img/brokers/michael_drukov.jpg" class="user-avatar"  >
+      <h1 class="fw500">Policia Nacional</h1>
       <h1 class="fw500">{{usuario.Usuario}}</h1>
     </ion-card-content>
   
@@ -36,12 +41,12 @@
             </ion-list-header>
             <form [formGroup]="editProfileForm">
 
-              <ion-item *ngIf="EsGuardiaCivil !== undefined && !EsGuardiaCivil">
+              <ion-item *ngIf="(EsGuardiaCivil !== undefined && !EsGuardiaCivil) && (EsPoliciaNacional !== undefined && !EsPoliciaNacional)">
                 <ion-label color="dark" position="stacked">Nombre:</ion-label>
                 <ion-input color="dark" type="text" formControlName="nombre" disabled></ion-input>
               </ion-item>
             
-              <ion-item *ngIf="EsGuardiaCivil !== undefined && !EsGuardiaCivil">
+              <ion-item *ngIf="(EsGuardiaCivil !== undefined && !EsGuardiaCivil) && (EsPoliciaNacional !== undefined && !EsPoliciaNacional)">
                 <ion-label color="dark" position="stacked">Tipo:</ion-label>
                 <ion-input color="dark" type="text" formControlName="tipo" disabled></ion-input>
               </ion-item>

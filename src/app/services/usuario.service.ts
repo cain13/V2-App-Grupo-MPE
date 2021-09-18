@@ -89,9 +89,22 @@ export class UsuarioService {
     this.usuario = usuario;
     if (usuario !== null && usuario !== undefined && usuario.EsGuardiaCivil !== undefined &&  usuario.EsGuardiaCivil !== null) {
       this.usuario.EsGuardiaCivil = usuario.EsGuardiaCivil;
-    } else {
+    } 
+    else
+    {
       if (usuario !== null && usuario !== undefined ) {
         this.usuario.EsGuardiaCivil = false;
+        this.usuario.EsPoliciaNacional = false;
+      }
+    }
+    if (usuario !== null && usuario !== undefined && usuario.EsPoliciaNacional !== undefined &&  usuario.EsPoliciaNacional !== null) {
+      this.usuario.EsPoliciaNacional = usuario.EsPoliciaNacional;
+    } 
+    else
+    {
+      if (usuario !== null && usuario !== undefined ) {
+        this.usuario.EsGuardiaCivil = false;
+        this.usuario.EsPoliciaNacional = false;
       }
     }
 
