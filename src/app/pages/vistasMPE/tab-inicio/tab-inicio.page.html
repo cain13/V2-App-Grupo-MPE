@@ -68,15 +68,14 @@
 
 <ion-tabs *ngIf="usuario.Tipo === 'TRABAJADOR' && (!esGuardiaCivil && esPoliciaNacional)">
   <ion-tab-bar slot="bottom" color="primary">
-
-    <ion-tab-button tab="documentos-trabajador">
-      <ion-icon name="document-outline"></ion-icon>
-      <ion-label>RRMM</ion-label>
-    </ion-tab-button>
-
     <ion-tab-button tab="inicio">
       <ion-icon name="home-outline"></ion-icon>
       <ion-label>Inicio</ion-label>
+    </ion-tab-button>
+    
+    <ion-tab-button tab="documentos-trabajador">
+      <ion-icon name="document-outline"></ion-icon>
+      <ion-label>RRMM</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="documentos-covid">
