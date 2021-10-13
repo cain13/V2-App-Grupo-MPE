@@ -16,7 +16,7 @@ import * as moment from 'moment';
 })
 export class UsuarioService {
 
-  version = 'Versión 1.0.8';
+  version = 'Versión 1.1.7';
   usuario: UsuarioLogin;
   empresaConsultor: EmpresaConsultor;
   cambiarPassword: CambiarPassword;
@@ -439,9 +439,9 @@ export class UsuarioService {
           text: 'Si',
           handler: () => {
             console.log('Cerrar sesion');
-            this.BorrarEmpleado();
-            this.guardarUsuario(null);
-            this.navController.navigateRoot('blanco');
+            // this.BorrarEmpleado();
+            // this.guardarUsuario(null);
+            this.navController.navigateRoot('login');
           }
         }
       ]

@@ -13,11 +13,13 @@ import * as moment from 'moment';
 })
 export class VistaTuberculinaInicioPage implements OnInit {
 
-
   datosMostrar: VistaTimeLineDatos;
   usuario: UsuarioLogin;
   datosMantoux: any[] = [];
   noHayDocumentos = false;
+
+
+  // tslint:disable-next-line: max-line-length
 
 
   constructor(private navCtrl: NavController,
@@ -69,6 +71,7 @@ export class VistaTuberculinaInicioPage implements OnInit {
 
                     const obj: RespuestAPIMantoux = JSON.parse(JSON.stringify(this.ngxXml2jsonService.xmlToJson(xml)));
                     console.log('obj: ', obj);
+                    // tslint:disable-next-line: max-line-length
                     let a: ObtenerResultadoTestMantouxResult;
                     try {
                         a = JSON.parse(JSON.stringify(obj['soap:Envelope']['soap:Body']['ObtenerResultadoTestMantouxResponse']['ObtenerResultadoTestMantouxResult']['ResultadoTestMantouxInfo']));
@@ -84,6 +87,8 @@ export class VistaTuberculinaInicioPage implements OnInit {
                       if (!Array.isArray(a)) {
                         if (a.DatosMantoux.RespuestaTestMantouxInfo !== undefined && a.DatosMantoux.RespuestaTestMantouxInfo !== null && !Array.isArray(a.DatosMantoux.RespuestaTestMantouxInfo)) {
                           console.log('EL ARRAY DE OBJETOS TIENE SOLO 1 OBJETO...');
+                          console.log('a.DatosMantoux.RespuestaTestMantouxInfo: ', a.DatosMantoux.RespuestaTestMantouxInfo);
+
                           this.datosMantoux.push(a.DatosMantoux.RespuestaTestMantouxInfo);
                           console.log('this.datosMantoux[0].FechaInoculacion: ', this.datosMantoux[0].FechaInoculacion);
                           const fechaAux = moment(this.datosMantoux[0].FechaInoculacion);
@@ -102,14 +107,12 @@ export class VistaTuberculinaInicioPage implements OnInit {
                           this.usuarioService.dismiss();
 
                         }
-
-
                       } else {
 
                         for (const aux of a) {
 
                           if (!Array.isArray(aux.DatosMantoux.RespuestaTestMantouxInfo)) {
-                            console.log('EL ARRAY DE OBJETOS TIENE SOLO 1 OBJETO...');
+                            console.log('EL ARRAY DE OBJETOS VARIOS 1 OBJETO...');
                             const fechaAux = moment(aux.DatosMantoux.RespuestaTestMantouxInfo.FechaInoculacion);
                             if (fechaAux < moment('2000-01-01T00:00:00')) {
 
@@ -164,18 +167,32 @@ export class VistaTuberculinaInicioPage implements OnInit {
 
   }
 
-  isObject( obj: any) {
+  debeHacerPrueba( obj: any) {
     const aux: RespuestaTestMantouxInfo = obj;
 
-    if (typeof aux.FechaFoto === 'object' && aux.EsPositivo.toString() !== 'true' && aux.EsNegativo.toString() !== 'true') {
-
+    if (( aux.Foto === undefined && aux.Foto === null && typeof aux.Foto === 'object') && aux.EsPositivo.toString() !== 'true' && aux.EsNegativo.toString() !== 'true') {
+      console.log('isObject: ', true);
       return true;
 
     } else {
-
+      console.log('isObject: ', false);
       return false;
 
     }
+  }
+
+  hayImagen(prueba: any): boolean {
+    console.log('prueba hayImagen: ', prueba);
+    if (typeof prueba.Foto === 'object') {
+      console.log('hayImagen: ', true);
+      return false;
+
+    } else {
+      console.log('hayImagen: ', false);
+      return true;
+
+    }
+
   }
 
   isResultPositivo(obj: any) {
@@ -197,14 +214,11 @@ export class VistaTuberculinaInicioPage implements OnInit {
   isPendiente(obj: any) {
 
     const aux: RespuestaTestMantouxInfo = obj;
-    console.log('AUXXXX: ', aux);
     if (aux.EsPositivo.toString() === 'false' && aux.EsNegativo.toString() === 'false') {
-      console.log('AUXXXX: ', true);
 
       return true;
 
     } else {
-      console.log('AUXXXX: ', false);
 
       return false;
 
